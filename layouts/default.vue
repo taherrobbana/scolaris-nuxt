@@ -1,25 +1,27 @@
 <template>
-  <q-layout view="hHh lpR fFf" class="bg-grey-3">
-    <Header
-      @toggleLeftDrawer="toggleLeftDrawer"
-      v-if="isUserLoggedIn && isRouteActive"
-    />
-    <q-drawer
-      v-if="isUserLoggedIn && isRouteActive"
-      show-if-above
-      v-model="leftDrawerOpen"
-      side="left"
-      class="tw-side-nav"
-      bordered
-    >
-      <q-scroll-area class="sidebar-scroll" visible="false">
-        <SideBar />
-      </q-scroll-area>
-    </q-drawer>
-    <q-page-container class="page-container">
-      <NuxtPage />
-    </q-page-container>
-  </q-layout>
+  <client-only>
+    <q-layout view="hHh lpR fFf" class="bg-grey-3">
+      <Header
+        @toggleLeftDrawer="toggleLeftDrawer"
+        v-if="isUserLoggedIn && isRouteActive"
+      />
+      <q-drawer
+        v-if="isUserLoggedIn && isRouteActive"
+        show-if-above
+        v-model="leftDrawerOpen"
+        side="left"
+        class="tw-side-nav"
+        bordered
+      >
+        <q-scroll-area class="sidebar-scroll" :visible="false">
+          <SideBar />
+        </q-scroll-area>
+      </q-drawer>
+      <q-page-container class="page-container">
+        <NuxtPage />
+      </q-page-container>
+    </q-layout>
+  </client-only>
 </template>
 <script setup>
 import SideBar from "../components/SideBar.vue";

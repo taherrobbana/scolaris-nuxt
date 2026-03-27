@@ -32,7 +32,7 @@
                   <img :src="studentPhotoBase64" />
                 </q-avatar>
               </q-icon> -->
-              <q-label>{{ fullName }}</q-label>
+              <span>{{ fullName }}</span>
             </q-btn>
             <q-btn flat round icon="logout" class="q-ml-xs" @click="logout" />
           </div>

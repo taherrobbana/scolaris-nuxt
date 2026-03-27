@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
+    "nuxt-quasar-ui": "^3.0.1",
     "sass-embedded": "^1.97.2"
   }
 }
