@@ -4,6 +4,7 @@ export default defineNuxtConfig({
     "quasar/src/css/index.sass",
     "@quasar/extras/material-icons/material-icons.css",
     "vue-advanced-cropper/dist/style.css",
+    'vue-cal/dist/vuecal.css',
   ],
   vite: {
     css: {
