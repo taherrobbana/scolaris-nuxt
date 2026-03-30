@@ -25,7 +25,7 @@
                   class="icon-transition" />
               </transition>
             </q-btn>
-            <q-btn flat no-caps class="q-ml-xs" @click="route('/student/profile')">
+            <q-btn flat no-caps class="q-ml-xs" @click="route('/profile')">
               <q-icon left style="font-size: 25px" name="account_circle" />
               <!-- <q-icon left>
                 <q-avatar style="font-size: 25px">

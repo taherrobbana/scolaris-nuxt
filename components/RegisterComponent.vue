@@ -141,8 +141,8 @@ const loading = ref(false);
 const roleOptions = [
   { label: "Étudiant", value: "student" },
   { label: "Enseignant / Encadrant pédagogique", value: "teacher" },
-  { label: "Entreprise / Encadrant professionnel", value: "company" },
   { label: "Administrateur", value: "admin" },
+  { label: "Chef de Département / Coordinateur", value: "coordinator" },
 ];
 
 const onSubmit = async () => {
