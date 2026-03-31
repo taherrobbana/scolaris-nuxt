@@ -1,9 +1,14 @@
 {
-  "enOnly": "en only",
-  "home": "Home",
-  "hello": "Hello",
-  "welcome": "Welcome to our app",
   "commun": {
     "welcome": "Welcome to our app"
+  },
+  "unauthorizedPage": {
+    "unauthorizedMessage": "Sorry {name}, Your role ({role}) does not allow you to access this page."
+  },
+  "error": {
+    "pageNotFoundTitle": "Page Not Found",
+    "pageNotFoundSubtitle": "The page you are looking for might have been removed had its name changed or is temporarily unavailable.",
+    "back": "Back",
+    "home": "Home"
   }
 }

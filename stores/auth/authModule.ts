@@ -16,8 +16,8 @@ export const useAuthModule = defineStore("authModule", {
     email: "",
     firstName: "",
     lastName: "",
-    role: "",
-    connected: false,
+    role: "student",
+    connected: true,
   }),
 
   getters: {

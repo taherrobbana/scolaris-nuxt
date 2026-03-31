@@ -23,10 +23,10 @@
           </q-tabs>
         </div>
         <div>
-          <ProfileIdentity v-if="tab == 'identity'"/>
-          <ProfileContactDetails v-if="tab == 'contactDetails'"/>
-          <ProfileEmergencyContacts v-if="tab == 'emergencyContacts'"/>
-          <ProfileDocuments v-if="tab == 'documents'"/>
+          <ProfileIdentity v-if="tab == 'identity'" />
+          <ProfileContactDetails v-if="tab == 'contactDetails'" />
+          <ProfileEmergencyContacts v-if="tab == 'emergencyContacts'" />
+          <ProfileDocuments v-if="tab == 'documents'" />
         </div>
         <!-- <div>
           <q-form class="q-gutter-md">
@@ -73,6 +73,19 @@ const showEditProfilePicPopUp = ref(false);
 function editProfilePic() {
   showEditProfilePicPopUp.value = !showEditProfilePicPopUp.value;
 }
+
+definePageMeta({
+  middleware: 'auth',
+  roles: ['student', 'teacher', 'admin', 'coordinator'],
+  alias: ['/mon-profil', '/account'], // La page pages/profile.vue répondra à 3 URLs
+})
+
+useHead({
+  title: 'Mon Profil - Plateforme Scolaire', // Modifie le <title>
+  link: [
+    { rel: 'icon', type: 'image/x-icon', href: '/sesameSmallLogo.png' } // Modifie l'icône
+  ]
+})
 
 </script>
 <style scoped>

@@ -1,6 +1,6 @@
 <template>
   <q-list style="padding-top: 20px">
-    <q-item v-for="r in filtredRoutesByRole" clickable @click="route(r.route)" :active="selectedRoute(r.route)"
+    <q-item v-for="r in filtredRoutesByRole" clickable @click="navigateTo(r.route)" :active="selectedRoute(r)"
       active-class="bg-grey-3">
       <q-item-section avatar>
         <q-icon :name="r.icon" />
@@ -15,10 +15,10 @@
 
 <script setup lang="ts">
 import { useAuthModule } from '~/stores/auth/authModule';
-import { Role } from '~/utils/types';
+import { Role, type RouteConfig } from '~/utils/types';
 
 const { $router } = useNuxtApp();
-function route(path: string) {
+function navigateTo(path: string) {
   $router.push(path);
 }
 
@@ -29,11 +29,11 @@ const role = Role.student
 // const role = Role.admin
 // const role = Role.coordinator
 
-function selectedRoute(route: string) {
+function selectedRoute(r: RouteConfig) {
   const actualRoute = $router.currentRoute.value.fullPath
-  return route === actualRoute
+  return r.route === actualRoute || r?.secondaryRoutes?.includes(actualRoute)
 }
-const routes = [
+const routes: RouteConfig[] = [
   {
     icon: "manage_accounts",
     label: "Administration",
@@ -138,6 +138,7 @@ const routes = [
     label: "Mon profil",
     roles: [Role.student, Role.teacher, Role.admin, Role.coordinator],
     route: "/profile",
+    secondaryRoutes: ["/mon-profil", "/account"]
   },
   {
     caption: "Détails du stage en cours",

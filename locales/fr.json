@@ -1,9 +1,14 @@
 {
-  "frOnly": "fr only",
-  "home": "Acceuil",
-  "hello": "Bonjour",
-  "welcome": "Bienvenue dans notre application",
   "commun": {
     "welcome": "Bienvenue dans notre application"
+  },
+  "unauthorizedPage": {
+    "unauthorizedMessage": "Désolé {name}, votre rôle ({role}) ne vous permet pas d'accéder à cette page."
+  },
+  "error": {
+    "pageNotFoundTitle": "Page non trouvée",
+    "pageNotFoundSubtitle": "La page que vous recherchez a peut-être été supprimée, a changé de nom ou est temporairement indisponible.",
+    "back": "Retourner en arrière",
+    "home": "Accueil"
   }
 }
