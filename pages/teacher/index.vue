@@ -3,13 +3,7 @@
     <div class="myCard">
       <div class="text-h5">Dashboard Enseignant</div>
 
-      <q-table
-        class="q-mt-md"
-        title="Stages encadrés"
-        :rows="stages"
-        :columns="columns"
-        row-key="student"
-      />
+      <q-table class="q-mt-md" title="Stages encadrés" :rows="stages" :columns="columns" row-key="student" />
     </div>
   </q-page>
 </template>
@@ -25,4 +19,14 @@ const stages = ref([
   { student: "Ahmed Benali", company: "TechCorp", status: "En attente" },
   { student: "Sara Ali", company: "DataSoft", status: "Validé" },
 ]);
+
+definePageMeta({
+  middleware: 'auth',
+  roles: ['teacher'],
+})
+
+useHead({
+  title: 'Dashboard enseignant - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+})
 </script>

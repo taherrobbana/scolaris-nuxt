@@ -25,4 +25,14 @@ const rows = ref([
   { id: 1, student: "Yassine", period: "Mars - Juin" },
   { id: 2, student: "Lina", period: "Avril - Juillet" },
 ]);
+
+definePageMeta({
+  middleware: 'auth',
+  roles: ['coordinator'],
+})
+
+useHead({
+  title: 'Évaluations - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+})
 </script>

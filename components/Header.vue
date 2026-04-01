@@ -5,16 +5,16 @@
       <q-toolbar-title>
         <div class="header">
           <div class="logo-container">
-            <img src="../public/sesameLogo.png" class="sesame-logo" />
+            <img src="../public/sesameLogo.png" class="sesame-logo" @click="navigateTo('/')" />
           </div>
           <div>
             <q-btn flat no-caps @click="changeLanguage" icon="translate" :label="getLanguage === 'fr'
-                ? 'Switch to English'
-                : 'Passer en Français'
+              ? 'Switch to English'
+              : 'Passer en Français'
               " class="q-mr-sm" />
             <q-btn flat round :icon="numberOfNotifications > 0
-                ? 'notifications_active'
-                : 'notifications'
+              ? 'notifications_active'
+              : 'notifications'
               " class="q-ml-xs">
               <q-badge v-if="numberOfNotifications > 0" rounded color="red" floating :label="numberOfNotifications"
                 class="q-mt-xs" />
@@ -25,7 +25,7 @@
                   class="icon-transition" />
               </transition>
             </q-btn>
-            <q-btn flat no-caps class="q-ml-xs" @click="route('/profile')">
+            <q-btn flat no-caps class="q-ml-xs" @click="navigateTo('/profile')">
               <q-icon left style="font-size: 25px" name="account_circle" />
               <!-- <q-icon left>
                 <q-avatar style="font-size: 25px">
@@ -46,7 +46,7 @@
 import { Dark } from "quasar";
 import { useAuthModule } from "~/stores/auth/authModule";
 import { useLangModule } from "~/stores/lang/langModule";
-function route(path: string) {
+function navigateTo(path: string) {
   $router.push(path);
 }
 
@@ -95,6 +95,7 @@ function logout() {
   height: auto;
   max-height: 40px;
   object-fit: contain;
+  cursor: pointer;
 }
 
 .icon-transition {

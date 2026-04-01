@@ -26,4 +26,14 @@ const rows = ref([
   { id: 1, name: "Ahmed Benali", company: "TechCorp", step: 3 },
   { id: 2, name: "Sara Ali", company: "DataSoft", step: 6 },
 ]);
+
+definePageMeta({
+  middleware: 'auth',
+  roles: ['teacher'],
+})
+
+useHead({
+  title: 'Mes étudiants - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+})
 </script>

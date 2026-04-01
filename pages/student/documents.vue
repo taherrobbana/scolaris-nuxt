@@ -6,9 +6,7 @@
       <q-table :rows="documents" :columns="columns" row-key="name">
         <template #body-cell-status="props">
           <q-td style="text-align: center">
-            <q-badge
-              :color="props.row.status === 'Validé' ? 'green' : 'orange'"
-            >
+            <q-badge :color="props.row.status === 'Validé' ? 'green' : 'orange'">
               {{ props.row.status }}
             </q-badge>
           </q-td>
@@ -29,4 +27,14 @@ const documents = ref([
   { name: "Rapport", status: "En attente" },
   { name: "Attestation", status: "Manquant" },
 ]);
+
+definePageMeta({
+  middleware: 'auth',
+  roles: ['student'],
+})
+
+useHead({
+  title: 'Mes documents - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+})
 </script>

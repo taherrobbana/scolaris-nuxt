@@ -39,4 +39,14 @@
 
 <script setup>
 const step = ref(1);
+
+definePageMeta({
+  middleware: 'auth',
+  roles: ['student'],
+})
+
+useHead({
+  title: 'Suivi du stage - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+})
 </script>

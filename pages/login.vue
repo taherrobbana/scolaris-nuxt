@@ -52,4 +52,9 @@ onMounted(() => {
 definePageMeta({
   layout: "default",
 });
+
+useHead({
+  title: "Connexion - Plateforme Scolaire",
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+});
 </script>

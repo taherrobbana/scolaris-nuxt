@@ -17,4 +17,13 @@ import { useLangModule } from "~/stores/lang/langModule";
 const langModule = useLangModule();
 const getLanguage = computed(() => langModule.getLanguage);
 
+definePageMeta({
+    middleware: 'auth',
+    roles: ['student', 'teacher', 'admin', 'coordinator'],
+})
+
+useHead({
+    title: 'Emploi du temps - Plateforme Scolaire',
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+})
 </script>

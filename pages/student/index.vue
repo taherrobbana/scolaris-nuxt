@@ -43,4 +43,14 @@ const timeline = ref([
   { label: "Validation enseignant", done: true },
   { label: "Rapport", done: false },
 ]);
+
+definePageMeta({
+  middleware: 'auth',
+  roles: ['student'],
+})
+
+useHead({
+  title: 'Dashboard étudiant - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+})
 </script>

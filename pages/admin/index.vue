@@ -21,4 +21,14 @@ const cards = ref([
   { title: "En cours", value: 180 },
   { title: "Terminés", value: 140 },
 ]);
+
+definePageMeta({
+  middleware: 'auth',
+  roles: ['admin'],
+})
+
+useHead({
+  title: 'Administration - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+})
 </script>

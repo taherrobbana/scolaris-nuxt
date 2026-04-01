@@ -25,9 +25,13 @@
 
 const router = useRouter()
 
-// On peut définir un layout spécifique ou rester sur le 'default'
 definePageMeta({
   layout: 'default'
+})
+
+useHead({
+  title: 'Page introuvable - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
 })
 </script>
 <style scoped>

@@ -25,4 +25,14 @@
 <script setup>
 const usersPending = ref(2);
 const offersPending = ref(2);
+
+definePageMeta({
+  middleware: 'auth',
+  roles: ['admin'],
+})
+
+useHead({
+  title: 'Dashboard administrateur - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+})
 </script>

@@ -11,13 +11,7 @@
         </q-card-section>
 
         <q-card-section>
-          <q-input
-            dense
-            outlined
-            v-model="comment"
-            type="textarea"
-            label="Commentaire pédagogique"
-          />
+          <q-input dense outlined v-model="comment" type="textarea" label="Commentaire pédagogique" />
         </q-card-section>
 
         <q-card-actions align="right">
@@ -31,4 +25,14 @@
 
 <script setup>
 const comment = ref("Bon avancement");
+
+definePageMeta({
+  middleware: 'auth',
+  roles: ['teacher'],
+})
+
+useHead({
+  title: 'Détail du stage - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+})
 </script>

@@ -28,14 +28,18 @@
 <script setup>
 import { useAuthModule } from '~/stores/auth/authModule';
 
-// On peut désactiver le middleware sur cette page pour éviter les boucles infinies
+const router = useRouter()
+const authModule = useAuthModule();
+const user = authModule;
+
 definePageMeta({
     layout: 'default'
 })
 
-const router = useRouter()
-const authModule = useAuthModule();
-const user = authModule;
+useHead({
+  title: 'Accès restreint - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+})
 </script>
 <style scoped>
 .unauthorized-container {

@@ -9,67 +9,37 @@
       </q-card-section>
 
       <q-form @submit="resetPassword" class="q-gutter-y-md">
-        <q-input
-          v-model="form.newPassword"
-          label="Nouveau mot de passe"
-          :type="showPassword ? 'text' : 'password'"
-          outlined
-          dense
-          :rules="[
+        <q-input v-model="form.newPassword" label="Nouveau mot de passe" :type="showPassword ? 'text' : 'password'"
+          outlined dense :rules="[
             (val) => !!val || 'Mot de passe requis',
             (val) => val.length >= 6 || 'Minimum 6 caractères',
-          ]"
-        >
+          ]">
           <template v-slot:append>
-            <q-icon
-              :name="showPassword ? 'visibility_off' : 'visibility'"
-              class="cursor-pointer"
-              @click="showPassword = !showPassword"
-            />
+            <q-icon :name="showPassword ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+              @click="showPassword = !showPassword" />
           </template>
         </q-input>
 
-        <q-input
-          v-model="form.confirmPassword"
-          label="Confirmer le mot de passe"
-          :type="showConfirmPassword ? 'text' : 'password'"
-          outlined
-          dense
-          :rules="[
+        <q-input v-model="form.confirmPassword" label="Confirmer le mot de passe"
+          :type="showConfirmPassword ? 'text' : 'password'" outlined dense :rules="[
             (val) => !!val || 'Confirmation requise',
             (val) =>
               val === form.newPassword ||
               'Les mots de passe ne correspondent pas',
-          ]"
-        >
+          ]">
           <template v-slot:append>
-            <q-icon
-              :name="showConfirmPassword ? 'visibility_off' : 'visibility'"
-              class="cursor-pointer"
-              @click="showConfirmPassword = !showConfirmPassword"
-            />
+            <q-icon :name="showConfirmPassword ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+              @click="showConfirmPassword = !showConfirmPassword" />
           </template>
         </q-input>
 
         <div class="text-center">
-          <q-btn
-            type="submit"
-            color="primary"
-            label="Réinitialiser mot de passe"
-            :loading="loading"
-            class="full-width"
-          />
+          <q-btn type="submit" color="primary" label="Réinitialiser mot de passe" :loading="loading"
+            class="full-width" />
         </div>
         <div class="text-center q-mt-md">
           <span class="text-caption">Revenir à l'écran de connexion ? </span>
-          <q-btn
-            flat
-            color="primary"
-            label="Se connecté"
-            @click="router.push('/login')"
-            dense
-            no-caps
-          />
+          <q-btn flat color="primary" label="Se connecté" @click="router.push('/login')" dense no-caps />
         </div>
       </q-form>
     </q-card>
@@ -119,4 +89,13 @@ const resetPassword = async () => {
     loading.value = false;
   }
 };
+
+definePageMeta({
+  layout: "default",
+});
+
+useHead({
+  title: "Réinitialiser le mot de passe - Plateforme Scolaire",
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+});
 </script>

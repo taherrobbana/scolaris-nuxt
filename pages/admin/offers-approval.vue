@@ -43,4 +43,14 @@ const offers = ref([
     status: "En attente",
   },
 ]);
+
+definePageMeta({
+  middleware: 'auth',
+  roles: ['admin'],
+})
+
+useHead({
+  title: 'Validation des offres - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+})
 </script>

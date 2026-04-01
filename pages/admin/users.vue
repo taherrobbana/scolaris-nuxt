@@ -21,4 +21,14 @@ const users = ref([
   { id: 1, name: "Admin", role: "ADMIN", email: "admin@uni.tn" },
   { id: 2, name: "Ahmed", role: "STUDENT", email: "ahmed@uni.tn" },
 ]);
+
+definePageMeta({
+  middleware: 'auth',
+  roles: ['admin'],
+})
+
+useHead({
+  title: 'Gestion des utilisateurs - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+})
 </script>

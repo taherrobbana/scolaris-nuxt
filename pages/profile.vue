@@ -77,14 +77,12 @@ function editProfilePic() {
 definePageMeta({
   middleware: 'auth',
   roles: ['student', 'teacher', 'admin', 'coordinator'],
-  alias: ['/mon-profil', '/account'], // La page pages/profile.vue répondra à 3 URLs
+  alias: ['/mon-profil', '/account'],
 })
 
 useHead({
-  title: 'Mon Profil - Plateforme Scolaire', // Modifie le <title>
-  link: [
-    { rel: 'icon', type: 'image/x-icon', href: '/sesameSmallLogo.png' } // Modifie l'icône
-  ]
+  title: 'Mon Profil - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
 })
 
 </script>

@@ -3,71 +3,36 @@
     <div class="myCard">
       <div class="text-h5">Suivi pédagogique des stages</div>
 
-      <q-select
-        dense
-        outlined
-        class="q-mb-md"
-        v-model="selectedStudent"
-        :options="students"
-        label="Choisir un étudiant"
-      />
+      <q-select dense outlined class="q-mb-md" v-model="selectedStudent" :options="students"
+        label="Choisir un étudiant" />
 
       <q-stepper v-model="step" vertical animated>
-        <!-- Step 3 -->
         <q-step :name="3" title="Validation journal (Enseignant)">
           <q-banner class="q-mb-sm">Journal soumis par l'étudiant</q-banner>
-          <q-input
-            dense
-            outlined
-            type="textarea"
-            v-model="commentJournal"
-            label="Commentaire"
-          />
+          <q-input dense outlined type="textarea" v-model="commentJournal" label="Commentaire" />
           <div class="q-mt-sm">
             <q-btn label="Valider" color="green" />
             <q-btn label="Refuser" color="red" class="q-ml-sm" />
           </div>
         </q-step>
 
-        <!-- Step 6 -->
         <q-step :name="6" title="Validation rapport (Enseignant)">
           <q-banner class="q-mb-sm">Rapport soumis par l'étudiant</q-banner>
-          <q-input
-            dense
-            outlined
-            type="textarea"
-            v-model="commentReport"
-            label="Commentaire"
-          />
+          <q-input dense outlined type="textarea" v-model="commentReport" label="Commentaire" />
           <div class="q-mt-sm">
             <q-btn label="Valider" color="green" />
             <q-btn label="Refuser" color="red" class="q-ml-sm" />
           </div>
         </q-step>
 
-        <!-- Step 7 -->
         <q-step :name="7" title="Fixer la date de soutenance">
-          <q-input
-            dense
-            outlined
-            type="date"
-            v-model="defense.date"
-            label="Date"
-            style="padding-bottom: 5px"
-          />
+          <q-input dense outlined type="date" v-model="defense.date" label="Date" style="padding-bottom: 5px" />
           <q-input dense outlined v-model="defense.room" label="Salle" />
           <q-btn label="Enregistrer" color="primary" class="q-mt-sm" />
         </q-step>
 
-        <!-- Step 9 -->
         <q-step :name="9" title="Feedback final (Enseignant)">
-          <q-input
-            dense
-            outlined
-            type="textarea"
-            v-model="finalFeedback"
-            label="Feedback final"
-          />
+          <q-input dense outlined type="textarea" v-model="finalFeedback" label="Feedback final" />
           <q-btn label="Envoyer" color="primary" class="q-mt-sm" />
         </q-step>
       </q-stepper>
@@ -90,4 +55,14 @@ const defense = ref({
 });
 
 const finalFeedback = ref("Très bon travail, bon niveau technique.");
+
+definePageMeta({
+  middleware: 'auth',
+  roles: ['teacher'],
+})
+
+useHead({
+  title: 'Validation & suivi - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+})
 </script>

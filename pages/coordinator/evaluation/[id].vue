@@ -7,13 +7,7 @@
         <q-rating v-model="form.tech" label="Technique" />
         <q-rating v-model="form.soft" label="Comportement" />
         <q-rating v-model="form.presence" label="Assiduité" />
-        <q-input
-          dense
-          outlined
-          v-model="form.comment"
-          type="textarea"
-          label="Commentaire"
-        />
+        <q-input dense outlined v-model="form.comment" type="textarea" label="Commentaire" />
 
         <q-btn label="Soumettre" color="primary" />
       </q-form>
@@ -23,4 +17,14 @@
 
 <script setup>
 const form = ref({ tech: 4, soft: 5, presence: 4, comment: "" });
+
+definePageMeta({
+  middleware: 'auth',
+  roles: ['coordinator'],
+})
+
+useHead({
+  title: 'Évaluation du stagiaire - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+})
 </script>

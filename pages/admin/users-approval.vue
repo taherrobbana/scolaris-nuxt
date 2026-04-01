@@ -40,4 +40,14 @@ const users = ref([
     status: "En attente",
   },
 ]);
+
+definePageMeta({
+  middleware: 'auth',
+  roles: ['admin'],
+})
+
+useHead({
+  title: 'Validation des utilisateurs - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+})
 </script>

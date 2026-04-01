@@ -3,12 +3,7 @@
     <div class="myCard">
       <div class="text-h5">Demandes de stage</div>
 
-      <q-table
-        class="q-mt-md"
-        :rows="applications"
-        :columns="columns"
-        row-key="id"
-      >
+      <q-table class="q-mt-md" :rows="applications" :columns="columns" row-key="id">
         <template #body-cell-actions="props">
           <q-td style="text-align: center">
             <q-btn size="sm" icon="check" color="green" flat />
@@ -45,4 +40,14 @@ const applications = ref([
     message: "Intéressée",
   },
 ]);
+
+definePageMeta({
+  middleware: 'auth',
+  roles: ['coordinator'],
+})
+
+useHead({
+  title: 'Candidatures - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+})
 </script>

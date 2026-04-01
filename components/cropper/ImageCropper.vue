@@ -1,4 +1,3 @@
-<!-- components/ImageCropper.vue -->
 <template>
   <div class="cropper-wrapper">
     <AdvancedCropper ref="cropper" :src="imageSrc" :stencil-props="stencilProps" :stencil-component="CircleStencil"
@@ -20,7 +19,6 @@
     adjustStencil: false
   }" :background-class="'cropper-background'" />
 
-    <!-- Contrôles Quasar -->
     <div class="q-mt-md">
       <q-btn color="primary" @click="rotate(-90)" icon="rotate_left" class="q-mr-sm" />
       <q-btn color="primary" @click="rotate(90)" icon="rotate_right" class="q-mr-sm" />

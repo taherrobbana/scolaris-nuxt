@@ -4,23 +4,11 @@
       <div class="text-h5">Offres de stage</div>
 
       <div class="row q-col-gutter-md q-mt-md">
-        <q-select
-          dense
-          outlined
-          class="col-12 col-md-4"
-          v-model="filters.company"
-          :options="companies"
-          label="Filtrer par entreprise"
-        />
+        <q-select dense outlined class="col-12 col-md-4" v-model="filters.company" :options="companies"
+          label="Filtrer par entreprise" />
 
-        <q-select
-          dense
-          outlined
-          class="col-12 col-md-4"
-          v-model="filters.type"
-          :options="types"
-          label="Type de stage"
-        />
+        <q-select dense outlined class="col-12 col-md-4" v-model="filters.type" :options="types"
+          label="Type de stage" />
       </div>
 
       <q-card class="q-mt-md" v-for="offer in filteredOffers" :key="offer.id">
@@ -42,20 +30,8 @@
           </q-card-section>
 
           <q-card-section class="q-gutter-md">
-            <q-input
-              dense
-              outlined
-              v-model="application.message"
-              type="textarea"
-              label="Message"
-            />
-            <q-select
-              dense
-              outlined
-              v-model="application.teacher"
-              :options="teachers"
-              label="Encadrant pédagogique"
-            />
+            <q-input dense outlined v-model="application.message" type="textarea" label="Message" />
+            <q-select dense outlined v-model="application.teacher" :options="teachers" label="Encadrant pédagogique" />
           </q-card-section>
 
           <q-card-actions align="right">
@@ -110,4 +86,14 @@ function openApply(offer) {
   selectedOffer.value = offer;
   applyDialog.value = true;
 }
+
+definePageMeta({
+  middleware: 'auth',
+  roles: ['student'],
+})
+
+useHead({
+  title: 'Offres de stage - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+})
 </script>

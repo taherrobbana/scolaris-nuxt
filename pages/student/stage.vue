@@ -6,26 +6,9 @@
       <q-form class="q-gutter-md">
         <q-input dense outlined v-model="stage.company" label="Entreprise" />
         <q-input dense outlined v-model="stage.subject" label="Sujet" />
-        <q-input
-          dense
-          outlined
-          v-model="stage.supervisor"
-          label="Encadrant professionnel"
-        />
-        <q-input
-          dense
-          outlined
-          v-model="stage.start"
-          type="date"
-          label="Date début"
-        />
-        <q-input
-          dense
-          outlined
-          v-model="stage.end"
-          type="date"
-          label="Date fin"
-        />
+        <q-input dense outlined v-model="stage.supervisor" label="Encadrant professionnel" />
+        <q-input dense outlined v-model="stage.start" type="date" label="Date début" />
+        <q-input dense outlined v-model="stage.end" type="date" label="Date fin" />
 
         <q-btn label="Mettre à jour" color="primary" />
       </q-form>
@@ -41,4 +24,14 @@ const stage = ref({
   start: "2025-03-01",
   end: "2025-06-30",
 });
+
+definePageMeta({
+  middleware: 'auth',
+  roles: ['student'],
+})
+
+useHead({
+  title: 'Mon stage - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+})
 </script>

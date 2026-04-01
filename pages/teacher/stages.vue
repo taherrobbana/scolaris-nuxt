@@ -11,8 +11,9 @@
             <q-btn size="sm" flat icon="close" color="red" />
           </q-td>
         </template>
-      </q-table></div
-  ></q-page>
+      </q-table>
+    </div>
+  </q-page>
 </template>
 
 <script setup>
@@ -27,4 +28,14 @@ const stages = ref([
   { id: 1, student: "Ahmed", company: "TechCorp", status: "En attente" },
   { id: 2, student: "Sara", company: "DataSoft", status: "Validé" },
 ]);
+
+definePageMeta({
+  middleware: 'auth',
+  roles: ['teacher'],
+})
+
+useHead({
+  title: 'Stages encadrés - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+})
 </script>

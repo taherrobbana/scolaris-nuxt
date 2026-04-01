@@ -20,4 +20,14 @@ const stagiaires = ref([
   { name: "Yassine", period: "Mars - Juin" },
   { name: "Lina", period: "Avril - Juillet" },
 ]);
+
+definePageMeta({
+  middleware: 'auth',
+  roles: ['coordinator'],
+})
+
+useHead({
+  title: 'Tableau de bord entreprise - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+})
 </script>

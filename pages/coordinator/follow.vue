@@ -3,14 +3,8 @@
     <div class="myCard">
       <div class="text-h5">Suivi des stages</div>
 
-      <q-select
-        dense
-        outlined
-        class="q-mb-md"
-        v-model="selectedStudent"
-        :options="students"
-        label="Choisir un stagiaire"
-      />
+      <q-select dense outlined class="q-mb-md" v-model="selectedStudent" :options="students"
+        label="Choisir un stagiaire" />
 
       <q-stepper v-model="step" vertical animated>
         <q-step :name="2" title="Validation journal">
@@ -48,4 +42,14 @@
 const students = ["Ahmed", "Sara"];
 const selectedStudent = ref(null);
 const step = ref(2);
+
+definePageMeta({
+  middleware: 'auth',
+  roles: ['coordinator'],
+})
+
+useHead({
+  title: 'Suivi des stages - Plateforme Scolaire',
+  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+})
 </script>
