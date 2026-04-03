@@ -8,13 +8,14 @@
       <q-drawer
         v-if="isUserLoggedIn && isRouteActive"
         show-if-above
-        v-model="leftDrawerOpen"
+        v-model="drawerModel"
         side="left"
         class="tw-side-nav"
         bordered
+        :mini="!leftDrawerOpen"
       >
         <q-scroll-area class="sidebar-scroll" :visible="false">
-          <SideBar />
+          <SideBar :leftDrawerOpen="leftDrawerOpen"/>
         </q-scroll-area>
       </q-drawer>
       <q-page-container class="page-container">
@@ -27,6 +28,7 @@
 import SideBar from "../components/SideBar.vue";
 import Header from "../components/Header.vue";
 
+const drawerModel = ref(true);
 const leftDrawerOpen = ref(false);
 
 function toggleLeftDrawer() {

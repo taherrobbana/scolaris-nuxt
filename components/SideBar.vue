@@ -1,14 +1,25 @@
 <template>
   <q-list style="padding-top: 20px">
     <q-item v-for="r in filtredRoutesByRole" clickable @click="navigateTo(r.route)" :active="selectedRoute(r)"
-      active-class="bg-grey-3">
-      <q-item-section avatar>
+      active-class="bg-grey-3" style="min-height: 52px;">
+      <q-item-section avatar style="min-width: none;">
         <q-icon :name="r.icon" />
       </q-item-section>
       <q-item-section>
         <q-item-label>{{ r.label }}</q-item-label>
         <q-item-label caption>{{ r.caption }}</q-item-label>
       </q-item-section>
+      <q-tooltip v-if="!leftDrawerOpen" self="center left" class="bg-white text-dark shadow-10">
+        <div class="row no-wrap items-center q-pa-xs">
+          <q-icon :name="r.icon" size="24px" color="primary" class="q-mr-md" />
+          <div>
+            <div class="text-weight-bold text-subtitle2">{{ r.label }}</div>
+            <div class="text-caption text-grey-8">
+              {{ r.caption }}
+            </div>
+          </div>
+        </div>
+      </q-tooltip>
     </q-item>
   </q-list>
 </template>
@@ -16,7 +27,12 @@
 <script setup lang="ts">
 import { useAuthModule } from '~/stores/auth/authModule';
 import { Role, type RouteConfig } from '~/utils/types';
-
+const props = defineProps({
+  leftDrawerOpen: {
+    type: Boolean,
+    required: true
+  }
+})
 const { $router } = useNuxtApp();
 function navigateTo(path: string) {
   $router.push(path);
