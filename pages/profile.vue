@@ -51,6 +51,7 @@ import ProfileContactDetails from "~/components/profile/ProfileContactDetails.vu
 import ProfileEmergencyContacts from "~/components/profile/ProfileEmergencyContacts.vue";
 import ProfileDocuments from "~/components/profile/ProfileDocuments.vue";
 import { useAuthModule } from "~/stores/auth/authModule";
+import { ALL_ROLES } from '~/utils/types';
 
 const authModule = useAuthModule();
 const fullName = computed(
@@ -76,7 +77,7 @@ function editProfilePic() {
 
 definePageMeta({
   middleware: 'auth',
-  roles: ['student', 'teacher', 'admin', 'coordinator'],
+  roles: ALL_ROLES,
   alias: ['/mon-profil', '/account'],
 })
 

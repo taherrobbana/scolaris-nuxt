@@ -13,13 +13,14 @@
 </template>
 <script setup>
 import { useLangModule } from "~/stores/lang/langModule";
+import { ALL_ROLES } from '~/utils/types';
 
 const langModule = useLangModule();
 const getLanguage = computed(() => langModule.getLanguage);
 
 definePageMeta({
     middleware: 'auth',
-    roles: ['student', 'teacher', 'admin', 'coordinator'],
+    roles: ALL_ROLES,
 })
 
 useHead({

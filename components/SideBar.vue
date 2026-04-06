@@ -1,7 +1,31 @@
 <template>
-  <q-list style="padding-top: 20px">
-    <q-item v-for="r in filtredRoutesByRole" clickable @click="navigateTo(r.route)" :active="selectedRoute(r)"
-      active-class="bg-grey-3" style="min-height: 52px;">
+  <q-list style="padding-top: 10px">
+    <q-item v-for="r in mainRoutes" clickable @click="r.action ? r.action() : r.route ? navigateTo(r.route) : ''"
+      :active="selectedRoute(r)" active-class="bg-grey-3" style="min-height: 52px;">
+      <q-item-section avatar style="min-width: none;">
+        <q-icon :name="r.icon" />
+      </q-item-section>
+      <q-item-section>
+        <q-item-label>{{ r.label }}</q-item-label>
+        <q-item-label caption>{{ r.caption }}</q-item-label>
+      </q-item-section>
+      <q-tooltip v-if="!leftDrawerOpen" self="center left" class="bg-white text-dark shadow-10">
+        <div class="row no-wrap items-center q-pa-xs">
+          <q-icon :name="r.icon" size="24px" color="primary" class="q-mr-md" />
+          <div>
+            <div class="text-weight-bold text-subtitle2">{{ r.label }}</div>
+            <div class="text-caption text-grey-8">
+              {{ r.caption }}
+            </div>
+          </div>
+        </div>
+      </q-tooltip>
+    </q-item>
+  </q-list>
+  <q-separator v-if="footerRoutes.length > 0" />
+  <q-list>
+    <q-item v-for="r in footerRoutes" clickable @click="r.action ? r.action() : r.route ? navigateTo(r.route) : ''"
+      :active="selectedRoute(r)" active-class="bg-grey-3" style="min-height: 52px;">
       <q-item-section avatar style="min-width: none;">
         <q-icon :name="r.icon" />
       </q-item-section>
@@ -26,7 +50,7 @@
 
 <script setup lang="ts">
 import { useAuthModule } from '~/stores/auth/authModule';
-import { Role, type RouteConfig } from '~/utils/types';
+import { Role, type RouteConfig, ALL_ROLES } from '~/utils/types';
 const props = defineProps({
   leftDrawerOpen: {
     type: Boolean,
@@ -152,7 +176,7 @@ const routes: RouteConfig[] = [
     caption: "Informations personnelles et CV",
     icon: "account_circle",
     label: "Mon profil",
-    roles: [Role.student, Role.teacher, Role.admin, Role.coordinator],
+    roles: ALL_ROLES,
     route: "/profile",
     secondaryRoutes: ["/mon-profil", "/account"]
   },
@@ -191,8 +215,39 @@ const routes: RouteConfig[] = [
     roles: [Role.teacher],
     route: "/teacher/students",
   },
+  {
+    icon: "help_outline",
+    label: "Centre d'aide",
+    caption: "FAQ et guides",
+    roles: ALL_ROLES,
+    route: "/help",
+    isFooter: true
+  },
+  {
+    icon: "settings",
+    label: "Paramètres",
+    caption: "Préférences du compte",
+    roles: ALL_ROLES,
+    route: "/settings",
+    isFooter: true
+  },
+  {
+    icon: "logout",
+    label: "Déconnexion",
+    caption: "Quitter la session",
+    roles: ALL_ROLES,
+    isFooter: true,
+    action: logout,
+  }
 ];
-const filtredRoutesByRole = routes.filter((r) => r.roles.includes(role));
+const filtredRoutesByRole = computed(() => routes.filter((r) => r.roles.includes(role)));
+const mainRoutes = computed(() => filtredRoutesByRole.value.filter(r => !r?.isFooter));
+const footerRoutes = computed(() => filtredRoutesByRole.value.filter(r => r?.isFooter));
+
+function logout() {
+  authModule.initAuth();
+  $router.push("/login");
+}
 </script>
 
 <style scoped></style>
