@@ -6,7 +6,7 @@
         class="tw-side-nav" bordered :mini="!leftDrawerOpen">
         <SideBar :leftDrawerOpen="leftDrawerOpen" />
       </q-drawer>
-      <q-page-container class="page-container">
+      <q-page-container>
         <NuxtPage />
       </q-page-container>
     </q-layout>
@@ -30,21 +30,61 @@ const isRouteActive = computed(
     router.currentRoute.value.fullPath !== "/login" &&
     !router.currentRoute.value.fullPath.startsWith("/reset-password"),
 );
-  const authModule = useAuthModule();
+const authModule = useAuthModule();
 const isUserLoggedIn = computed(() => authModule.isConnected);
 </script>
 <style>
+/* Reset complet */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#__nuxt,
+.q-layout {
+  height: 100%;
+  width: 100%;
+}
+
+/* Configuration du scroll */
+.q-layout-container {
+  height: 100%;
+  overflow: hidden;
+}
+
+.q-page-container {
+  height: 100%;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+/* Pour la sidebar */
+.tw-side-nav {
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Cacher le scrollbar si nécessaire (optionnel) */
+.q-page-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.q-page-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.q-page-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
 .myCard {
   border: 16px !important;
   padding: 32px !important;
   border-radius: 8px !important;
   background-color: #ffffff !important;
-}
-
-html,
-body,
-#__nuxt {
-  height: 100%;
-  margin: 0;
 }
 </style>

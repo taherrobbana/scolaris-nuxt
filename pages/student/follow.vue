@@ -24,6 +24,12 @@
         <q-step :name="8" title="Feedback entreprise" />
         <q-step :name="9" title="Feedback enseignant" />
         <q-step :name="10" title="Attestation" />
+        <q-step :name="11" title="" />
+        <q-step :name="12" title="" />
+        <q-step :name="13" title="" />
+        <q-step :name="14" title="" />
+        <q-step :name="15" title="" />
+        <q-step :name="16" title="" />
       </q-stepper>
 
       <q-card class="q-mt-lg">

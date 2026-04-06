@@ -34,7 +34,7 @@ useHead({
   link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
 })
 </script>
-<style scoped>
+<style scoped lang="scss">
 .unauthorized-container {
   display: flex;
   align-items: center;
