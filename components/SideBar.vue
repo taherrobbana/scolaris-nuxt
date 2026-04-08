@@ -2,8 +2,8 @@
   <div class="sidebar-container column full-height">
     <q-list style="padding-top: 10px" class="col-grow">
       <q-item v-for="r in mainRoutes" clickable @click="r.action ? r.action() : r.route ? navigateTo(r.route) : ''"
-        :active="selectedRoute(r)" active-class="bg-grey-3" style="min-height: 52px;">
-        <q-item-section avatar style="min-width: none;">
+        :active="selectedRoute(r)" active-class="bg-grey-3" style="min-height: 52px">
+        <q-item-section avatar style="min-width: none">
           <q-icon :name="r.icon" />
         </q-item-section>
         <q-item-section>
@@ -15,9 +15,7 @@
             <q-icon :name="r.icon" size="24px" color="primary" class="q-mr-md" />
             <div>
               <div class="text-weight-bold text-subtitle2">{{ r.label }}</div>
-              <div class="text-caption text-grey-8">
-                {{ r.caption }}
-              </div>
+              <div class="text-caption text-grey-8">{{ r.caption }}</div>
             </div>
           </div>
         </q-tooltip>
@@ -27,8 +25,8 @@
       <q-separator />
       <q-list>
         <q-item v-for="r in footerRoutes" clickable @click="r.action ? r.action() : r.route ? navigateTo(r.route) : ''"
-          :active="selectedRoute(r)" active-class="bg-grey-3" style="min-height: 52px;">
-          <q-item-section avatar style="min-width: none;">
+          :active="selectedRoute(r)" active-class="bg-grey-3" style="min-height: 52px">
+          <q-item-section avatar style="min-width: none">
             <q-icon :name="r.icon" />
           </q-item-section>
           <q-item-section>
@@ -51,31 +49,27 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthModule } from '~/stores/auth/authModule';
-import { Role, type RouteConfig, ALL_ROLES } from '~/utils/types';
+import { useAuthModule } from "~/stores/auth/authModule";
+import { Role, type RouteConfig, ALL_ROLES } from "~/utils/types";
 const props = defineProps({
   leftDrawerOpen: {
     type: Boolean,
-    required: true
-  }
-})
+    required: true,
+  },
+});
 const { $router } = useNuxtApp();
 function navigateTo(path: string) {
   $router.push(path);
 }
 
 const authModule = useAuthModule();
-// const role = authModule.getRole
-const role = Role.student
-// const role = Role.teacher
-// const role = Role.admin
-// const role = Role.coordinator
+const role = computed(() => authModule.getRole);
 
 function selectedRoute(r: RouteConfig) {
-  const actualRoute = $router.currentRoute.value.fullPath
-  return r.route === actualRoute || r?.secondaryRoutes?.includes(actualRoute)
+  const actualRoute = $router.currentRoute.value.fullPath;
+  return r.route === actualRoute || r?.secondaryRoutes?.includes(actualRoute);
 }
-const routes: RouteConfig[] = [
+const routes: ComputedRef<RouteConfig[]> = computed(() => [
   {
     icon: "manage_accounts",
     label: "Administration",
@@ -180,7 +174,7 @@ const routes: RouteConfig[] = [
     label: "Mon profil",
     roles: ALL_ROLES,
     route: "/profile",
-    secondaryRoutes: ["/mon-profil", "/account"]
+    secondaryRoutes: ["/mon-profil", "/account"],
   },
   {
     caption: "Détails du stage en cours",
@@ -223,7 +217,7 @@ const routes: RouteConfig[] = [
     caption: "FAQ et guides",
     roles: ALL_ROLES,
     route: "/help",
-    isFooter: true
+    isFooter: true,
   },
   {
     icon: "settings",
@@ -231,7 +225,7 @@ const routes: RouteConfig[] = [
     caption: "Préférences du compte",
     roles: ALL_ROLES,
     route: "/settings",
-    isFooter: true
+    isFooter: true,
   },
   {
     icon: "logout",
@@ -240,11 +234,25 @@ const routes: RouteConfig[] = [
     roles: ALL_ROLES,
     isFooter: true,
     action: logout,
-  }
-];
-const filtredRoutesByRole = computed(() => routes.filter((r) => r.roles.includes(role)));
-const mainRoutes = computed(() => filtredRoutesByRole.value.filter(r => !r?.isFooter));
-const footerRoutes = computed(() => filtredRoutesByRole.value.filter(r => r?.isFooter));
+  },
+  {
+    icon: "calendar_month",
+    label: "Vue Cal Test",
+    caption: "Vue Cal Test",
+    roles: ALL_ROLES,
+    route: "/vue-cal-test",
+  },
+]);
+
+const filtredRoutesByRole = computed(() =>
+  routes.value.filter((r: RouteConfig) => r.roles.includes(role.value)),
+);
+const mainRoutes = computed(() =>
+  filtredRoutesByRole.value.filter((r: RouteConfig) => !r?.isFooter),
+);
+const footerRoutes = computed(() =>
+  filtredRoutesByRole.value.filter((r: RouteConfig) => r?.isFooter),
+);
 
 function logout() {
   authModule.initAuth();

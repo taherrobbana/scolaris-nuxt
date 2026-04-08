@@ -3,20 +3,15 @@ export enum Role {
   teacher = "teacher",
   admin = "admin",
   coordinator = "coordinator",
-}
+};
 
-export const ALL_ROLES = [
-  Role.student,
-  Role.teacher,
-  Role.admin,
-  Role.coordinator,
-];
+export const ALL_ROLES = [Role.student, Role.teacher, Role.admin, Role.coordinator];
 
 export type RouteConfig = {
   caption: string;
   icon: string;
   label: string;
-  roles: Role[];
+  roles: Role | string[];
   route?: string;
   secondaryRoutes?: string[];
   isFooter?: boolean;

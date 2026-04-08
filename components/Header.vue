@@ -1,5 +1,5 @@
 <template>
-  <q-header reveal elevated class="bg-grey-1 text-primary" :class="isDarkActive ? 'bg-grey-9 text-white' : ''">
+  <q-header elevated :class="isDarkActive ? 'bg-grey-9 text-white' : 'bg-grey-1 text-primary'">
     <q-toolbar>
       <q-btn dense flat round icon="menu" @click="$emit('toggleLeftDrawer')" />
       <q-toolbar-title>

@@ -7,7 +7,7 @@ export interface AuthState {
   email: string;
   firstName: string;
   lastName: string;
-  role: string;
+  role: Role | string;
   connected: boolean;
 }
 
@@ -16,7 +16,7 @@ export const useAuthModule = defineStore("authModule", {
     email: "",
     firstName: "",
     lastName: "",
-    role: "student",
+    role: Role.student,
     connected: true,
   }),
 
@@ -38,7 +38,7 @@ export const useAuthModule = defineStore("authModule", {
     setLastName(lastName: string) {
       this.lastName = lastName;
     },
-    setRole(role: string) {
+    setRole(role: Role | string) {
       this.role = role;
     },
     setConnected(connected: boolean) {
