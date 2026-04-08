@@ -32,6 +32,6 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Dashboard administrateur - Plateforme Scolaire',
+  title: 'Dashboard administrateur',
 })
 </script>

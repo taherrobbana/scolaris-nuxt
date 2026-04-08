@@ -50,6 +50,6 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Dashboard étudiant - Plateforme Scolaire',
+  title: 'Dashboard étudiant',
 })
 </script>

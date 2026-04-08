@@ -35,6 +35,6 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Stages encadrés - Plateforme Scolaire',
+  title: 'Stages encadrés',
 })
 </script>

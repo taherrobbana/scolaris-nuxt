@@ -9,6 +9,6 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Paramètres - Plateforme Scolaire',
+  title: 'Paramètres',
 })
 </script>

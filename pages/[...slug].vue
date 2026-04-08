@@ -30,7 +30,7 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Page introuvable - Plateforme Scolaire',
+  title: 'Page introuvable',
 })
 </script>
 <style scoped lang="scss">

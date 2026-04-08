@@ -28,6 +28,6 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Gestion des utilisateurs - Plateforme Scolaire',
+  title: 'Gestion des utilisateurs',
 })
 </script>

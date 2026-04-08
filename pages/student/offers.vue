@@ -93,6 +93,6 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Offres de stage - Plateforme Scolaire',
+  title: 'Offres de stage',
 })
 </script>

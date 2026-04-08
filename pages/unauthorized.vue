@@ -37,7 +37,7 @@ definePageMeta({
 })
 
 useHead({
-    title: 'Accès restreint - Plateforme Scolaire',
+    title: 'Accès restreint',
 })
 </script>
 <style scoped lang="scss">

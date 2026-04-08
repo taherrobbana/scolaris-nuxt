@@ -9,6 +9,6 @@ definePageMeta({
 })
 
 useHead({
-    title: 'Aide - Plateforme Scolaire',
+    title: 'Aide',
 })
 </script>

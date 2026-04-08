@@ -82,7 +82,7 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Mon Profil - Plateforme Scolaire',
+  title: 'Mon Profil',
 })
 
 </script>

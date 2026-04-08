@@ -50,6 +50,6 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Validation des offres - Plateforme Scolaire',
+  title: 'Validation des offres',
 })
 </script>

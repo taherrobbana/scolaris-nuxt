@@ -47,6 +47,6 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Validation des utilisateurs - Plateforme Scolaire',
+  title: 'Validation des utilisateurs',
 })
 </script>

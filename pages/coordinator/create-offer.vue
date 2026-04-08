@@ -35,6 +35,6 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Créer une offre - Plateforme Scolaire',
+  title: 'Créer une offre',
 })
 </script>

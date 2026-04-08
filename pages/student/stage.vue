@@ -31,6 +31,6 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Mon stage - Plateforme Scolaire',
+  title: 'Mon stage',
 })
 </script>

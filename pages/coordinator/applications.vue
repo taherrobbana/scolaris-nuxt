@@ -47,6 +47,6 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Candidatures - Plateforme Scolaire',
+  title: 'Candidatures',
 })
 </script>

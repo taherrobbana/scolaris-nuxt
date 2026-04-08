@@ -32,6 +32,6 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Évaluations - Plateforme Scolaire',
+  title: 'Évaluations',
 })
 </script>

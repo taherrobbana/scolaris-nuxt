@@ -24,6 +24,6 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Évaluation du stagiaire - Plateforme Scolaire',
+  title: 'Évaluation du stagiaire',
 })
 </script>

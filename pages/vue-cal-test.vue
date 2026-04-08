@@ -225,7 +225,7 @@ definePageMeta({
 })
 
 useHead({
-    title: 'Emploi du temps - Plateforme Scolaire',
+    title: 'Emploi du temps',
 })
 </script>
 <style lang="scss">

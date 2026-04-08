@@ -27,6 +27,6 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Tableau de bord entreprise - Plateforme Scolaire',
+  title: 'Tableau de bord entreprise',
 })
 </script>

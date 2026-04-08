@@ -62,6 +62,6 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Validation & suivi - Plateforme Scolaire',
+  title: 'Validation & suivi',
 })
 </script>

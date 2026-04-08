@@ -95,6 +95,6 @@ definePageMeta({
 });
 
 useHead({
-  title: "Réinitialiser le mot de passe - Plateforme Scolaire",
+  title: "Réinitialiser le mot de passe",
 });
 </script>

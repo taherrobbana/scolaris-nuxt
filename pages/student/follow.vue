@@ -52,6 +52,6 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Suivi du stage - Plateforme Scolaire',
+  title: 'Suivi du stage',
 })
 </script>

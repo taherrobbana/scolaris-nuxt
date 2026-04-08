@@ -50,7 +50,7 @@ function navigateTo(path: string) {
   $router.push(path);
 }
 
-const numberOfNotifications = 2;
+const numberOfNotifications = ref(2)
 const getLanguage = computed(() => langModule.getLanguage);
 const langModule = useLangModule();
 

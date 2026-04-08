@@ -46,6 +46,6 @@ definePageMeta({
 });
 
 useHead({
-  title: "Connexion - Plateforme Scolaire",
+  title: "Connexion",
 });
 </script>
