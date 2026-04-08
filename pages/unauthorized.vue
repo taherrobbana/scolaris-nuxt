@@ -37,8 +37,7 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Accès restreint - Plateforme Scolaire',
-  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
+    title: 'Accès restreint - Plateforme Scolaire',
 })
 </script>
 <style scoped lang="scss">

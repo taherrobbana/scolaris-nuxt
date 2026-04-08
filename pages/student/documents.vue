@@ -35,6 +35,5 @@ definePageMeta({
 
 useHead({
   title: 'Mes documents - Plateforme Scolaire',
-  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
 })
 </script>

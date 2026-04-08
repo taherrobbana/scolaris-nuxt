@@ -83,7 +83,6 @@ definePageMeta({
 
 useHead({
   title: 'Mon Profil - Plateforme Scolaire',
-  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
 })
 
 </script>

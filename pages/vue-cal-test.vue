@@ -226,7 +226,6 @@ definePageMeta({
 
 useHead({
     title: 'Emploi du temps - Plateforme Scolaire',
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
 })
 </script>
 <style lang="scss">

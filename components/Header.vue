@@ -5,7 +5,7 @@
       <q-toolbar-title>
         <div class="header">
           <div class="logo-container">
-            <img src="../public/sesameLogo.png" class="sesame-logo" @click="navigateTo('/')" />
+            <img :src="!isDarkActive ? '/sesameLogo.png' : '/sesameDarkLogo.png'" class="sesame-logo" @click="navigateTo('/')" />
           </div>
           <div>
             <q-btn flat no-caps @click="changeLanguage" icon="translate" :label="getLanguage === 'fr'

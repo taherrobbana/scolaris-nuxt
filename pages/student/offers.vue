@@ -94,6 +94,5 @@ definePageMeta({
 
 useHead({
   title: 'Offres de stage - Plateforme Scolaire',
-  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
 })
 </script>

@@ -33,6 +33,5 @@ definePageMeta({
 
 useHead({
   title: 'Détail du stage - Plateforme Scolaire',
-  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
 })
 </script>

@@ -51,6 +51,5 @@ definePageMeta({
 
 useHead({
   title: 'Suivi des stages - Plateforme Scolaire',
-  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
 })
 </script>

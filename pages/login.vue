@@ -1,21 +1,13 @@
 <template>
   <div class="q-pa-md flex flex-center bg-grey-3" style="min-height: 100vh">
-    <LoginComponent
-      v-if="componentToShow == 'LoginComponent'"
+    <LoginComponent v-if="componentToShow == 'LoginComponent'"
       @switch-to-register="componentToShow = 'RegisterComponent'"
-      @switch-to-forgot-password="componentToShow = 'ForgotPasswordComponent'"
-      :onLogin="handleLogin"
-    />
-    <RegisterComponent
-      v-else-if="componentToShow == 'RegisterComponent'"
+      @switch-to-forgot-password="componentToShow = 'ForgotPasswordComponent'" :onLogin="handleLogin" />
+    <RegisterComponent v-else-if="componentToShow == 'RegisterComponent'"
+      @switch-to-login="componentToShow = 'LoginComponent'" @account-created="handleAccountCreated" />
+    <ForgotPasswordComponent v-else-if="componentToShow == 'ForgotPasswordComponent'"
       @switch-to-login="componentToShow = 'LoginComponent'"
-      @account-created="handleAccountCreated"
-    />
-    <ForgotPasswordComponent
-      v-else-if="componentToShow == 'ForgotPasswordComponent'"
-      @switch-to-login="componentToShow = 'LoginComponent'"
-      @switch-to-register="componentToShow = 'RegisterComponent'"
-    />
+      @switch-to-register="componentToShow = 'RegisterComponent'" />
     <div style="position: absolute; top: 90%; right: 5%">
       <q-btn round color="grey" icon="translate" @click="changeLanguage" />
     </div>
@@ -55,6 +47,5 @@ definePageMeta({
 
 useHead({
   title: "Connexion - Plateforme Scolaire",
-  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
 });
 </script>

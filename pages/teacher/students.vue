@@ -36,6 +36,5 @@ definePageMeta({
 
 useHead({
   title: 'Mes étudiants - Plateforme Scolaire',
-  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
 })
 </script>

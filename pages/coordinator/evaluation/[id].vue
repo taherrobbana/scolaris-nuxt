@@ -25,6 +25,5 @@ definePageMeta({
 
 useHead({
   title: 'Évaluation du stagiaire - Plateforme Scolaire',
-  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
 })
 </script>

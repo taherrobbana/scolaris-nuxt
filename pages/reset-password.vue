@@ -96,6 +96,5 @@ definePageMeta({
 
 useHead({
   title: "Réinitialiser le mot de passe - Plateforme Scolaire",
-  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
 });
 </script>

@@ -63,6 +63,5 @@ definePageMeta({
 
 useHead({
   title: 'Validation & suivi - Plateforme Scolaire',
-  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
 })
 </script>

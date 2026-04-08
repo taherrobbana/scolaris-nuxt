@@ -36,6 +36,5 @@ definePageMeta({
 
 useHead({
   title: 'Stages encadrés - Plateforme Scolaire',
-  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
 })
 </script>

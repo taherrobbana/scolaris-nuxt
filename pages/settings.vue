@@ -10,6 +10,5 @@ definePageMeta({
 
 useHead({
   title: 'Paramètres - Plateforme Scolaire',
-  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
 })
 </script>

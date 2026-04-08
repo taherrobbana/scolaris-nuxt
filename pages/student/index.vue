@@ -51,6 +51,5 @@ definePageMeta({
 
 useHead({
   title: 'Dashboard étudiant - Plateforme Scolaire',
-  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
 })
 </script>

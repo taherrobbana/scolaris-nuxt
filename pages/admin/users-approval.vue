@@ -48,6 +48,5 @@ definePageMeta({
 
 useHead({
   title: 'Validation des utilisateurs - Plateforme Scolaire',
-  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
 })
 </script>

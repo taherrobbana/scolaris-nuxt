@@ -31,7 +31,6 @@ definePageMeta({
 
 useHead({
   title: 'Page introuvable - Plateforme Scolaire',
-  link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
 })
 </script>
 <style scoped lang="scss">
