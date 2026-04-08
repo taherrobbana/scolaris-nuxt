@@ -260,7 +260,7 @@ function logout() {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .sidebar-container {
   height: 100%;
   display: flex;

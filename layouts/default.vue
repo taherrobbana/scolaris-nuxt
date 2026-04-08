@@ -33,7 +33,7 @@ const isRouteActive = computed(
 const authModule = useAuthModule();
 const isUserLoggedIn = computed(() => authModule.isConnected);
 </script>
-<style>
+<style lang="scss">
 /* Reset complet */
 * {
   margin: 0;

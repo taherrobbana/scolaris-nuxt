@@ -229,7 +229,7 @@ useHead({
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/sesameIcon.png' }],
 })
 </script>
-<style>
+<style lang="scss">
 .vuecal {
     background-color: #f9fafb;
     border-radius: 8px;
@@ -385,7 +385,6 @@ useHead({
     /* overflow: visible !important; */
 }
 
-/* Dans votre <style scoped> */
 ::v-deep .vuecal__event {
     cursor: grab !important;
     /* Curseur avant le drag */

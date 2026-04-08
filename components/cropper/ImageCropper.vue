@@ -97,7 +97,7 @@ defineExpose({
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .cropper-wrapper {
   max-width: 600px;
   margin: 0 auto;

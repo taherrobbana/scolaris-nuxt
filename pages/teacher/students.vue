@@ -15,7 +15,9 @@
 </template>
 
 <script setup lang="ts">
-const columns = [
+import type { QTableColumn } from '~/utils/types';
+
+const columns: QTableColumn[] = [
   { name: "name", label: "Étudiant", field: "name", align: "center" },
   { name: "company", label: "Entreprise", field: "company", align: "center" },
   { name: "step", label: "Étape actuelle", field: "step", align: "center" },

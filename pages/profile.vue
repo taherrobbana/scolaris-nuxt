@@ -87,7 +87,7 @@ useHead({
 })
 
 </script>
-<style scoped>
+<style scoped lang="scss">
 .rounded-circle {
   border-radius: 50% !important;
 }
