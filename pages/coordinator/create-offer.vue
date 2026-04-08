@@ -17,7 +17,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const types = ["Stage initiation", "Stage perfectionnement", "Stage PFE"];
 
 const offer = ref({

@@ -10,7 +10,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const columns = [
   { name: "name", label: "Nom", field: "name", align: "center" },
   { name: "role", label: "Rôle", field: "role", align: "center" },

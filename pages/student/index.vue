@@ -31,7 +31,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const stats = ref([
   { title: "Statut du stage", value: "En cours" },
   { title: "Documents validés", value: "3 / 5" },

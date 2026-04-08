@@ -44,7 +44,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const filters = ref({ company: null, type: null });
 
 const companies = ["TechCorp", "DataSoft"];
@@ -82,7 +82,7 @@ const filteredOffers = computed(() => {
   );
 });
 
-function openApply(offer) {
+function openApply(offer: any) {
   selectedOffer.value = offer;
   applyDialog.value = true;
 }

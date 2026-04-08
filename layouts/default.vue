@@ -12,7 +12,7 @@
     </q-layout>
   </client-only>
 </template>
-<script setup>
+<script setup lang="ts">
 import SideBar from "../components/SideBar.vue";
 import Header from "../components/Header.vue";
 import { useAuthModule } from "~/stores/auth/authModule";

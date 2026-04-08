@@ -15,7 +15,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const cards = ref([
   { title: "Total stages", value: 320 },
   { title: "En cours", value: 180 },

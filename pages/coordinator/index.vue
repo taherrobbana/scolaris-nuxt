@@ -15,7 +15,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const stagiaires = ref([
   { name: "Yassine", period: "Mars - Juin" },
   { name: "Lina", period: "Avril - Juillet" },

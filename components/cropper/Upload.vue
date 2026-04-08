@@ -156,21 +156,26 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onUnmounted } from 'vue'
 import { useQuasar } from 'quasar'
 import ImageCropper from '~/components/cropper/ImageCropper.vue'
 
 const $q = useQuasar()
-const file = ref(null)
+const file = ref<File | null>(null)
 const imageSrc = ref('')
 const croppedImageUrl = ref('')
 const croppedImageBase64 = ref('')
-const croppedImageInfo = ref(null)
+const croppedImageInfo = ref<{
+  size: number;
+  type: string;
+  width: number;
+  height: number;
+} | null>(null)
 const showBase64Dialog = ref(false)
-const cropperRef = ref(null)
+const cropperRef = ref<InstanceType<typeof ImageCropper> | null>(null)
 
-const onFileSelect = (file) => {
+const onFileSelect = (file: any) => {
   if (file) {
     // Libérer l'ancienne URL si elle existe
     if (imageSrc.value) {
@@ -184,7 +189,7 @@ const onFileSelect = (file) => {
   }
 }
 
-const onCropped = (data) => {
+const onCropped = (data: any) => {
   croppedImageUrl.value = data.url
   croppedImageBase64.value = data.base64
   

@@ -44,7 +44,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Upload from "~/components/cropper/Upload.vue";
 import ProfileIdentity from "~/components/profile/ProfileIdentity.vue";
 import ProfileContactDetails from "~/components/profile/ProfileContactDetails.vue";

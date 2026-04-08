@@ -23,7 +23,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const comment = ref("Bon avancement");
 
 definePageMeta({

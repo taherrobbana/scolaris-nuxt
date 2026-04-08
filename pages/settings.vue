@@ -1,6 +1,6 @@
 <template>settings</template>
 
-<script setup>
+<script setup lang="ts">
 import { ALL_ROLES } from '~/utils/types';
 
 definePageMeta({

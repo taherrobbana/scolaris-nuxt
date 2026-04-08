@@ -14,7 +14,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const columns = [
   { name: "name", label: "Étudiant", field: "name", align: "center" },
   { name: "company", label: "Entreprise", field: "company", align: "center" },

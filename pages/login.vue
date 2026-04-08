@@ -22,7 +22,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import LoginComponent from "@/components/LoginComponent.vue";
 import RegisterComponent from "@/components/RegisterComponent.vue";
@@ -34,11 +34,11 @@ const componentToShow = ref("LoginComponent");
 const authModule = useAuthModule();
 const langModule = useLangModule();
 
-const handleLogin = async (credentials) => {
+const handleLogin = async (credentials: any) => {
   await authModule.login(credentials);
 };
 
-const handleAccountCreated = (userData) => {
+const handleAccountCreated = (userData: any) => {
   componentToShow.value = "LoginComponent";
 };
 const changeLanguage = () => {

@@ -40,7 +40,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const students = ["Ahmed Benali", "Sara Ali"];
 const selectedStudent = ref(null);
 

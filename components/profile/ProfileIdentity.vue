@@ -1,6 +1,6 @@
 <template>
     ProfileIdentityComponent //Todo
 </template>
-<script setup>
+<script setup lang="ts">
 </script>
 <style scoped></style>

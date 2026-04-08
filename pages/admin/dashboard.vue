@@ -22,7 +22,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const usersPending = ref(2);
 const offersPending = ref(2);
 

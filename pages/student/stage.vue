@@ -16,7 +16,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const stage = ref({
   company: "TechCorp",
   subject: "Plateforme de gestion des stages",

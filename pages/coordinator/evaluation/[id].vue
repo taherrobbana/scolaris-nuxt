@@ -15,7 +15,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const form = ref({ tech: 4, soft: 5, presence: 4, comment: "" });
 
 definePageMeta({

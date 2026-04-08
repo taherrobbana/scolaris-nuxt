@@ -43,7 +43,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const step = ref(1);
 
 definePageMeta({

@@ -31,16 +31,17 @@
         </q-step>
 
         <q-step :name="10" title="Attestation">
-          <q-file label="Uploader attestation PDF" />
+          <q-file v-model="attestationFile" dense outlined label="Uploader attestation PDF" accept=".pdf" />
         </q-step>
       </q-stepper>
     </div>
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const students = ["Ahmed", "Sara"];
 const selectedStudent = ref(null);
+const attestationFile = ref(null);
 const step = ref(2);
 
 definePageMeta({

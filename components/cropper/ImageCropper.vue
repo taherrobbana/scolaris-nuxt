@@ -16,8 +16,8 @@
       lines: {},
       previewClass: 'circle-preview'
     }" :stencil-component="CircleStencil" :resize-image="{
-    adjustStencil: false
-  }" :background-class="'cropper-background'" />
+      adjustStencil: false
+    }" :background-class="'cropper-background'" />
 
     <div class="q-mt-md">
       <q-btn color="primary" @click="rotate(-90)" icon="rotate_left" class="q-mr-sm" />
@@ -29,7 +29,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import { Cropper as AdvancedCropper, CircleStencil } from 'vue-advanced-cropper'
 import 'vue-advanced-cropper/dist/style.css'
@@ -47,7 +47,7 @@ const props = defineProps({
 
 const emit = defineEmits(['cropped'])
 
-const cropper = ref(null)
+const cropper = ref<InstanceType<typeof AdvancedCropper> | null>(null)
 const croppedImageBase64 = ref('')
 
 const stencilProps = computed(() => ({
@@ -57,11 +57,11 @@ const stencilProps = computed(() => ({
   previewClass: 'cropper-preview' // Classe pour le preview
 }))
 
-const onChange = (data) => {
+const onChange = (data: any) => {
   console.log('Cropper data:', data)
 }
 
-const rotate = (angle) => {
+const rotate = (angle: any) => {
   if (cropper.value) {
     cropper.value.rotate(angle)
   }
@@ -78,6 +78,7 @@ const crop = () => {
 
       // Convertir aussi en blob si besoin
       canvas.toBlob((blob) => {
+        if (!blob) return
         const url = URL.createObjectURL(blob)
         emit('cropped', {
           blob,
@@ -107,7 +108,7 @@ defineExpose({
   background: #f5f5f5;
   border-radius: 8px;
   overflow: hidden;
-  background-color: red o !important;
+  background-color: #f5f5f5 !important;
 }
 
 /* Pour rendre le preview circulaire */

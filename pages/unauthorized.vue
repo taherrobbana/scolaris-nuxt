@@ -25,7 +25,7 @@
     </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useAuthModule } from '~/stores/auth/authModule';
 
 const router = useRouter()
