@@ -1,5 +1,5 @@
 <template>
-    ProfileContactDetailsComponent //Todo
+    ProfileContactDetailsComponent //TODO
 </template>
 <script setup lang="ts">
 </script>
