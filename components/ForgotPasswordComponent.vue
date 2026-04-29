@@ -75,25 +75,16 @@ const loading = ref(false);
 
 const sendRecoveryMail = async () => {
   loading.value = true;
-
-  try {
-    await authModule.sendRecoveryMail(loginForm.value).then((res: any) => {
-      console.log("res", res);
+  await authModule.sendRecoveryMail(loginForm.value)
+    .finally(() => {
+      loading.value = false;
       emit("switch-to-login");
     });
-  } catch (error: any) {
-    $q.notify({
-      type: "negative",
-      message: error.response?.data?.message || "Failed to send recovery mail",
-    });
-  } finally {
-    loading.value = false;
-  }
-
-  onMounted(() => {
-    loginForm.value = {
-      email: "",
-    };
-  });
 };
+
+onMounted(() => {
+  loginForm.value = {
+    email: "",
+  };
+});
 </script>

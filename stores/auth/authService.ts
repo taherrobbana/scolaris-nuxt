@@ -7,7 +7,10 @@ export async function login(body: any) {
     });
     return res;
   } catch (error: any) {
-    throw new Error(error.response._data.message);
+    Notify.create({
+      type: "negative",
+      message: error.response._data.error,
+    });
   }
 }
 export async function register(body: any) {
@@ -35,30 +38,40 @@ export async function register(body: any) {
 export async function sendRecoveryMail(body: any) {
   const config = useRuntimeConfig();
   try {
-    const res: any = await $fetch(
+    const res = await $fetch(
       `${config.public.authApiBase}auth/forgot-password`,
       {
         method: "POST",
         body: body,
       },
     );
-    return res.response;
+    return res;
   } catch (error: any) {
-    throw new Error(error.response._data.message);
+    Notify.create({
+      type: "negative",
+      message: error.response._data.error,
+    });
   }
 }
 export async function resetPassword(body: any) {
   const config = useRuntimeConfig();
   try {
-    const res: any = await $fetch(
+    const data = {
+      code: body.token,
+      newPassword: body.newPassword,
+    };
+    const res = await $fetch(
       `${config.public.authApiBase}auth/reset-password`,
       {
         method: "POST",
-        body: body,
+        body: data,
       },
     );
-    return res.response;
+    return res;
   } catch (error: any) {
-    throw new Error(error.response._data.message);
+    Notify.create({
+      type: "negative",
+      message: error.response._data.error,
+    });
   }
 }

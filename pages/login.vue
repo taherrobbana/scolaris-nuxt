@@ -2,9 +2,9 @@
   <div class="q-pa-md flex flex-center bg-grey-3" style="min-height: 100vh">
     <LoginComponent v-if="componentToShow == 'LoginComponent'"
       @switch-to-register="componentToShow = 'RegisterComponent'"
-      @switch-to-forgot-password="componentToShow = 'ForgotPasswordComponent'" :onLogin="handleLogin" />
+      @switch-to-forgot-password="componentToShow = 'ForgotPasswordComponent'" />
     <RegisterComponent v-else-if="componentToShow == 'RegisterComponent'"
-      @switch-to-login="componentToShow = 'LoginComponent'" @account-created="handleAccountCreated" />
+      @switch-to-login="componentToShow = 'LoginComponent'" />
     <ForgotPasswordComponent v-else-if="componentToShow == 'ForgotPasswordComponent'"
       @switch-to-login="componentToShow = 'LoginComponent'"
       @switch-to-register="componentToShow = 'RegisterComponent'" />
@@ -26,13 +26,6 @@ const componentToShow = ref("LoginComponent");
 const authModule = useAuthModule();
 const langModule = useLangModule();
 
-const handleLogin = async (credentials: any) => {
-  await authModule.login(credentials);
-};
-
-const handleAccountCreated = (userData: any) => {
-  componentToShow.value = "LoginComponent";
-};
 const changeLanguage = () => {
   langModule.setLanguage();
 };

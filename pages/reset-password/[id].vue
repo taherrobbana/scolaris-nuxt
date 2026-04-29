@@ -55,11 +55,10 @@ import { useAuthModule } from "~/stores/auth/authModule";
 import { useLangModule } from "~/stores/lang/langModule";
 
 const router = useRouter();
-const token = router.currentRoute.value.query.token;
+const token = router.currentRoute.value.params.id;
 
 const $q = useQuasar();
 
-const emit = defineEmits(["switch-to-register", "switch-to-login"]);
 const authModule = useAuthModule();
 const langModule = useLangModule();
 const changeLanguage = () => {
@@ -77,17 +76,11 @@ const loading = ref(false);
 
 const resetPassword = async () => {
   loading.value = true;
-
-  try {
-    await authModule.resetPassword(form.value);
-  } catch (error: any) {
-    $q.notify({
-      type: "negative",
-      message: error.response?.data?.message || "Failed to reset password",
+  await authModule.resetPassword(form.value)
+    .finally(() => {
+      loading.value = false;
     });
-  } finally {
-    loading.value = false;
-  }
+
 };
 
 definePageMeta({

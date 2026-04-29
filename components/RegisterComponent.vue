@@ -58,7 +58,7 @@ import { useAuthModule } from "@/stores/auth/authModule";
 
 const $q = useQuasar();
 
-const emit = defineEmits(["switch-to-login", "account-created"]);
+const emit = defineEmits(["switch-to-login"]);
 
 const authModule = useAuthModule();
 
@@ -78,16 +78,6 @@ const onSubmit = async () => {
   loading.value = true;
 
   await authModule.register(form.value)
-    .then(() => {
-      emit("account-created", form.value);
-      form.value = {
-        firstName: "",
-        lastName: "",
-        username: "",
-        password: "",
-        confirmPassword: "",
-      };
-    })
     .finally(() => {
       loading.value = false;
     });

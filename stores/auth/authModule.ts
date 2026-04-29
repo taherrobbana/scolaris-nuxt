@@ -1,27 +1,36 @@
 import { defineStore } from "pinia";
-import { login, register, resetPassword, sendRecoveryMail } from "./authService";
+import {
+  login,
+  register,
+  resetPassword,
+  sendRecoveryMail,
+} from "./authService";
 import { Notify } from "quasar";
 import { useNuxtApp } from "nuxt/app";
 
 export interface AuthState {
-  email: string;
+  username: string;
   firstName: string;
   lastName: string;
   role: Role | string;
   connected: boolean;
+  token: string;
+  refreshToken: string;
 }
 
 export const useAuthModule = defineStore("authModule", {
   state: (): AuthState => ({
-    email: "",
+    username: "",
     firstName: "",
     lastName: "",
     role: Role.student,
-    connected: true,
+    connected: false,
+    token: "",
+    refreshToken: "",
   }),
 
   getters: {
-    getEmail: (state) => state.email,
+    getUsername: (state) => state.username,
     getFirstName: (state) => state.firstName,
     getLastName: (state) => state.lastName,
     getRole: (state) => state.role,
@@ -29,8 +38,8 @@ export const useAuthModule = defineStore("authModule", {
   },
 
   actions: {
-    setMail(email: string) {
-      this.email = email;
+    setUsername(username: string) {
+      this.username = username;
     },
     setFirstName(firstName: string) {
       this.firstName = firstName;
@@ -44,39 +53,44 @@ export const useAuthModule = defineStore("authModule", {
     setConnected(connected: boolean) {
       this.connected = connected;
     },
+    setToken(token: string) {
+      this.token = token;
+    },
+    setRefreshToken(refreshToken: string) {
+      this.refreshToken = refreshToken;
+    },
 
     initAuth() {
-      this.setMail("");
+      this.setUsername("");
       this.setFirstName("");
       this.setLastName("");
       this.setRole("");
-      this.setMail("");
       this.setConnected(false);
+      this.setToken("");
+      this.setRefreshToken("");
     },
-
-    async login(credentials: any) {
+    handleLoginResponse(res: any) {
       const { $router } = useNuxtApp();
-
-      await login(credentials)
-        .then((res: any) => {
-          let data = decodeJWT(res.token).payload;
-          if (data.email) this.setMail(data.email);
-          if (data.firstName) this.setFirstName(data.firstName);
-          if (data.lastName) this.setLastName(data.lastName);
-          if (data.role) this.setRole(data.role);
-          this.setConnected(true);
-          $router.push("/" + data.role);
-          Notify.create({
-            type: "positive",
-            message: "Successfully logged in",
-          });
-        })
-        .catch((error: any) => {
-          Notify.create({
-            type: "negative",
-            message: error || "Login failed",
-          });
+      if (res) {
+        let data = decodeJWT(res.token).payload;
+        if (data.username) this.setUsername(data.username);
+        if (data.firstName) this.setFirstName(data.firstName);
+        if (data.lastName) this.setLastName(data.lastName);
+        if (res.role) this.setRole(res.role);
+        if (res.token) this.setToken(res.token);
+        if (res.refreshToken) this.setRefreshToken(res.refreshToken);
+        this.setConnected(true);
+        $router.push("/" + res.role);
+      }
+    },
+    async login(body: any) {
+      await login(body).then((res: any) => {
+        this.handleLoginResponse(res);
+        Notify.create({
+          type: "positive",
+          message: res.message || "Successfully logged in",
         });
+      });
     },
     async register(payload: any) {
       await register(payload).then((res: any) => {
@@ -85,44 +99,31 @@ export const useAuthModule = defineStore("authModule", {
             type: "positive",
             message: res.message || "Account created successfully",
           });
+          this.handleLoginResponse(res);
         }
       });
     },
     async sendRecoveryMail(payload: any) {
-      const res = await sendRecoveryMail(payload)
-        .then((res: any) => {
+      await sendRecoveryMail(payload).then((res: any) => {
+        if (res) {
           Notify.create({
             type: "positive",
-            message: "Vous avez reçu votre courriel de récupération !",
+            message: res.message || "Mail sent successfully",
           });
-          return res;
-        })
-        .catch((error: any) => {
-          Notify.create({
-            type: "negative",
-            message: error || "Failed to send recovery mail",
-          });
-          return error;
-        });
-      return res;
+        }
+      });
     },
-    async resetPassword(body: any) {
+    async resetPassword(payload: any) {
       const { $router } = useNuxtApp();
-
-      await resetPassword(body)
-        .then((res: any) => {
-          $router.push("/login");
+      await resetPassword(payload).then((res: any) => {
+        if (res) {
           Notify.create({
             type: "positive",
-            message: "Mot de passe réinitialisé avec succès",
+            message: res.message || "Mot de passe réinitialisé avec succès",
           });
-        })
-        .catch((error: any) => {
-          Notify.create({
-            type: "negative",
-            message: error || "Failed to reset password",
-          });
-        });
+          $router.push("/login");
+        }
+      });
     },
   },
 
