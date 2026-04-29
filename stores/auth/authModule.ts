@@ -79,19 +79,14 @@ export const useAuthModule = defineStore("authModule", {
         });
     },
     async register(payload: any) {
-      await register(payload)
-        .then((res: any) => {
+      await register(payload).then((res: any) => {
+        if (res) {
           Notify.create({
             type: "positive",
-            message: "Registred successfully",
+            message: res.message || "Account created successfully",
           });
-        })
-        .catch((error: any) => {
-          Notify.create({
-            type: "negative",
-            message: error || "Failed to register",
-          });
-        });
+        }
+      });
     },
     async sendRecoveryMail(payload: any) {
       const res = await sendRecoveryMail(payload)

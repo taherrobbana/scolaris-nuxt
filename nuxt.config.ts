@@ -31,6 +31,11 @@ export default defineNuxtConfig({
       },
     },
   },
+  runtimeConfig: {
+    public: {
+      authApiBase: process.env.SCOLARIS_AUTH_URI || 'http://localhost:8080/api/'
+    }
+  },
   modules: ["@pinia/nuxt", "@pinia-plugin-persistedstate/nuxt", 'nuxt-quasar-ui'],
   quasar: {
     // Tu peux configurer tes plugins ici (ex: Notify, Dialog)

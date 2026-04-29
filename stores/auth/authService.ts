@@ -1,6 +1,7 @@
 export async function login(body: any) {
+  const config = useRuntimeConfig();
   try {
-    const res = await $fetch("http://localhost:8080/api/auth/login", {
+    const res = await $fetch(`${config.public.authApiBase}auth/login`, {
       method: "POST",
       body: body,
     });
@@ -10,20 +11,32 @@ export async function login(body: any) {
   }
 }
 export async function register(body: any) {
+  const config = useRuntimeConfig();
   try {
-    const res = await $fetch("http://localhost:8080/api/auth/register", {
+    const data = {
+      firstName: body.firstName,
+      lastName: body.lastName,
+      username: body.username,
+      password: body.password,
+      role: body.role || Role.student,
+    };
+    const res = await $fetch(`${config.public.authApiBase}auth/register`, {
       method: "POST",
-      body: body,
+      body: data,
     });
     return res;
   } catch (error: any) {
-    throw new Error(error.response._data.message);
+    Notify.create({
+      type: "negative",
+      message: error.response._data.error,
+    });
   }
 }
 export async function sendRecoveryMail(body: any) {
+  const config = useRuntimeConfig();
   try {
     const res: any = await $fetch(
-      "http://localhost:8080/api/auth/forgot-password",
+      `${config.public.authApiBase}auth/forgot-password`,
       {
         method: "POST",
         body: body,
@@ -35,9 +48,10 @@ export async function sendRecoveryMail(body: any) {
   }
 }
 export async function resetPassword(body: any) {
+  const config = useRuntimeConfig();
   try {
     const res: any = await $fetch(
-      "http://localhost:8080/api/auth/reset-password",
+      `${config.public.authApiBase}auth/reset-password`,
       {
         method: "POST",
         body: body,

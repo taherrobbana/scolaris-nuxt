@@ -6,12 +6,12 @@
 
     <q-form @submit="onSubmit" class="q-gutter-y-md">
       <div style="display: flex; justify-content: space-between">
-        <q-input v-model="form.firstName" label="First Name" type="firstName" outlined dense style="width: 48%"
+        <q-input v-model="form.firstName" label="First Name" outlined dense style="width: 48%"
           :rules="[(val) => !!val || 'First Name requis']" />
-        <q-input v-model="form.lastName" label="Last Name" type="lastName" outlined dense style="width: 48%"
+        <q-input v-model="form.lastName" label="Last Name" outlined dense style="width: 48%"
           :rules="[(val) => !!val || 'Last Name requis']" />
       </div>
-      <q-input v-model="form.email" label="Email" type="email" outlined dense :rules="[
+      <q-input v-model="form.username" label="Email" type="email" outlined dense :rules="[
         (val) => !!val || 'Email requis',
         (val) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(val) || 'Email invalide',
       ]" />
@@ -39,9 +39,6 @@
         </template>
       </q-input>
 
-      <q-select v-model="form.role" :options="roleOptions" label="Rôle" outlined dense emit-value map-options
-        :rules="[(val) => !!val || 'Rôle requis']" />
-
       <div class="text-center">
         <q-btn type="submit" color="primary" label="Créer un compte" :loading="loading" class="full-width" />
       </div>
@@ -68,47 +65,31 @@ const authModule = useAuthModule();
 const form = ref({
   firstName: "",
   lastName: "",
-  email: "",
+  username: "",
   password: "",
   confirmPassword: "",
-  role: "",
 });
 
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 const loading = ref(false);
 
-const roleOptions = [
-  { label: "Étudiant", value: "student" },
-  { label: "Enseignant / Encadrant pédagogique", value: "teacher" },
-  { label: "Administrateur", value: "admin" },
-  { label: "Chef de Département / Coordinateur", value: "coordinator" },
-];
-
 const onSubmit = async () => {
   loading.value = true;
 
-  try {
-    await authModule.register(form.value);
-
-    emit("account-created", form.value);
-
-    form.value = {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      role: "",
-    };
-  } catch (error: any) {
-    $q.notify({
-      type: "negative",
-      message:
-        error.response?.data?.message || "Erreur lors de la création du compte",
+  await authModule.register(form.value)
+    .then(() => {
+      emit("account-created", form.value);
+      form.value = {
+        firstName: "",
+        lastName: "",
+        username: "",
+        password: "",
+        confirmPassword: "",
+      };
+    })
+    .finally(() => {
+      loading.value = false;
     });
-  } finally {
-    loading.value = false;
-  }
 };
 </script>
