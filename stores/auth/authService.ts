@@ -1,3 +1,5 @@
+import { useAuthModule } from "./authModule";
+
 export async function login(body: any) {
   const config = useRuntimeConfig();
   try {
@@ -71,7 +73,67 @@ export async function resetPassword(body: any) {
   } catch (error: any) {
     Notify.create({
       type: "negative",
-      message: error.response._data.error,
+      message: error.response._data.fields.newPassword,
+    });
+  }
+}
+
+export async function bulkCreateUsers(users: any[]) {
+  const config = useRuntimeConfig();
+  try {
+    const res = await $fetch(`${config.public.authApiBase}users/bulk`, {
+      method: "POST",
+      body: users,
+    });
+    return res;
+  } catch (error: any) {
+    Notify.create({
+      type: "negative",
+      message:
+        error.response?._data?.error || "Erreur lors de la création en masse",
+    });
+  }
+}
+
+export async function updateUser(id: string, data: any) {
+  const config = useRuntimeConfig();
+  const authModule = useAuthModule();
+  const token = authModule.getToken;
+  try {
+    const res = await $fetch(`${config.public.authApiBase}users/${id}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: data,
+    });
+    return res;
+  } catch (error: any) {
+    Notify.create({
+      type: "negative",
+      message: error.response?._data?.error || "Erreur lors de la modification",
+    });
+  }
+}
+
+export async function getAllUsers() {
+  const config = useRuntimeConfig();
+  const authModule = useAuthModule();
+  const token = authModule.getToken;
+  try {
+    const res: any = await $fetch(`${config.public.authApiBase}users`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.content;
+  } catch (error: any) {
+    Notify.create({
+      type: "negative",
+      message:
+        error.response?._data?.error ||
+        "Erreur lors de la récupération des utilisateurs",
     });
   }
 }

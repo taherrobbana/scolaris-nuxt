@@ -35,6 +35,8 @@ export const useAuthModule = defineStore("authModule", {
     getLastName: (state) => state.lastName,
     getRole: (state) => state.role,
     isConnected: (state) => state.connected,
+    getToken: (state) => state.token,
+    getRefreshToken: (state) => state.refreshToken,
   },
 
   actions: {
