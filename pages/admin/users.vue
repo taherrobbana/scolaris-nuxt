@@ -64,7 +64,7 @@
           <q-input v-if="!isEditing" v-model="editForm.password" label="Mot de passe" type="password" outlined dense />
 
           <q-select v-model="editForm.role" :options="roleOptions" label="Rôle" outlined dense emit-value map-options />
-          <q-input v-model="editForm.group" label="Groupe" outlined dense />
+          <q-select v-model="editForm.group" :options="groupOptions" label="Groupe" outlined dense emit-value map-options />
           <q-input v-model="editForm.avatar" label="URL Avatar" outlined dense />
         </q-card-section>
 
@@ -118,10 +118,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useQuasar, Dialog } from 'quasar';
 import * as XLSX from 'xlsx';
 import { getAllUsers, updateUser, bulkCreateUsers, register } from '@/stores/auth/authService';
+import { useGroupModule } from '@/stores/group/groupModule';
 
 definePageMeta({
   middleware: 'auth',
@@ -140,6 +141,7 @@ const isEditing = ref(false);
 const showBulkDialog = ref(false);
 const bulkJson = ref('');
 const excelFile = ref<any>(null);
+const groupStore = useGroupModule();
 
 const processExcel = (file: any) => {
   if (!file) return;
@@ -182,6 +184,17 @@ const roleOptions = [
   { label: 'Administrateur', value: 'admin' },
   { label: 'Coordinateur', value: 'coordinator' }
 ];
+
+const groupOptions = computed(() => {
+  return groupStore.groups.map(g => {
+    if (typeof g === 'string') return { label: g, value: g };
+    return { label: g.name || g.label || g.id, value: g.name || g.id };
+  });
+});
+
+const fetchGroups = async () => {
+  await groupStore.fetchGroups();
+};
 
 const fetchUsers = async () => {
   loading.value = true;
@@ -271,6 +284,7 @@ const getRoleColor = (role: string) => {
 
 onMounted(() => {
   fetchUsers();
+  fetchGroups();
 });
 </script>
 

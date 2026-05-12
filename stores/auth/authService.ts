@@ -80,9 +80,14 @@ export async function resetPassword(body: any) {
 
 export async function bulkCreateUsers(users: any[]) {
   const config = useRuntimeConfig();
+  const authModule = useAuthModule();
+  const token = authModule.getToken;
   try {
     const res = await $fetch(`${config.public.authApiBase}users/bulk`, {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
       body: users,
     });
     return res;
