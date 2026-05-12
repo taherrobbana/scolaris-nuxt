@@ -11,6 +11,9 @@
         class="groups-table">
         <template v-slot:body-cell-actions="props">
           <q-td :props="props" class="q-gutter-x-sm">
+            <q-btn flat round color="secondary" icon="person_add" @click="openAssignDialog(props.row)" size="sm">
+              <q-tooltip>Affecter des utilisateurs</q-tooltip>
+            </q-btn>
             <q-btn flat round color="primary" icon="edit" @click="openGroupDialog(props.row)" size="sm">
               <q-tooltip>Modifier</q-tooltip>
             </q-btn>
@@ -42,6 +45,45 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <!-- Dialogue Affectation -->
+    <q-dialog v-model="assignDialog">
+      <q-card style="min-width: 500px; max-height: 80vh">
+        <q-card-section class="row items-center">
+          <div class="text-h6">Affectation : {{ selectedGroup?.name }}</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-section class="q-pa-none scroll" style="height: 400px">
+          <q-list separator v-if="!assignLoading">
+            <q-item v-for="user in allUsers" :key="user.id">
+              <q-item-section avatar>
+                <q-avatar color="primary" text-color="white" size="30px">
+                  {{ user.firstName?.charAt(0).toUpperCase() }}{{ user.lastName?.charAt(0).toUpperCase() }}
+                </q-avatar>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>{{ user.firstName }} {{ user.lastName }}</q-item-label>
+                <q-item-label caption>{{ user.username }}</q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-toggle :model-value="user.group === selectedGroup?.name" @update:model-value="toggleAssignment(user)"
+                  color="secondary" />
+              </q-item-section>
+            </q-item>
+          </q-list>
+          <div v-if="assignLoading" class="flex flex-center q-pa-lg">
+            <q-spinner color="primary" size="40px" />
+          </div>
+          <div v-if="!assignLoading && allUsers.length === 0" class="text-center q-pa-lg text-grey">
+            Aucun utilisateur trouvé
+          </div>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -49,6 +91,7 @@
 import { ref, onMounted } from 'vue';
 import { useQuasar, Dialog } from 'quasar';
 import { useGroupModule } from '@/stores/group/groupModule';
+import { getAllUsers, updateUser } from '@/stores/auth/authService';
 
 definePageMeta({
   middleware: 'auth',
@@ -65,6 +108,11 @@ const groupForm = ref({
   id: '',
   name: ''
 });
+
+const assignDialog = ref(false);
+const selectedGroup = ref<any>(null);
+const allUsers = ref<any[]>([]);
+const assignLoading = ref(false);
 
 const columns = [
   { name: 'name', label: 'Nom du groupe', field: 'name', align: 'left', sortable: true },
@@ -104,6 +152,37 @@ const saveGroup = async () => {
     groupDialog.value = false;
   } finally {
     saving.value = false;
+  }
+};
+
+const openAssignDialog = async (group: any) => {
+  selectedGroup.value = group;
+  assignDialog.value = true;
+  assignLoading.value = true;
+  try {
+    const res = await getAllUsers();
+    allUsers.value = res || [];
+  } finally {
+    assignLoading.value = false;
+  }
+};
+
+const toggleAssignment = async (user: any) => {
+  const isAssigned = user.group === selectedGroup.value.name;
+  const newGroup = isAssigned ? '' : selectedGroup.value.name;
+
+  try {
+    // On met à jour l'utilisateur via l'API
+    await updateUser(user.id, { ...user, group: newGroup });
+    // On met à jour l'état local pour le toggle
+    user.group = newGroup;
+    $q.notify({
+      type: 'positive',
+      message: isAssigned ? 'Utilisateur désinfecté' : 'Utilisateur affecté',
+      timeout: 1000
+    });
+  } catch (error) {
+    console.error('Erreur lors de l\'affectation', error);
   }
 };
 
