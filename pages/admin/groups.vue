@@ -143,7 +143,38 @@ const saveGroup = async () => {
   saving.value = true;
   try {
     if (isEditing.value) {
-      await groupStore.editGroup(groupForm.value.id, { name: groupForm.value.name });
+      // 1. Récupérer l'ancien nom pour mettre à jour les utilisateurs si nécessaire
+      const oldGroup = groupStore.groups.find(g => g.id === groupForm.value.id);
+      const oldName = oldGroup ? oldGroup.name : null;
+      const newName = groupForm.value.name;
+
+      // 2. Mettre à jour le groupe via l'API
+      await groupStore.editGroup(groupForm.value.id, { name: newName });
+
+      // 3. Si le nom a changé, on met à jour les utilisateurs qui étaient dans l'ancien groupe
+      if (oldName && oldName !== newName) {
+        try {
+          const usersRes = await getAllUsers();
+          const affectedUsers = (usersRes || []).filter((u: any) => u.group === oldName);
+
+          if (affectedUsers.length > 0) {
+            $q.notify({
+              message: `Mise à jour de ${affectedUsers.length} utilisateur(s)...`,
+              color: 'info',
+              icon: 'sync',
+              timeout: 1000
+            });
+
+            // Mise à jour séquentielle pour éviter de surcharger le serveur
+            for (const user of affectedUsers) {
+              await updateUser(user.id, { ...user, group: newName });
+            }
+          }
+        } catch (err) {
+          console.error('Erreur lors de la mise à jour des utilisateurs affectés:', err);
+        }
+      }
+
       $q.notify({ type: 'positive', message: 'Groupe mis à jour' });
     } else {
       await groupStore.addGroup({ name: groupForm.value.name });

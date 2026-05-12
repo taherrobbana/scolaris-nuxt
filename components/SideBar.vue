@@ -100,7 +100,7 @@ const routes: ComputedRef<RouteConfig[]> = computed(() => [
   },
   {
     caption: "Gestion des groupes",
-    icon: "school",
+    icon: "diversity_3",
     label: "Groupes",
     roles: [Role.admin],
     route: "/admin/groups",
