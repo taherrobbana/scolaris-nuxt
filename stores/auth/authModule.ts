@@ -9,6 +9,7 @@ import { Notify } from "quasar";
 import { useNuxtApp } from "nuxt/app";
 
 export interface AuthState {
+  id: string;
   username: string;
   firstName: string;
   lastName: string;
@@ -16,10 +17,12 @@ export interface AuthState {
   connected: boolean;
   token: string;
   refreshToken: string;
+  avatar?: string;
 }
 
 export const useAuthModule = defineStore("authModule", {
   state: (): AuthState => ({
+    id: "",
     username: "",
     firstName: "",
     lastName: "",
@@ -27,6 +30,7 @@ export const useAuthModule = defineStore("authModule", {
     connected: false,
     token: "",
     refreshToken: "",
+    avatar: "",
   }),
 
   getters: {
@@ -37,6 +41,8 @@ export const useAuthModule = defineStore("authModule", {
     isConnected: (state) => state.connected,
     getToken: (state) => state.token,
     getRefreshToken: (state) => state.refreshToken,
+    getAvatar: (state) => state.avatar,
+    getId: (state) => state.id,
   },
 
   actions: {
@@ -61,8 +67,15 @@ export const useAuthModule = defineStore("authModule", {
     setRefreshToken(refreshToken: string) {
       this.refreshToken = refreshToken;
     },
+    setAvatar(avatar: string) {
+      this.avatar = avatar;
+    },
+    setId(id: string) {
+      this.id = id;
+    },
 
     initAuth() {
+      this.setId("");
       this.setUsername("");
       this.setFirstName("");
       this.setLastName("");
@@ -70,14 +83,17 @@ export const useAuthModule = defineStore("authModule", {
       this.setConnected(false);
       this.setToken("");
       this.setRefreshToken("");
+      this.setAvatar("");
     },
     handleLoginResponse(res: any) {
       const { $router } = useNuxtApp();
       if (res) {
         let data = decodeJWT(res.token).payload;
+        if (res.id) this.setId(res.id);
         if (data.username) this.setUsername(data.username);
         if (data.firstName) this.setFirstName(data.firstName);
         if (data.lastName) this.setLastName(data.lastName);
+        if (res.avatar) this.setAvatar(res.avatar);
         if (res.role) this.setRole(res.role);
         if (res.token) this.setToken(res.token);
         if (res.refreshToken) this.setRefreshToken(res.refreshToken);

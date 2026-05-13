@@ -22,7 +22,9 @@
           <q-td :props="props">
             <q-avatar size="30px">
               <img v-if="props.row.avatar" :src="props.row.avatar" />
-              <q-icon v-else style="font-size: 30px" name="account_circle" />
+              <q-avatar v-else color="primary" text-color="white" size="30px">
+                {{ props.row.firstName?.charAt(0).toUpperCase() }}{{ props.row.lastName?.charAt(0).toUpperCase() }}
+              </q-avatar>
             </q-avatar>
           </q-td>
         </template>
@@ -64,7 +66,8 @@
           <q-input v-if="!isEditing" v-model="editForm.password" label="Mot de passe" type="password" outlined dense />
 
           <q-select v-model="editForm.role" :options="roleOptions" label="Rôle" outlined dense emit-value map-options />
-          <q-select v-model="editForm.group" :options="groupOptions" label="Groupe" outlined dense emit-value map-options />
+          <q-select v-model="editForm.group" :options="groupOptions" label="Groupe" outlined dense emit-value
+            map-options />
           <q-input v-model="editForm.avatar" label="URL Avatar" outlined dense />
         </q-card-section>
 
@@ -88,8 +91,8 @@
 
         <q-card-section>
           <div class="q-mb-md">
-            <q-file v-model="excelFile" label="Importer un fichier Excel (.xlsx, .xls)" outlined dense accept=".xlsx, .xls"
-              @update:model-value="processExcel">
+            <q-file v-model="excelFile" label="Importer un fichier Excel (.xlsx, .xls)" outlined dense
+              accept=".xlsx, .xls" @update:model-value="processExcel">
               <template v-slot:prepend>
                 <q-icon name="upload_file" />
               </template>

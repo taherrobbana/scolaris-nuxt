@@ -1,30 +1,16 @@
 <template>
   <div class="cropper-wrapper">
     <AdvancedCropper ref="cropper" :src="imageSrc" :stencil-props="stencilProps" :stencil-component="CircleStencil"
-      :default-size="{
-        width: 300,
-        height: 300
-      }" :default-position="{
-        left: 0,
-        top: 0
-      }" @change="onChange" class="cropper" />
-    <AdvancedCropper ref="cropper" :src="imageSrc" :stencil-props="{
-      aspectRatio: 1,
-      movable: true,
-      resizable: true,
-      handlers: {},
-      lines: {},
-      previewClass: 'circle-preview'
-    }" :stencil-component="CircleStencil" :resize-image="{
-      adjustStencil: false
-    }" :background-class="'cropper-background'" />
+      class="cropper" />
 
-    <div class="q-mt-md">
-      <q-btn color="primary" @click="rotate(-90)" icon="rotate_left" class="q-mr-sm" />
-      <q-btn color="primary" @click="rotate(90)" icon="rotate_right" class="q-mr-sm" />
-      <q-btn color="positive" @click="crop" icon="check">
-        Recadrer
+    <div class="row justify-center q-mt-md q-gutter-sm">
+      <q-btn color="primary" flat @click="rotate(-90)" icon="rotate_left">
+        <q-tooltip>Rotation gauche</q-tooltip>
       </q-btn>
+      <q-btn color="primary" flat @click="rotate(90)" icon="rotate_right">
+        <q-tooltip>Rotation droite</q-tooltip>
+      </q-btn>
+      <q-btn color="positive" unelevated @click="crop" icon="check" label="Valider" />
     </div>
   </div>
 </template>

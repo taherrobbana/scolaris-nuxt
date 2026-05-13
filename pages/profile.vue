@@ -8,10 +8,14 @@
               {{ fullName }}
             </div>
             <div class="image-wrapper">
-              <q-img :src="studentPhotoBase64" width="250px" height="250px" class="rounded-circle"
-                style="border: 4px solid white" />
+              <q-img v-if="authModule.getAvatar" :src="authModule.getAvatar" width="250px" height="250px"
+                class="rounded-circle shadow-3" style="border: 4px solid white" />
+              <q-avatar v-else size="250px" color="primary" text-color="white" class="rounded-circle shadow-3"
+                style="border: 4px solid white; font-size: 80px; font-weight: bold; width: 250px; height: 250px;">
+                {{ initials }}
+              </q-avatar>
               <q-btn round color="primary" class="q-ml-xs badge-bottom-right" @click="editProfilePic()">
-                <q-icon name="edit" class="cursor-pointer" @click="editProfilePic()" />
+                <q-icon name="edit" />
               </q-btn>
             </div>
           </div>
@@ -41,32 +45,87 @@
         </div> -->
       </div>
     </div>
+
+    <!-- Dialog pour changer la photo de profil -->
+    <q-dialog v-model="showEditProfilePicPopUp">
+      <q-card style="min-width: 400px; max-width: 600px">
+        <q-card-section class="row items-center">
+          <div class="text-h6">Modifier la photo de profil</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-card-section class="q-gutter-md">
+          <q-file v-model="tempFile" label="Choisir une image" outlined dense accept="image/*"
+            @update:model-value="onFileSelected">
+            <template v-slot:prepend>
+              <q-icon name="image" />
+            </template>
+          </q-file>
+
+          <div v-if="imageToCrop" class="q-mt-md">
+            <ImageCropper :image-src="imageToCrop" @cropped="handleCropped" />
+          </div>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
 <script setup lang="ts">
 import Upload from "~/components/cropper/Upload.vue";
+import ImageCropper from "~/components/cropper/ImageCropper.vue";
 import ProfileIdentity from "~/components/profile/ProfileIdentity.vue";
 import ProfileContactDetails from "~/components/profile/ProfileContactDetails.vue";
 import ProfileEmergencyContacts from "~/components/profile/ProfileEmergencyContacts.vue";
 import ProfileDocuments from "~/components/profile/ProfileDocuments.vue";
 import { useAuthModule } from "~/stores/auth/authModule";
+import { updateUser } from "~/stores/auth/authService";
 import { ALL_ROLES } from '~/utils/types';
+const $q = useQuasar();
 
 const authModule = useAuthModule();
 const fullName = computed(
   () => authModule.getFirstName + " " + authModule.getLastName,
 );
 const tab = ref('identity');
-const studentPhotoBase64 =
-  "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAA0ADQDASIAAhEBAxEB/8QAGwABAQEAAgMAAAAAAAAAAAAAAAUEAwcBCAn/xAA0EAAABgEBBAULBQAAAAAAAAAAAQIDBAUGEQcIEjEWISJBYRM1NlV0dYGRlLG0FDIzUXH/xAAXAQEBAQEAAAAAAAAAAAAAAAAAAQID/8QAGBEBAAMBAAAAAAAAAAAAAAAAAAERIUH/2gAMAwEAAhEDEQA/APkGAC5a2PRyYqlqoUYjj9h55+Kh1Tiy5n2yMiLXkRDq5oYCszkeQSNfIQ4i9OfBTsHp8mweyLIY5Eb8KIgj5GunYLX5thiakgKiMrnmsilwYDzevbaOuaRxF/XEhJKL4GODIYMevtVswyUTK223mUrPU0ocbS4kjPvMiURfABiAAEUFLMvSqf7Ur7iaKWZelU/2pX3F4nXtxuvxFU27ri1xWX7lFCSzk13lcurpokibYNQjjIaZQuQhRJ/k0LrIi1M9BnTtw3Yt6m0pdgGRr2hk5kWRw4tbaS6+n1gyXVmwherLaFm3q6RrSR9fCXeQ6+3Vt4SkjY5J2DbTLuBTU0nHbuFVZBJYcV+jfnJYPhd4NT8nxMa6kRmRqG/Y3sT2G7LNr2K7TrrfNwaVDxzI4NpKjQos5Tzzcd9DqkII2SI1GSDItT5mN3kJToDLseexLK7PFpD6XXK2e9FW4kupRtrNJmX+6DzlnnRr3ZC/FaHNtCv4uVZ7dZPBQpLNjbSJLKV8yStxSiI/HQxw5Z50a92QvxWhhU0AARQWrKLEyKSdvDtYzTj3akMyXSQaV9+hnzIRQFiRS6Mu+uqz65IdGXfXVZ9ckTQC4RURjbaFkqXf16Gy/epuSS1EXgkusxnvrBmytFyYyFJaShDTJK58CEJQnXx0SQxgFqAACAAAAAAAAAAAAAA//9k=";
 
-const profile = ref({
-  name: "Ahmed Benali",
-  email: "ahmed@student.tn",
-  phone: "22123456",
-  cv: null,
+const initials = computed(() => {
+  const f = authModule.getFirstName?.charAt(0).toUpperCase() || "";
+  const l = authModule.getLastName?.charAt(0).toUpperCase() || "";
+  return f + l;
 });
+
+const tempFile = ref<File | null>(null);
+const imageToCrop = ref('');
+
+const onFileSelected = (file: any) => {
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      imageToCrop.value = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+const handleCropped = async (data: any) => {
+  const base64 = data.base64;
+  try {
+    await updateUser(authModule.getId, { avatar: base64 });
+    authModule.setAvatar(base64);
+    $q.notify({
+      type: 'positive',
+      message: 'Photo de profil mise à jour avec succès',
+      timeout: 2000
+    });
+    showEditProfilePicPopUp.value = false;
+    imageToCrop.value = '';
+    tempFile.value = null;
+  } catch (err) {
+    console.error('Erreur lors de la mise à jour de l\'avatar', err);
+  }
+};
 
 
 const showEditProfilePicPopUp = ref(false);
