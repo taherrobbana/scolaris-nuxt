@@ -120,6 +120,26 @@ export async function updateUser(id: string, data: any) {
     });
   }
 }
+export async function updateProfile(data: any) {
+  const config = useRuntimeConfig();
+  const authModule = useAuthModule();
+  const token = authModule.getToken;
+  try {
+    const res = await $fetch(`${config.public.authApiBase}users/profile`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: data,
+    });
+    return res;
+  } catch (error: any) {
+    Notify.create({
+      type: "negative",
+      message: error.response?._data?.error || "Erreur lors de la modification",
+    });
+  }
+}
 
 export async function getAllUsers() {
   const config = useRuntimeConfig();

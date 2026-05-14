@@ -11,7 +11,7 @@
               <q-img v-if="authModule.getAvatar" :src="authModule.getAvatar" width="250px" height="250px"
                 class="rounded-circle shadow-3" style="border: 4px solid white" />
               <q-avatar v-else size="250px" color="primary" text-color="white" class="rounded-circle shadow-3"
-                style="border: 4px solid white; font-size: 80px; font-weight: bold; width: 250px; height: 250px;">
+                style="border: 4px solid white; font-size: 180px; font-weight: bold; width: 250px; height: 250px;">
                 {{ initials }}
               </q-avatar>
               <q-btn round color="primary" class="q-ml-xs badge-bottom-right" @click="editProfilePic()">
@@ -19,7 +19,7 @@
               </q-btn>
             </div>
           </div>
-          <q-tabs v-model="tab" vertical class="text-primary">
+          <q-tabs v-model="tab" vertical class="text-primary" style="padding-top: 10px;">
             <q-tab name="identity" label="Identité" />
             <q-tab name="contactDetails" label="Coordonnées" />
             <q-tab name="emergencyContacts" label="Contacts d'urgence" />
@@ -80,7 +80,6 @@ import ProfileContactDetails from "~/components/profile/ProfileContactDetails.vu
 import ProfileEmergencyContacts from "~/components/profile/ProfileEmergencyContacts.vue";
 import ProfileDocuments from "~/components/profile/ProfileDocuments.vue";
 import { useAuthModule } from "~/stores/auth/authModule";
-import { updateUser } from "~/stores/auth/authService";
 import { ALL_ROLES } from '~/utils/types';
 const $q = useQuasar();
 
@@ -112,16 +111,17 @@ const onFileSelected = (file: any) => {
 const handleCropped = async (data: any) => {
   const base64 = data.base64;
   try {
-    await updateUser(authModule.getId, { avatar: base64 });
-    authModule.setAvatar(base64);
-    $q.notify({
-      type: 'positive',
-      message: 'Photo de profil mise à jour avec succès',
-      timeout: 2000
-    });
-    showEditProfilePicPopUp.value = false;
-    imageToCrop.value = '';
-    tempFile.value = null;
+    const res = await authModule.updateProfile({ avatar: base64 });
+    if (res) {
+      $q.notify({
+        type: 'positive',
+        message: 'Photo de profil mise à jour avec succès',
+        timeout: 2000
+      });
+      showEditProfilePicPopUp.value = false;
+      imageToCrop.value = '';
+      tempFile.value = null;
+    }
   } catch (err) {
     console.error('Erreur lors de la mise à jour de l\'avatar', err);
   }

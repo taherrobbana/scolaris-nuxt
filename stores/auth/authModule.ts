@@ -4,20 +4,33 @@ import {
   register,
   resetPassword,
   sendRecoveryMail,
+  updateProfile,
 } from "./authService";
 import { Notify } from "quasar";
 import { useNuxtApp } from "nuxt/app";
+import type { emergencyContactsType } from "~/utils/types";
 
 export interface AuthState {
   id: string;
   username: string;
   firstName: string;
   lastName: string;
+  avatar?: string;
+  group?: string;
+  gender?: string;
+  birthDate?: string;
+  birthPlace?: string;
+  nationality?: string;
+  phone?: string;
+  address?: string;
+  postalCode?: string;
+  city?: string;
+  country?: string;
+  emergencyContacts?: emergencyContactsType[];
   role: Role | string;
   connected: boolean;
   token: string;
   refreshToken: string;
-  avatar?: string;
 }
 
 export const useAuthModule = defineStore("authModule", {
@@ -26,26 +39,51 @@ export const useAuthModule = defineStore("authModule", {
     username: "",
     firstName: "",
     lastName: "",
+    avatar: "",
+    group: "",
+    gender: "",
+    birthDate: "",
+    birthPlace: "",
+    nationality: "",
+    phone: "",
+    address: "",
+    postalCode: "",
+    city: "",
+    country: "",
+    emergencyContacts: [],
     role: Role.student,
     connected: false,
     token: "",
     refreshToken: "",
-    avatar: "",
   }),
 
   getters: {
+    getId: (state) => state.id,
     getUsername: (state) => state.username,
     getFirstName: (state) => state.firstName,
     getLastName: (state) => state.lastName,
+    getAvatar: (state) => state.avatar,
+    getGroup: (state) => state.group,
+    getGender: (state) => state.gender,
+    getBirthDate: (state) => state.birthDate,
+    getBirthPlace: (state) => state.birthPlace,
+    getNationality: (state) => state.nationality,
+    getPhone: (state) => state.phone,
+    getAddress: (state) => state.address,
+    getPostalCode: (state) => state.postalCode,
+    getCity: (state) => state.city,
+    getCountry: (state) => state.country,
+    getEmergencyContacts: (state) => state.emergencyContacts,
     getRole: (state) => state.role,
     isConnected: (state) => state.connected,
     getToken: (state) => state.token,
     getRefreshToken: (state) => state.refreshToken,
-    getAvatar: (state) => state.avatar,
-    getId: (state) => state.id,
   },
 
   actions: {
+    setId(id: string) {
+      this.id = id;
+    },
     setUsername(username: string) {
       this.username = username;
     },
@@ -54,6 +92,42 @@ export const useAuthModule = defineStore("authModule", {
     },
     setLastName(lastName: string) {
       this.lastName = lastName;
+    },
+    setAvatar(avatar: string) {
+      this.avatar = avatar;
+    },
+    setGroup(group: string) {
+      this.group = group;
+    },
+    setGender(gender: string) {
+      this.gender = gender;
+    },
+    setBirthDate(birthDate: string) {
+      this.birthDate = birthDate;
+    },
+    setBirthPlace(birthPlace: string) {
+      this.birthPlace = birthPlace;
+    },
+    setNationality(nationality: string) {
+      this.nationality = nationality;
+    },
+    setPhone(phone: string) {
+      this.phone = phone;
+    },
+    setAddress(address: string) {
+      this.address = address;
+    },
+    setPostalCode(postalCode: string) {
+      this.postalCode = postalCode;
+    },
+    setCity(city: string) {
+      this.city = city;
+    },
+    setCountry(country: string) {
+      this.country = country;
+    },
+    setEmergencyContacts(emergencyContacts: emergencyContactsType[]) {
+      this.emergencyContacts = emergencyContacts;
     },
     setRole(role: Role | string) {
       this.role = role;
@@ -67,13 +141,6 @@ export const useAuthModule = defineStore("authModule", {
     setRefreshToken(refreshToken: string) {
       this.refreshToken = refreshToken;
     },
-    setAvatar(avatar: string) {
-      this.avatar = avatar;
-    },
-    setId(id: string) {
-      this.id = id;
-    },
-
     initAuth() {
       this.setId("");
       this.setUsername("");
@@ -84,19 +151,42 @@ export const useAuthModule = defineStore("authModule", {
       this.setToken("");
       this.setRefreshToken("");
       this.setAvatar("");
+      this.setGroup("");
+      this.setGender("");
+      this.setBirthDate("");
+      this.setBirthPlace("");
+      this.setNationality("");
+      this.setPhone("");
+      this.setAddress("");
+      this.setPostalCode("");
+      this.setCity("");
+      this.setCountry("");
+      this.setEmergencyContacts([]);
     },
     handleLoginResponse(res: any) {
       const { $router } = useNuxtApp();
       if (res) {
         let data = decodeJWT(res.token).payload;
         if (res.id) this.setId(res.id);
-        if (data.username) this.setUsername(data.username);
-        if (data.firstName) this.setFirstName(data.firstName);
-        if (data.lastName) this.setLastName(data.lastName);
-        if (res.avatar) this.setAvatar(res.avatar);
-        if (res.role) this.setRole(res.role);
         if (res.token) this.setToken(res.token);
         if (res.refreshToken) this.setRefreshToken(res.refreshToken);
+        if (res.username) this.setUsername(res.username);
+        if (res.role) this.setRole(res.role);
+        if (res.firstName) this.setFirstName(res.firstName);
+        if (res.lastName) this.setLastName(res.lastName);
+        if (res.group) this.setGroup(res.group);
+        if (res.avatar) this.setAvatar(res.avatar);
+        if (res.gender) this.setGender(res.gender);
+        if (res.birthDate) this.setBirthDate(res.birthDate);
+        if (res.birthPlace) this.setBirthPlace(res.birthPlace);
+        if (res.nationality) this.setNationality(res.nationality);
+        if (res.phone) this.setPhone(res.phone);
+        if (res.address) this.setAddress(res.address);
+        if (res.postalCode) this.setPostalCode(res.postalCode);
+        if (res.city) this.setCity(res.city);
+        if (res.country) this.setCountry(res.country);
+        if (res.emergencyContacts)
+          this.setEmergencyContacts(res.emergencyContacts);
         this.setConnected(true);
         $router.push("/" + res.role);
       }
@@ -142,6 +232,26 @@ export const useAuthModule = defineStore("authModule", {
           $router.push("/login");
         }
       });
+    },
+    async updateProfile(payload: any) {
+      const res: any = await updateProfile(payload);
+      if (res) {
+        if (res.firstName) this.setFirstName(res.firstName);
+        if (res.lastName) this.setLastName(res.lastName);
+        if (res.avatar) this.setAvatar(res.avatar);
+        if (res.group) this.setGroup(res.group);
+        if (res.gender) this.setGender(res.gender);
+        if (res.birthDate) this.setBirthDate(res.birthDate);
+        if (res.birthPlace) this.setBirthPlace(res.birthPlace);
+        if (res.nationality) this.setNationality(res.nationality);
+        if (res.phone) this.setPhone(res.phone);
+        if (res.address) this.setAddress(res.address);
+        if (res.postalCode) this.setPostalCode(res.postalCode);
+        if (res.city) this.setCity(res.city);
+        if (res.country) this.setCountry(res.country);
+        if (res.emergencyContacts) this.setEmergencyContacts(res.emergencyContacts);
+        return res;
+      }
     },
   },
 

@@ -5,7 +5,8 @@
       <q-toolbar-title>
         <div class="header">
           <div class="logo-container">
-            <img :src="!isDarkActive ? '/sesameLogo.png' : '/sesameDarkLogo.png'" class="sesame-logo" @click="navigateTo('/')" />
+            <img :src="!isDarkActive ? '/sesameLogo.png' : '/sesameDarkLogo.png'" class="sesame-logo"
+              @click="navigateTo('/')" />
           </div>
           <div>
             <q-btn flat no-caps @click="changeLanguage" icon="translate" :label="getLanguage === 'fr'
@@ -26,12 +27,12 @@
               </transition>
             </q-btn>
             <q-btn flat no-caps class="q-ml-xs" @click="navigateTo('/profile')">
-              <q-icon left style="font-size: 25px" name="account_circle" />
-              <!-- <q-icon left>
-                <q-avatar style="font-size: 25px">
-                  <img :src="studentPhotoBase64" />
-                </q-avatar>
-              </q-icon> -->
+              <q-icon size="25px">
+                <div v-if="avatar" style="margin-right: 10px !important;">
+                  <img :src="avatar" style="width: 25px; height: 25px; border-radius: 50%;" />
+                </div>
+                <q-icon v-else left style="font-size: 25px" name="account_circle" />
+              </q-icon>
               <span>{{ fullName }}</span>
             </q-btn>
             <q-btn flat round icon="logout" class="q-ml-xs" @click="logout" />
@@ -55,7 +56,10 @@ const getLanguage = computed(() => langModule.getLanguage);
 const langModule = useLangModule();
 
 const authModule = useAuthModule();
-const fullName = computed(() => authModule.getFirstName + " " + authModule.getLastName);
+const firstName = computed(() => authModule.getFirstName);
+const lastName = computed(() => authModule.getLastName);
+const fullName = computed(() => firstName.value + " " + lastName.value);
+const avatar = computed(() => authModule.getAvatar);
 
 function darkMode() {
   Dark.toggle();

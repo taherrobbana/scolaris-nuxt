@@ -25,6 +25,12 @@ export type RouteConfig = {
   action?: any;
 };
 
+export type emergencyContactsType = {
+  name?: string;
+  relationship?: string;
+  phone?: string;
+};
+
 export type QTableColumn = {
   name: string;
   label: string;
