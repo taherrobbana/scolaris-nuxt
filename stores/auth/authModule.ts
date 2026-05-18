@@ -15,6 +15,7 @@ export interface AuthState {
   username: string;
   firstName: string;
   lastName: string;
+  localStorageTick: number;
   avatar?: string;
   group?: string;
   gender?: string;
@@ -39,6 +40,7 @@ export const useAuthModule = defineStore("authModule", {
     username: "",
     firstName: "",
     lastName: "",
+    localStorageTick: 0,
     avatar: "",
     group: "",
     gender: "",
@@ -62,7 +64,10 @@ export const useAuthModule = defineStore("authModule", {
     getUsername: (state) => state.username,
     getFirstName: (state) => state.firstName,
     getLastName: (state) => state.lastName,
-    getAvatar: (state) => state.avatar,
+    getAvatar: (state) => {
+      state.localStorageTick; // Crée une dépendance réactive
+      return typeof window !== 'undefined' ? localStorage.getItem('avatar') : null;
+    },
     getGroup: (state) => state.group,
     getGender: (state) => state.gender,
     getBirthDate: (state) => state.birthDate,
@@ -94,7 +99,8 @@ export const useAuthModule = defineStore("authModule", {
       this.lastName = lastName;
     },
     setAvatar(avatar: string) {
-      this.avatar = avatar;
+      localStorage.setItem("avatar", avatar);
+      this.localStorageTick++;
     },
     setGroup(group: string) {
       this.group = group;
@@ -150,7 +156,8 @@ export const useAuthModule = defineStore("authModule", {
       this.setConnected(false);
       this.setToken("");
       this.setRefreshToken("");
-      this.setAvatar("");
+      localStorage.removeItem("avatar");
+      this.localStorageTick++;
       this.setGroup("");
       this.setGender("");
       this.setBirthDate("");
