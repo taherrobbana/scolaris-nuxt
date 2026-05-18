@@ -272,6 +272,7 @@ const confirmDelete = (user: any) => {
     persistent: true
   }).onOk(() => {
     // API delete non spécifiée par l'utilisateur, mais on pourrait l'ajouter
+    // TODO
     $q.notify({ message: 'Fonction de suppression non implémentée côté serveur', color: 'warning' });
   });
 };
