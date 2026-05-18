@@ -28,6 +28,7 @@ export interface AuthState {
   city?: string;
   country?: string;
   emergencyContacts?: emergencyContactsType[];
+  documents?: Record<string, string>;
   role: Role | string;
   connected: boolean;
   token: string;
@@ -53,6 +54,7 @@ export const useAuthModule = defineStore("authModule", {
     city: "",
     country: "",
     emergencyContacts: [],
+    documents: {},
     role: Role.student,
     connected: false,
     token: "",
@@ -79,6 +81,12 @@ export const useAuthModule = defineStore("authModule", {
     getCity: (state) => state.city,
     getCountry: (state) => state.country,
     getEmergencyContacts: (state) => state.emergencyContacts,
+    getDocuments: (state) => {
+      state.localStorageTick;
+      return typeof window !== 'undefined' && localStorage.getItem('user_documents') 
+        ? JSON.parse(localStorage.getItem('user_documents')!) 
+        : {};
+    },
     getRole: (state) => state.role,
     isConnected: (state) => state.connected,
     getToken: (state) => state.token,
@@ -135,6 +143,13 @@ export const useAuthModule = defineStore("authModule", {
     setEmergencyContacts(emergencyContacts: emergencyContactsType[]) {
       this.emergencyContacts = emergencyContacts;
     },
+    setDocuments(documents: Record<string, string>) {
+      this.documents = documents;
+      if (typeof window !== 'undefined') {
+        localStorage.setItem("user_documents", JSON.stringify(documents));
+      }
+      this.localStorageTick++;
+    },
     setRole(role: Role | string) {
       this.role = role;
     },
@@ -157,6 +172,7 @@ export const useAuthModule = defineStore("authModule", {
       this.setToken("");
       this.setRefreshToken("");
       localStorage.removeItem("avatar");
+      localStorage.removeItem("user_documents");
       this.localStorageTick++;
       this.setGroup("");
       this.setGender("");
@@ -194,6 +210,7 @@ export const useAuthModule = defineStore("authModule", {
         if (res.country) this.setCountry(res.country);
         if (res.emergencyContacts)
           this.setEmergencyContacts(res.emergencyContacts);
+        if (res.documents) this.setDocuments(res.documents);
         this.setConnected(true);
         $router.push("/" + res.role);
       }
@@ -257,6 +274,7 @@ export const useAuthModule = defineStore("authModule", {
         if (res.city) this.setCity(res.city);
         if (res.country) this.setCountry(res.country);
         if (res.emergencyContacts) this.setEmergencyContacts(res.emergencyContacts);
+        if (res.documents) this.setDocuments(res.documents);
         return res;
       }
     },

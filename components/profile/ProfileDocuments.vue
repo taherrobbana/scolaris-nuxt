@@ -17,7 +17,10 @@
 
           <q-item-section side>
             <div class="row q-gutter-xs">
-              <q-btn flat round dense icon="download" color="primary" v-if="doc.status === 'uploaded'">
+              <q-btn flat round dense icon="visibility" color="info" v-if="doc.status === 'uploaded'" @click="viewDocument(doc)">
+                <q-tooltip>Visualiser</q-tooltip>
+              </q-btn>
+              <q-btn flat round dense icon="download" color="primary" v-if="doc.status === 'uploaded'" @click="downloadDocument(doc)">
                 <q-tooltip>Télécharger</q-tooltip>
               </q-btn>
               <q-btn flat round dense icon="upload" color="secondary" @click="triggerUpload(doc)">
@@ -28,49 +31,132 @@
         </q-item>
       </q-list>
     </div>
-
-    <!-- Zone de dépôt pour un nouveau document -->
-    <q-card flat bordered class="q-pa-md bg-grey-1">
-      <q-file v-model="newFile" label="Uploader un nouveau document" outlined dense accept=".pdf,.jpg,.png">
-        <template v-slot:prepend>
-          <q-icon name="attach_file" />
-        </template>
-        <template v-slot:append>
-          <q-btn label="Envoyer" color="primary" dense flat :disable="!newFile" @click="uploadNewFile" />
-        </template>
-      </q-file>
-    </q-card>
+    
+    <!-- Input de fichier caché pour gérer l'upload -->
+    <input type="file" ref="hiddenFileInput" accept=".pdf" style="display: none" @change="handleFileUpload" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useQuasar } from 'quasar';
+import { useAuthModule } from '~/stores/auth/authModule';
+import { Role } from '~/utils/types';
 
 const $q = useQuasar();
-const newFile = ref(null);
+const authModule = useAuthModule();
+const hiddenFileInput = ref<HTMLInputElement | null>(null);
+const currentUploadDoc = ref<any>(null);
 
-const documents = ref([
-  { id: 1, name: 'Carte d\'identité / Passeport', icon: 'badge', status: 'uploaded', date: '12/04/2026' },
-  { id: 2, name: 'Curriculum Vitae (CV)', icon: 'description', status: 'uploaded', date: '10/05/2026' },
-  { id: 3, name: 'Relevé de notes', icon: 'assessment', status: 'pending', date: '' },
-  { id: 4, name: 'Attestation de scolarité', icon: 'school', status: 'pending', date: '' }
-]);
+const documents = computed(() => {
+  const role = authModule.getRole;
+  const userDocs = authModule.getDocuments || {};
+  
+  const mapStatus = (docs: any[]) => {
+    return docs.map(d => ({
+      ...d,
+      status: userDocs[d.id] ? 'uploaded' : 'pending'
+    }));
+  };
+
+  const commonDocs = [
+    { id: 1, name: 'Carte d\'identité / Passeport', icon: 'badge', date: '12/04/2026' },
+  ];
+
+  let roleDocs = commonDocs;
+
+  if (role === Role.student || role === 'student') {
+    roleDocs = [
+      ...commonDocs,
+      { id: 2, name: 'Curriculum Vitae (CV)', icon: 'description', date: '10/05/2026' },
+      { id: 3, name: 'Relevé de notes', icon: 'assessment', date: '' },
+      { id: 4, name: 'Attestation de scolarité', icon: 'school', date: '' }
+    ];
+  } else if (role === Role.teacher || role === 'teacher') {
+    roleDocs = [
+      ...commonDocs,
+      { id: 2, name: 'Curriculum Vitae (CV)', icon: 'description', date: '10/05/2026' },
+      { id: 5, name: 'Diplôme', icon: 'workspace_premium', date: '' }
+    ];
+  } else if (role === Role.admin || role === 'admin') {
+    roleDocs = [
+      ...commonDocs,
+      { id: 7, name: 'Contrat de travail', icon: 'history_edu', date: '01/09/2025' },
+      { id: 8, name: 'Fiche de poste', icon: 'description', date: '01/09/2025' }
+    ];
+  } else if (role === Role.coordinator || role === 'coordinator') {
+    roleDocs = [
+      ...commonDocs,
+      { id: 7, name: 'Contrat de travail', icon: 'history_edu', date: '01/10/2025' },
+      { id: 9, name: 'Décision de nomination', icon: 'assignment', date: '' }
+    ];
+  }
+  
+  return mapStatus(roleDocs);
+});
 
 const triggerUpload = (doc: any) => {
-  $q.notify({
-    message: `Upload pour : ${doc.name}`,
-    color: 'info'
-  });
+  currentUploadDoc.value = doc;
+  if (hiddenFileInput.value) {
+    hiddenFileInput.value.click();
+  }
 };
 
-const uploadNewFile = () => {
-  if (newFile.value) {
-    $q.notify({
-      type: 'positive',
-      message: 'Document envoyé avec succès'
-    });
-    newFile.value = null;
+const handleFileUpload = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (!file || !currentUploadDoc.value) return;
+
+  if (file.type !== 'application/pdf') {
+    $q.notify({ type: 'negative', message: 'Veuillez sélectionner un fichier PDF valide' });
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const base64Str = e.target?.result as string;
+    
+    // Mettre à jour l'objet local de documents
+    const updatedDocuments = { ...(authModule.getDocuments || {}) };
+    updatedDocuments[currentUploadDoc.value.id] = base64Str;
+
+    try {
+      const res = await authModule.updateProfile({ documents: updatedDocuments });
+      if (res) {
+        $q.notify({ type: 'positive', message: 'Document mis à jour avec succès' });
+      }
+    } catch (err) {
+      $q.notify({ type: 'negative', message: 'Erreur lors de la mise à jour du document' });
+    } finally {
+      if (hiddenFileInput.value) hiddenFileInput.value.value = '';
+      currentUploadDoc.value = null;
+    }
+  };
+  reader.readAsDataURL(file);
+};
+
+const viewDocument = (doc: any) => {
+  const base64Str = authModule.getDocuments[doc.id];
+  if (base64Str) {
+    const pdfWindow = window.open("");
+    if (pdfWindow) {
+      pdfWindow.document.write(`<iframe width='100%' height='100%' src='${base64Str}'></iframe>`);
+      pdfWindow.document.title = doc.name;
+    }
+  } else {
+    $q.notify({ type: 'warning', message: 'Document introuvable' });
+  }
+};
+
+const downloadDocument = (doc: any) => {
+  const base64Str = authModule.getDocuments[doc.id];
+  if (base64Str) {
+    const a = document.createElement("a");
+    a.href = base64Str;
+    a.download = `${doc.name}.pdf`;
+    a.click();
+  } else {
+    $q.notify({ type: 'warning', message: 'Document introuvable' });
   }
 };
 </script>
