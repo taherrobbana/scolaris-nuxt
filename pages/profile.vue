@@ -2,9 +2,10 @@
   <q-page padding>
     <div class="myCard">
       <div class="row q-col-gutter-md">
-        <div style="width: min-content" class="col-12 col-md-2">
+        <!-- Colonne Avatar -->
+        <div class="col-12 col-md-auto">
           <div style="width: min-content">
-            <div class="text-h5 q-mb-md" style="text-align: center; font-weight: bold">
+            <div class="text-h5 text-primary text-weight-bold" style="text-align: center;">
               {{ fullName }}
             </div>
             <div class="image-wrapper">
@@ -19,18 +20,25 @@
               </q-btn>
             </div>
           </div>
-          <q-tabs v-model="tab" class="text-primary" style="padding-top: 10px;">
-            <q-tab name="identity" label="Identité" />
-            <q-tab name="contactDetails" label="Coordonnées" />
-            <q-tab name="emergencyContacts" label="Contacts d'urgence" />
-            <q-tab name="documents" label="Documents" />
-          </q-tabs>
         </div>
-        <div class="col-12 col-md-10">
-          <ProfileIdentity v-if="tab == 'identity'" />
-          <ProfileContactDetails v-if="tab == 'contactDetails'" />
-          <ProfileEmergencyContacts v-if="tab == 'emergencyContacts'" />
-          <ProfileDocuments v-if="tab == 'documents'" />
+
+        <!-- Colonne Contenu et Onglets -->
+        <div class="col-12 col-md">
+          <div class="row justify-center q-mb-md">
+            <q-tabs v-model="tab" class="text-primary">
+              <q-tab name="identity" label="Identité" />
+              <q-tab name="contactDetails" label="Coordonnées" />
+              <q-tab name="emergencyContacts" label="Contacts d'urgence" />
+              <q-tab name="documents" label="Documents" />
+            </q-tabs>
+          </div>
+          
+          <div style="width: 100%">
+            <ProfileIdentity v-if="tab == 'identity'" />
+            <ProfileContactDetails v-if="tab == 'contactDetails'" />
+            <ProfileEmergencyContacts v-if="tab == 'emergencyContacts'" />
+            <ProfileDocuments v-if="tab == 'documents'" />
+          </div>
         </div>
         <!-- <div>
           <q-form class="q-gutter-md">
