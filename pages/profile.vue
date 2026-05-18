@@ -26,10 +26,10 @@
         <div class="col-12 col-md">
           <div class="row justify-center q-mb-md">
             <q-tabs v-model="tab" class="text-primary">
-              <q-tab name="identity" label="Identité" />
-              <q-tab name="contactDetails" label="Coordonnées" />
-              <q-tab name="emergencyContacts" label="Contacts d'urgence" />
-              <q-tab name="documents" label="Documents" />
+              <q-tab name="identity" :label="$t('profile.identity')" />
+              <q-tab name="contactDetails" :label="$t('profile.contactDetails')" />
+              <q-tab name="emergencyContacts" :label="$t('profile.emergencyContacts')" />
+              <q-tab name="documents" :label="$t('profile.documents')" />
             </q-tabs>
           </div>
           
@@ -40,17 +40,6 @@
             <ProfileDocuments v-if="tab == 'documents'" />
           </div>
         </div>
-        <!-- <div>
-          <q-form class="q-gutter-md">
-            <q-input dense outlined v-model="profile.name" label="Nom complet" />
-            <q-input dense outlined v-model="profile.email" label="Email" />
-            <q-input dense outlined v-model="profile.phone" label="Téléphone" />
-
-            <q-file v-model="profile.cv" label="Uploader CV (PDF)" accept=".pdf" />
-            <Upload />
-            <q-btn label="Enregistrer" color="primary" />
-          </q-form>
-        </div> -->
       </div>
     </div>
 
@@ -58,13 +47,13 @@
     <q-dialog v-model="showEditProfilePicPopUp">
       <q-card style="min-width: 400px; max-width: 600px">
         <q-card-section class="row items-center">
-          <div class="text-h6">Modifier la photo de profil</div>
+          <div class="text-h6">{{ $t('profile.editAvatar') }}</div>
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
 
         <q-card-section class="q-gutter-md">
-          <q-file v-model="tempFile" label="Choisir une image" outlined dense accept="image/*"
+          <q-file v-model="tempFile" :label="$t('profile.chooseImage')" outlined dense accept="image/*"
             @update:model-value="onFileSelected">
             <template v-slot:prepend>
               <q-icon name="image" />
@@ -81,6 +70,9 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from "vue";
+import { useQuasar } from "quasar";
+import { useI18n } from "vue-i18n";
 import Upload from "~/components/cropper/Upload.vue";
 import ImageCropper from "~/components/cropper/ImageCropper.vue";
 import ProfileIdentity from "~/components/profile/ProfileIdentity.vue";
@@ -89,9 +81,11 @@ import ProfileEmergencyContacts from "~/components/profile/ProfileEmergencyConta
 import ProfileDocuments from "~/components/profile/ProfileDocuments.vue";
 import { useAuthModule } from "~/stores/auth/authModule";
 import { ALL_ROLES } from '~/utils/types';
-const $q = useQuasar();
 
+const $q = useQuasar();
+const { t } = useI18n();
 const authModule = useAuthModule();
+
 const fullName = computed(
   () => authModule.getFirstName + " " + authModule.getLastName,
 );
@@ -123,7 +117,7 @@ const handleCropped = async (data: any) => {
     if (res) {
       $q.notify({
         type: 'positive',
-        message: 'Photo de profil mise à jour avec succès',
+        message: t('profile.avatarSuccess'),
         timeout: 2000
       });
       showEditProfilePicPopUp.value = false;
@@ -134,7 +128,6 @@ const handleCropped = async (data: any) => {
     console.error('Erreur lors de la mise à jour de l\'avatar', err);
   }
 };
-
 
 const showEditProfilePicPopUp = ref(false);
 
@@ -149,10 +142,10 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Mon Profil',
+  title: t('profile.title'),
 })
-
 </script>
+
 <style scoped lang="scss">
 .rounded-circle {
   border-radius: 50% !important;

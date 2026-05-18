@@ -1,6 +1,6 @@
 import { defineNuxtPlugin } from "nuxt/app";
 import { createI18n } from "vue-i18n";
-import { watch } from "vue";
+import { watch, computed } from "vue";
 import { useLangModule } from "~/stores/lang/langModule";
 
 export default defineNuxtPlugin(async (nuxtApp) => {
@@ -11,6 +11,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     fr: (await import("../locales/fr.json")).default,
     en: (await import("../locales/en.json")).default,
   };
+  
   const i18n = createI18n({
     legacy: false,
     locale: language.value,
@@ -23,4 +24,10 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   });
 
   nuxtApp.vueApp.use(i18n);
+
+  return {
+    provide: {
+      t: i18n.global.t
+    }
+  };
 });

@@ -216,42 +216,45 @@ export const useAuthModule = defineStore("authModule", {
       }
     },
     async login(body: any) {
+      const { $t } = useNuxtApp();
       await login(body).then((res: any) => {
         this.handleLoginResponse(res);
         Notify.create({
           type: "positive",
-          message: res.message || "Successfully logged in",
+          message: res.message || $t('auth.messages.loginSuccess'),
         });
       });
     },
     async register(payload: any) {
+      const { $t } = useNuxtApp();
       await register(payload).then((res: any) => {
         if (res) {
           Notify.create({
             type: "positive",
-            message: res.message || "Account created successfully",
+            message: res.message || $t('auth.messages.registerSuccess'),
           });
           this.handleLoginResponse(res);
         }
       });
     },
     async sendRecoveryMail(payload: any) {
+      const { $t } = useNuxtApp();
       await sendRecoveryMail(payload).then((res: any) => {
         if (res) {
           Notify.create({
             type: "positive",
-            message: res.message || "Mail sent successfully",
+            message: res.message || $t('auth.messages.mailSent'),
           });
         }
       });
     },
     async resetPassword(payload: any) {
-      const { $router } = useNuxtApp();
+      const { $router, $t } = useNuxtApp();
       await resetPassword(payload).then((res: any) => {
         if (res) {
           Notify.create({
             type: "positive",
-            message: res.message || "Mot de passe réinitialisé avec succès",
+            message: res.message || $t('auth.messages.resetSuccess'),
           });
           $router.push("/login");
         }

@@ -1,9 +1,9 @@
 <template>
   <div class="q-pa-md">
-    <div class="text-h6 q-mb-md">Documents administratifs</div>
+    <div class="text-h6 q-mb-md">{{ $t('documents.title') }}</div>
 
-    <div class="row q-col-gutter-xs">
-      <div :class="currentViewedDocSrc ? 'col-12 col-md-6' : 'col-12'">
+    <div class="row q-col-gutter-lg">
+      <div :class="currentViewedDocSrc ? 'col-12 col-md-5' : 'col-12'">
         <q-list bordered separator padding>
           <q-item v-for="doc in documents" :key="doc.id">
             <q-item-section avatar>
@@ -12,22 +12,26 @@
 
             <q-item-section>
               <q-item-label>{{ doc.name }}</q-item-label>
-              <q-item-label caption v-if="doc.status === 'uploaded'">Téléchargé le {{ doc.date }}</q-item-label>
-              <q-item-label caption v-else class="text-warning">Non fourni</q-item-label>
+              <q-item-label caption v-if="doc.status === 'uploaded'">
+                {{ $t('documents.status.uploaded', { date: doc.date }) }}
+              </q-item-label>
+              <q-item-label caption v-else class="text-warning">
+                {{ $t('documents.status.pending') }}
+              </q-item-label>
             </q-item-section>
 
             <q-item-section side>
               <div class="row q-gutter-xs">
                 <q-btn flat round dense icon="visibility" color="info" v-if="doc.status === 'uploaded'"
                   @click="viewDocument(doc)">
-                  <q-tooltip>Visualiser</q-tooltip>
+                  <q-tooltip>{{ $t('documents.actions.view') }}</q-tooltip>
                 </q-btn>
                 <q-btn flat round dense icon="download" color="primary" v-if="doc.status === 'uploaded'"
                   @click="downloadDocument(doc)">
-                  <q-tooltip>Télécharger</q-tooltip>
+                  <q-tooltip>{{ $t('documents.actions.download') }}</q-tooltip>
                 </q-btn>
                 <q-btn flat round dense icon="upload" color="secondary" @click="triggerUpload(doc)">
-                  <q-tooltip>Mettre à jour</q-tooltip>
+                  <q-tooltip>{{ $t('documents.actions.update') }}</q-tooltip>
                 </q-btn>
               </div>
             </q-item-section>
@@ -35,9 +39,8 @@
         </q-list>
       </div>
 
-      <div v-if="currentViewedDocSrc" class="col-12 col-md-6">
-        <div class="row items-center justify-between q-mb-sm bg-primary text-white q-pa-sm rounded-borders"
-          style="border-radius: 4px;">
+      <div v-if="currentViewedDocSrc" class="col-12 col-md-7">
+        <div class="row items-center justify-between q-mb-sm bg-primary text-white q-pa-sm rounded-borders" style="border-radius: 4px;">
           <div class="text-subtitle1 flex items-center">
             <q-icon name="description" class="q-mr-sm" size="sm" />
             {{ currentViewedDocTitle }}
@@ -47,14 +50,14 @@
           </q-btn>
         </div>
         <q-card flat bordered class="q-pa-none relative-position" style="height: 600px;">
-          <iframe :src="currentViewedDocSrc" width="100%" height="100%" style="border: none;"
-            @load="onIframeLoad"></iframe>
+          <iframe :src="currentViewedDocSrc" width="100%" height="100%" style="border: none;" @load="onIframeLoad"></iframe>
           <q-inner-loading :showing="isDocLoading">
             <q-spinner size="50px" color="primary" />
           </q-inner-loading>
         </q-card>
       </div>
     </div>
+
     <!-- Input de fichier caché pour gérer l'upload -->
     <input type="file" ref="hiddenFileInput" accept=".pdf" style="display: none" @change="handleFileUpload" />
   </div>
@@ -63,10 +66,12 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 import { useAuthModule } from '~/stores/auth/authModule';
 import { Role } from '~/utils/types';
 
 const $q = useQuasar();
+const { t } = useI18n();
 const authModule = useAuthModule();
 const hiddenFileInput = ref<HTMLInputElement | null>(null);
 const currentUploadDoc = ref<any>(null);
@@ -78,7 +83,7 @@ const isDocLoading = ref(false);
 const documents = computed(() => {
   const role = authModule.getRole;
   const userDocs = authModule.getDocuments || {};
-
+  
   const mapStatus = (docs: any[]) => {
     return docs.map(d => ({
       ...d,
@@ -87,7 +92,7 @@ const documents = computed(() => {
   };
 
   const commonDocs = [
-    { id: 1, name: 'Carte d\'identité / Passeport', icon: 'badge', date: '12/04/2026' },
+    { id: 1, name: t('documents.list.id1'), icon: 'badge', date: '12/04/2026' },
   ];
 
   let roleDocs = commonDocs;
@@ -95,30 +100,30 @@ const documents = computed(() => {
   if (role === Role.student || role === 'student') {
     roleDocs = [
       ...commonDocs,
-      { id: 2, name: 'Curriculum Vitae (CV)', icon: 'description', date: '10/05/2026' },
-      { id: 3, name: 'Relevé de notes', icon: 'assessment', date: '' },
-      { id: 4, name: 'Attestation de scolarité', icon: 'school', date: '' }
+      { id: 2, name: t('documents.list.id2'), icon: 'description', date: '10/05/2026' },
+      { id: 3, name: t('documents.list.id3'), icon: 'assessment', date: '' },
+      { id: 4, name: t('documents.list.id4'), icon: 'school', date: '' }
     ];
   } else if (role === Role.teacher || role === 'teacher') {
     roleDocs = [
       ...commonDocs,
-      { id: 2, name: 'Curriculum Vitae (CV)', icon: 'description', date: '10/05/2026' },
-      { id: 5, name: 'Diplôme', icon: 'workspace_premium', date: '' }
+      { id: 2, name: t('documents.list.id2'), icon: 'description', date: '10/05/2026' },
+      { id: 5, name: t('documents.list.id5'), icon: 'workspace_premium', date: '' }
     ];
   } else if (role === Role.admin || role === 'admin') {
     roleDocs = [
       ...commonDocs,
-      { id: 7, name: 'Contrat de travail', icon: 'history_edu', date: '01/09/2025' },
-      { id: 8, name: 'Fiche de poste', icon: 'description', date: '01/09/2025' }
+      { id: 7, name: t('documents.list.id7'), icon: 'history_edu', date: '01/09/2025' },
+      { id: 8, name: t('documents.list.id8'), icon: 'description', date: '01/09/2025' }
     ];
   } else if (role === Role.coordinator || role === 'coordinator') {
     roleDocs = [
       ...commonDocs,
-      { id: 7, name: 'Contrat de travail', icon: 'history_edu', date: '01/10/2025' },
-      { id: 9, name: 'Décision de nomination', icon: 'assignment', date: '' }
+      { id: 7, name: t('documents.list.id7'), icon: 'history_edu', date: '01/10/2025' },
+      { id: 9, name: t('documents.list.id9'), icon: 'assignment', date: '' }
     ];
   }
-
+  
   return mapStatus(roleDocs);
 });
 
@@ -135,25 +140,24 @@ const handleFileUpload = (event: Event) => {
   if (!file || !currentUploadDoc.value) return;
 
   if (file.type !== 'application/pdf') {
-    $q.notify({ type: 'negative', message: 'Veuillez sélectionner un fichier PDF valide' });
+    $q.notify({ type: 'negative', message: t('documents.messages.invalidPdf') });
     return;
   }
 
   const reader = new FileReader();
   reader.onload = async (e) => {
     const base64Str = e.target?.result as string;
-
-    // Mettre à jour l'objet local de documents
+    
     const updatedDocuments = { ...(authModule.getDocuments || {}) };
     updatedDocuments[currentUploadDoc.value.id] = base64Str;
 
     try {
       const res = await authModule.updateProfile({ documents: updatedDocuments });
       if (res) {
-        $q.notify({ type: 'positive', message: 'Document mis à jour avec succès' });
+        $q.notify({ type: 'positive', message: t('documents.messages.success') });
       }
     } catch (err) {
-      $q.notify({ type: 'negative', message: 'Erreur lors de la mise à jour du document' });
+      $q.notify({ type: 'negative', message: t('documents.messages.error') });
     } finally {
       if (hiddenFileInput.value) hiddenFileInput.value.value = '';
       currentUploadDoc.value = null;
@@ -169,7 +173,7 @@ const viewDocument = (doc: any) => {
     currentViewedDocSrc.value = base64Str;
     currentViewedDocTitle.value = doc.name;
   } else {
-    $q.notify({ type: 'warning', message: 'Document introuvable' });
+    $q.notify({ type: 'warning', message: t('documents.messages.notFound') });
   }
 };
 
@@ -191,7 +195,7 @@ const downloadDocument = (doc: any) => {
     a.download = `${doc.name}.pdf`;
     a.click();
   } else {
-    $q.notify({ type: 'warning', message: 'Document introuvable' });
+    $q.notify({ type: 'warning', message: t('documents.messages.notFound') });
   }
 };
 </script>

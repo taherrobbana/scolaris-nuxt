@@ -10,5 +10,263 @@
     "pageNotFoundSubtitle": "The page you are looking for might have been removed had its name changed or is temporarily unavailable.",
     "back": "Back",
     "home": "Home"
+  },
+  "profile": {
+    "title": "Profile",
+    "fullName": "Full Name",
+    "identity": "Identity",
+    "contactDetails": "Contact Details",
+    "emergencyContacts": "Emergency Contacts",
+    "documents": "Documents",
+    "save": "Save",
+    "edit": "Edit",
+    "editAvatar": "Edit Profile Picture",
+    "chooseImage": "Choose an image",
+    "avatarSuccess": "Profile picture updated successfully"
+  },
+  "documents": {
+    "title": "Administrative Documents",
+    "status": {
+      "uploaded": "Uploaded on {date}",
+      "pending": "Not provided"
+    },
+    "actions": {
+      "view": "View",
+      "download": "Download",
+      "update": "Update"
+    },
+    "messages": {
+      "invalidPdf": "Please select a valid PDF file",
+      "success": "Document updated successfully",
+      "error": "Error updating document",
+      "notFound": "Document not found"
+    },
+    "list": {
+      "id1": "ID Card / Passport",
+      "id2": "Curriculum Vitae (CV)",
+      "id3": "Transcript",
+      "id4": "School Certificate",
+      "id5": "Diploma",
+      "id7": "Employment Contract",
+      "id8": "Job Description",
+      "id9": "Nomination Decision"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "uiPreferences": "Interface Preferences",
+    "darkMode": "Dark Mode",
+    "darkModeCaption": "Enable dark theme for the app",
+    "language": "Default Language",
+    "languageCaption": "Choose interface language",
+    "notifications": "Notifications",
+    "emailNotifications": "Email Notifications",
+    "emailNotificationsCaption": "Receive emails for important events",
+    "pushNotifications": "Push Notifications",
+    "pushNotificationsCaption": "Receive notifications on your device",
+    "save": "Save Preferences",
+    "simulation": "Preferences saved successfully (Simulation)"
+  },
+  "help": {
+    "title": "Help Center & Support",
+    "faq": "Frequently Asked Questions (FAQ)",
+    "contactSupport": "Contact Support",
+    "ourDetails": "Our Contact Info",
+    "email": "Email",
+    "phone": "Phone",
+    "schedule": "Schedule",
+    "sendMessage": "Send a Message",
+    "subject": "Subject",
+    "message": "Your message",
+    "send": "Send",
+    "simulation": "Your message has been sent to support (Simulation)",
+    "q1": "How do I modify my personal information?",
+    "a1": "You can modify your information by accessing the \"Profile\" page. Click on your avatar or name in the menu, then modify the desired fields and click \"Save\".",
+    "q2": "What types of documents can I upload?",
+    "a2": "For security and compatibility reasons, only **PDF** files are accepted at this time.",
+    "q3": "I forgot my password, what should I do?",
+    "a3": "On the login page, click on \"Forgot password\". You will receive an email with instructions to reset your password.",
+    "q4": "How do I change the app language?",
+    "a4": "Go to the \"Settings\" page. You will find an option to choose your default language."
+  },
+  "identity": {
+    "title": "Identity Information",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "gender": "Gender",
+    "birthDate": "Birth Date",
+    "birthPlace": "Birth Place",
+    "nationality": "Nationality",
+    "success": "Identity updated successfully",
+    "genders": {
+      "male": "Male",
+      "female": "Female",
+      "other": "Other"
+    }
+  },
+  "contact": {
+    "title": "Contact Details",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "postalCode": "Postal Code",
+    "city": "City",
+    "country": "Country",
+    "success": "Contact details updated successfully"
+  },
+  "emergency": {
+    "title": "Emergency Contacts",
+    "contactNum": "Contact #{num}",
+    "fullName": "Full Name",
+    "relationship": "Relationship",
+    "phone": "Phone",
+    "add": "Add Contact",
+    "success": "Emergency contacts saved"
+  },
+  "sidebar": {
+    "users": "Users",
+    "usersCaption": "Account Management",
+    "groups": "Groups",
+    "groupsCaption": "Group Management",
+    "profile": "My Profile",
+    "profileCaption": "Personal Info & CV",
+    "help": "Help Center",
+    "helpCaption": "FAQ & Guides",
+    "settings": "Settings",
+    "settingsCaption": "Account Preferences",
+    "logout": "Logout",
+    "logoutCaption": "End Session",
+    "calTest": "Cal Test View"
+  },
+  "header": {
+    "switchLanguage": "Passer en Français"
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "submit": "Login",
+      "forgotPassword": "Forgot Password?",
+      "recover": "Recover your password",
+      "noAccount": "No account?",
+      "createAccount": "Create an account"
+    },
+    "register": {
+      "title": "Create an Account",
+      "submit": "Create Account",
+      "alreadyAccount": "Already have an account?",
+      "login": "Login"
+    },
+    "forgot": {
+      "title": "Forgot Password?",
+      "subtitle": "Enter your email to receive a password recovery link",
+      "send": "Send",
+      "notNeed": "Not needed?",
+      "login": "Login",
+      "noAccount": "No account?",
+      "createAccount": "Create an account"
+    },
+    "fields": {
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "firstName": "First Name",
+      "lastName": "Last Name"
+    },
+    "validation": {
+      "emailRequired": "Email required",
+      "emailInvalid": "Invalid email",
+      "passwordRequired": "Password required",
+      "passwordMin": "Minimum 6 characters",
+      "confirmRequired": "Confirmation required",
+      "mismatch": "Passwords do not match",
+      "firstNameRequired": "First Name required",
+      "lastNameRequired": "Last Name required"
+    },
+    "messages": {
+      "loginSuccess": "Successfully logged in",
+      "registerSuccess": "Account created successfully",
+      "mailSent": "Mail sent successfully",
+      "resetSuccess": "Password reset successfully"
+    }
+  },
+  "admin": {
+    "users": {
+      "title": "Users Management",
+      "bulkCreate": "Bulk Create",
+      "add": "Add",
+      "search": "Search",
+      "edit": "Edit",
+      "delete": "Delete",
+      "editUser": "Edit User",
+      "addUser": "Add User",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "password": "Password",
+      "role": "Role",
+      "group": "Group",
+      "avatarUrl": "Avatar URL",
+      "cancel": "Cancel",
+      "update": "Update",
+      "create": "Create",
+      "bulkTitle": "Bulk Create",
+      "bulkSubtitle": "Paste here a list of users in JSON format or import an Excel file.",
+      "importExcel": "Import an Excel file (.xlsx, .xls)",
+      "import": "Import",
+      "successUpdate": "User updated",
+      "successCreate": "User created",
+      "successImport": "Import successful",
+      "invalidJson": "Invalid JSON format",
+      "confirmDeleteTitle": "Confirm Delete",
+      "confirmDeleteMessage": "Do you really want to delete {name} ?",
+      "deleteNotImplemented": "Delete function not implemented on server side",
+      "roles": {
+        "student": "Student",
+        "teacher": "Teacher",
+        "admin": "Admin",
+        "coordinator": "Coordinator"
+      },
+      "columns": {
+        "email": "Email",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "role": "Role",
+        "group": "Group",
+        "actions": "Actions"
+      }
+    },
+    "groups": {
+      "title": "Groups Management",
+      "add": "Add Group",
+      "assignUsers": "Assign Users",
+      "edit": "Edit",
+      "delete": "Delete",
+      "editGroup": "Edit Group",
+      "addGroup": "Add Group",
+      "name": "Group Name",
+      "cancel": "Cancel",
+      "update": "Update",
+      "create": "Create",
+      "assignTitle": "Assignment: {name}",
+      "noUserFound": "No user found",
+      "nameRequired": "Group name is required",
+      "updatingUsers": "Updating {count} user(s)...",
+      "successUpdate": "Group updated",
+      "successCreate": "Group created",
+      "successDelete": "Group deleted",
+      "userUnassigned": "User unassigned",
+      "userAssigned": "User assigned",
+      "confirmDeleteTitle": "Confirm Delete",
+      "confirmDeleteMessage": "Do you really want to delete group \"{name}\" ?",
+      "columns": {
+        "name": "Group Name",
+        "actions": "Actions"
+      }
+    },
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "usersPending": "Pending Users",
+      "offersPending": "Pending Offers"
+    }
   }
 }

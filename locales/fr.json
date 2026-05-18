@@ -10,5 +10,263 @@
     "pageNotFoundSubtitle": "La page que vous recherchez a peut-être été supprimée, a changé de nom ou est temporairement indisponible.",
     "back": "Retourner en arrière",
     "home": "Accueil"
+  },
+  "profile": {
+    "title": "Profil",
+    "fullName": "Nom complet",
+    "identity": "Identité",
+    "contactDetails": "Coordonnées",
+    "emergencyContacts": "Contacts d'urgence",
+    "documents": "Documents",
+    "save": "Enregistrer",
+    "edit": "Modifier",
+    "editAvatar": "Modifier la photo de profil",
+    "chooseImage": "Choisir une image",
+    "avatarSuccess": "Photo de profil mise à jour avec succès"
+  },
+  "documents": {
+    "title": "Documents administratifs",
+    "status": {
+      "uploaded": "Téléchargé le {date}",
+      "pending": "Non fourni"
+    },
+    "actions": {
+      "view": "Visualiser",
+      "download": "Télécharger",
+      "update": "Mettre à jour"
+    },
+    "messages": {
+      "invalidPdf": "Veuillez sélectionner un fichier PDF valide",
+      "success": "Document mis à jour avec succès",
+      "error": "Erreur lors de la mise à jour du document",
+      "notFound": "Document introuvable"
+    },
+    "list": {
+      "id1": "Carte d'identité / Passeport",
+      "id2": "Curriculum Vitae (CV)",
+      "id3": "Relevé de notes",
+      "id4": "Attestation de scolarité",
+      "id5": "Diplôme",
+      "id7": "Contrat de travail",
+      "id8": "Fiche de poste",
+      "id9": "Décision de nomination"
+    }
+  },
+  "settings": {
+    "title": "Paramètres",
+    "uiPreferences": "Préférences de l'interface",
+    "darkMode": "Mode sombre",
+    "darkModeCaption": "Activer le thème sombre pour l'application",
+    "language": "Langue par défaut",
+    "languageCaption": "Choisir la langue de l'interface",
+    "notifications": "Notifications",
+    "emailNotifications": "Notifications par email",
+    "emailNotificationsCaption": "Recevoir des emails pour les événements importants",
+    "pushNotifications": "Notifications push",
+    "pushNotificationsCaption": "Recevoir des notifications sur votre appareil",
+    "save": "Enregistrer les préférences",
+    "simulation": "Préférences enregistrées avec succès (Simulation)"
+  },
+  "help": {
+    "title": "Centre d'aide & Support",
+    "faq": "Foire Aux Questions (FAQ)",
+    "contactSupport": "Contacter le support",
+    "ourDetails": "Nos coordonnées",
+    "email": "Email",
+    "phone": "Téléphone",
+    "schedule": "Horaires",
+    "sendMessage": "Envoyer un message",
+    "subject": "Sujet",
+    "message": "Votre message",
+    "send": "Envoyer",
+    "simulation": "Votre message a été envoyé au support (Simulation)",
+    "q1": "Comment modifier mes informations personnelles ?",
+    "a1": "Vous pouvez modifier vos informations en accédant à la page \"Profil\". Cliquez sur votre avatar ou nom dans le menu, puis modifiez les champs souhaités et cliquez sur \"Enregistrer\".",
+    "q2": "Quels types de documents puis-je uploader ?",
+    "a2": "Pour des raisons de sécurité et de compatibilité, seuls les fichiers au format **PDF** sont acceptés pour le moment.",
+    "q3": "J'ai oublié mon mot de passe, que faire ?",
+    "a3": "Sur la page de connexion, cliquez sur \"Mot de passe oublié\". Vous recevrez un e-mail avec les instructions pour réinitialiser votre mot de passe.",
+    "q4": "Comment changer la langue de l'application ?",
+    "a4": "Rendez-vous dans la page \"Paramètres\" (Settings). Vous y trouverez une option pour choisir votre langue par défaut."
+  },
+  "identity": {
+    "title": "Informations d'identité",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "gender": "Genre",
+    "birthDate": "Date de naissance",
+    "birthPlace": "Lieu de naissance",
+    "nationality": "Nationalité",
+    "success": "Identité mise à jour avec succès",
+    "genders": {
+      "male": "Masculin",
+      "female": "Féminin",
+      "other": "Autre"
+    }
+  },
+  "contact": {
+    "title": "Coordonnées de contact",
+    "email": "Email",
+    "phone": "Téléphone",
+    "address": "Adresse",
+    "postalCode": "Code Postal",
+    "city": "Ville",
+    "country": "Pays",
+    "success": "Coordonnées mises à jour avec succès"
+  },
+  "emergency": {
+    "title": "Contacts d'urgence",
+    "contactNum": "Contact #{num}",
+    "fullName": "Nom complet",
+    "relationship": "Lien de parenté",
+    "phone": "Téléphone",
+    "add": "Ajouter un contact",
+    "success": "Contacts d'urgence enregistrés"
+  },
+  "sidebar": {
+    "users": "Utilisateurs",
+    "usersCaption": "Gestion des comptes",
+    "groups": "Groupes",
+    "groupsCaption": "Gestion des groupes",
+    "profile": "Mon profil",
+    "profileCaption": "Informations personnelles et CV",
+    "help": "Centre d'aide",
+    "helpCaption": "FAQ et guides",
+    "settings": "Paramètres",
+    "settingsCaption": "Préférences du compte",
+    "logout": "Déconnexion",
+    "logoutCaption": "Quitter la session",
+    "calTest": "Vue Cal Test"
+  },
+  "header": {
+    "switchLanguage": "Switch to English"
+  },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "submit": "Se connecter",
+      "forgotPassword": "Mot de passe oublié ?",
+      "recover": "Récupérer votre mot de passe",
+      "noAccount": "Pas de compte ?",
+      "createAccount": "Créer un compte"
+    },
+    "register": {
+      "title": "Créer un compte",
+      "submit": "Créer un compte",
+      "alreadyAccount": "Déjà un compte ?",
+      "login": "Se connecter"
+    },
+    "forgot": {
+      "title": "Mot de passe oublié ?",
+      "subtitle": "Entrer ton email pour recevoire un lien de recuperation de ton mot de passe",
+      "send": "Envoyer",
+      "notNeed": "Pas besoin ?",
+      "login": "Se connecter",
+      "noAccount": "Pas de compte ?",
+      "createAccount": "Créer un compte"
+    },
+    "fields": {
+      "email": "Email",
+      "password": "Mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "firstName": "Prénom",
+      "lastName": "Nom"
+    },
+    "validation": {
+      "emailRequired": "Email requis",
+      "emailInvalid": "Email invalide",
+      "passwordRequired": "Mot de passe requis",
+      "passwordMin": "Minimum 6 caractères",
+      "confirmRequired": "Confirmation requise",
+      "mismatch": "Les mots de passe ne correspondent pas",
+      "firstNameRequired": "Prénom requis",
+      "lastNameRequired": "Nom requis"
+    },
+    "messages": {
+      "loginSuccess": "Connexion réussie",
+      "registerSuccess": "Compte créé avec succès",
+      "mailSent": "E-mail envoyé avec succès",
+      "resetSuccess": "Mot de passe réinitialisé avec succès"
+    }
+  },
+  "admin": {
+    "users": {
+      "title": "Gestion des utilisateurs",
+      "bulkCreate": "Création en masse",
+      "add": "Ajouter",
+      "search": "Rechercher",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "editUser": "Modifier l'utilisateur",
+      "addUser": "Ajouter un utilisateur",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Email",
+      "password": "Mot de passe",
+      "role": "Rôle",
+      "group": "Groupe",
+      "avatarUrl": "URL Avatar",
+      "cancel": "Annuler",
+      "update": "Mettre à jour",
+      "create": "Créer",
+      "bulkTitle": "Création en masse",
+      "bulkSubtitle": "Collez ici une liste d'utilisateurs au format JSON ou importez un fichier Excel.",
+      "importExcel": "Importer un fichier Excel (.xlsx, .xls)",
+      "import": "Importer",
+      "successUpdate": "Utilisateur mis à jour",
+      "successCreate": "Utilisateur créé",
+      "successImport": "Importation réussie",
+      "invalidJson": "Format JSON invalide",
+      "confirmDeleteTitle": "Confirmer la suppression",
+      "confirmDeleteMessage": "Voulez-vous vraiment supprimer {name} ?",
+      "deleteNotImplemented": "Fonction de suppression non implémentée côté serveur",
+      "roles": {
+        "student": "Étudiant",
+        "teacher": "Enseignant",
+        "admin": "Administrateur",
+        "coordinator": "Coordinateur"
+      },
+      "columns": {
+        "email": "Email",
+        "firstName": "Prénom",
+        "lastName": "Nom",
+        "role": "Rôle",
+        "group": "Groupe",
+        "actions": "Actions"
+      }
+    },
+    "groups": {
+      "title": "Gestion des groupes",
+      "add": "Ajouter un groupe",
+      "assignUsers": "Affecter des utilisateurs",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "editGroup": "Modifier le groupe",
+      "addGroup": "Ajouter un groupe",
+      "name": "Nom du groupe",
+      "cancel": "Annuler",
+      "update": "Mettre à jour",
+      "create": "Créer",
+      "assignTitle": "Affectation : {name}",
+      "noUserFound": "Aucun utilisateur trouvé",
+      "nameRequired": "Le nom du groupe est requis",
+      "updatingUsers": "Mise à jour de {count} utilisateur(s)...",
+      "successUpdate": "Groupe mis à jour",
+      "successCreate": "Groupe créé",
+      "successDelete": "Groupe supprimé",
+      "userUnassigned": "Utilisateur désaffecté",
+      "userAssigned": "Utilisateur affecté",
+      "confirmDeleteTitle": "Confirmer la suppression",
+      "confirmDeleteMessage": "Voulez-vous vraiment supprimer le groupe \"{name}\" ?",
+      "columns": {
+        "name": "Nom du groupe",
+        "actions": "Actions"
+      }
+    },
+    "dashboard": {
+      "title": "Dashboard Administrateur",
+      "usersPending": "Utilisateurs en attente",
+      "offersPending": "Offres en attente"
+    }
   }
 }

@@ -9,10 +9,7 @@
               @click="navigateTo('/')" />
           </div>
           <div>
-            <q-btn flat no-caps @click="changeLanguage" icon="translate" :label="getLanguage === 'fr'
-              ? 'Switch to English'
-              : 'Passer en Français'
-              " class="q-mr-sm" />
+            <q-btn flat no-caps @click="changeLanguage" icon="translate" :label="$t('header.switchLanguage')" class="q-mr-sm" />
             <q-btn flat round :icon="numberOfNotifications > 0
               ? 'notifications_active'
               : 'notifications'
@@ -44,16 +41,20 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from "vue";
 import { Dark } from "quasar";
 import { useAuthModule } from "~/stores/auth/authModule";
 import { useLangModule } from "~/stores/lang/langModule";
+
+const { $router } = useNuxtApp();
+
 function navigateTo(path: string) {
   $router.push(path);
 }
 
 const numberOfNotifications = ref(2)
-const getLanguage = computed(() => langModule.getLanguage);
 const langModule = useLangModule();
+const getLanguage = computed(() => langModule.getLanguage);
 
 const authModule = useAuthModule();
 const firstName = computed(() => authModule.getFirstName);
@@ -70,7 +71,6 @@ const isDarkActive = computed(() => Dark.isActive);
 const changeLanguage = () => {
   langModule.setLanguage();
 };
-const { $router } = useNuxtApp();
 
 function logout() {
   authModule.initAuth();

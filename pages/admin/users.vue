@@ -2,16 +2,16 @@
   <q-page padding>
     <div class="myCard q-pa-lg">
       <div class="row items-center q-mb-lg">
-        <div class="text-h5 text-primary text-weight-bold">Gestion des utilisateurs</div>
+        <div class="text-h5 text-primary text-weight-bold">{{ $t('admin.users.title') }}</div>
         <q-space />
-        <q-btn color="secondary" icon="group_add" label="Création en masse" @click="showBulkDialog = true"
+        <q-btn color="secondary" icon="group_add" :label="$t('admin.users.bulkCreate')" @click="showBulkDialog = true"
           class="q-mr-sm" unelevated />
-        <q-btn color="primary" icon="add" label="Ajouter" @click="openEditDialog()" unelevated />
+        <q-btn color="primary" icon="add" :label="$t('admin.users.add')" @click="openEditDialog()" unelevated />
       </div>
       <q-table :rows="users" :columns="columns" row-key="id" :loading="loading" :filter="filter" flat bordered
         class="users-table">
         <template v-slot:top-right>
-          <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher">
+          <q-input borderless dense debounce="300" v-model="filter" :placeholder="$t('admin.users.search')">
             <template v-slot:append>
               <q-icon name="search" />
             </template>
@@ -32,7 +32,7 @@
         <template v-slot:body-cell-role="props">
           <q-td :props="props">
             <q-chip :color="getRoleColor(props.row.role)" text-color="white" dense class="text-weight-medium">
-              {{ props.row.role }}
+              {{ $t(`admin.users.roles.${props.row.role}`) }}
             </q-chip>
           </q-td>
         </template>
@@ -40,10 +40,10 @@
         <template v-slot:body-cell-actions="props">
           <q-td :props="props" class="q-gutter-x-sm">
             <q-btn flat round color="primary" icon="edit" @click="openEditDialog(props.row)" size="sm">
-              <q-tooltip>Modifier</q-tooltip>
+              <q-tooltip>{{ $t('admin.users.edit') }}</q-tooltip>
             </q-btn>
             <q-btn flat round color="negative" icon="delete" @click="confirmDelete(props.row)" size="sm">
-              <q-tooltip>Supprimer</q-tooltip>
+              <q-tooltip>{{ $t('admin.users.delete') }}</q-tooltip>
             </q-btn>
           </q-td>
         </template>
@@ -54,26 +54,26 @@
     <q-dialog v-model="editDialog" persistent>
       <q-card style="min-width: 400px">
         <q-card-section class="row items-center">
-          <div class="text-h6">{{ isEditing ? 'Modifier l\'utilisateur' : 'Ajouter un utilisateur' }}</div>
+          <div class="text-h6">{{ isEditing ? $t('admin.users.editUser') : $t('admin.users.addUser') }}</div>
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
 
         <q-card-section class="q-gutter-md">
-          <q-input v-model="editForm.firstName" label="Prénom" outlined dense />
-          <q-input v-model="editForm.lastName" label="Nom" outlined dense />
-          <q-input v-model="editForm.username" label="Email" outlined dense :disable="isEditing" />
-          <q-input v-if="!isEditing" v-model="editForm.password" label="Mot de passe" type="password" outlined dense />
+          <q-input v-model="editForm.firstName" :label="$t('admin.users.firstName')" outlined dense />
+          <q-input v-model="editForm.lastName" :label="$t('admin.users.lastName')" outlined dense />
+          <q-input v-model="editForm.username" :label="$t('admin.users.email')" outlined dense :disable="isEditing" />
+          <q-input v-if="!isEditing" v-model="editForm.password" :label="$t('admin.users.password')" type="password" outlined dense />
 
-          <q-select v-model="editForm.role" :options="roleOptions" label="Rôle" outlined dense emit-value map-options />
-          <q-select v-model="editForm.group" :options="groupOptions" label="Groupe" outlined dense emit-value
+          <q-select v-model="editForm.role" :options="roleOptions" :label="$t('admin.users.role')" outlined dense emit-value map-options />
+          <q-select v-model="editForm.group" :options="groupOptions" :label="$t('admin.users.group')" outlined dense emit-value
             map-options />
-          <q-input v-model="editForm.avatar" label="URL Avatar" outlined dense />
+          <q-input v-model="editForm.avatar" :label="$t('admin.users.avatarUrl')" outlined dense />
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Annuler" color="primary" v-close-popup />
-          <q-btn unelevated :label="isEditing ? 'Mettre à jour' : 'Créer'" color="primary" @click="saveUser"
+          <q-btn flat :label="$t('admin.users.cancel')" color="primary" v-close-popup />
+          <q-btn unelevated :label="isEditing ? $t('admin.users.update') : $t('admin.users.create')" color="primary" @click="saveUser"
             :loading="saving" />
         </q-card-actions>
       </q-card>
@@ -83,15 +83,15 @@
     <q-dialog v-model="showBulkDialog">
       <q-card style="min-width: 600px">
         <q-card-section>
-          <div class="text-h6">Création en masse</div>
+          <div class="text-h6">{{ $t('admin.users.bulkTitle') }}</div>
           <div class="text-caption text-grey-7 q-mt-sm">
-            Collez ici une liste d'utilisateurs au format JSON ou importez un fichier Excel.
+            {{ $t('admin.users.bulkSubtitle') }}
           </div>
         </q-card-section>
 
         <q-card-section>
           <div class="q-mb-md">
-            <q-file v-model="excelFile" label="Importer un fichier Excel (.xlsx, .xls)" outlined dense
+            <q-file v-model="excelFile" :label="$t('admin.users.importExcel')" outlined dense
               accept=".xlsx, .xls" @update:model-value="processExcel">
               <template v-slot:prepend>
                 <q-icon name="upload_file" />
@@ -112,8 +112,8 @@
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Annuler" color="primary" v-close-popup />
-          <q-btn unelevated label="Importer" color="secondary" @click="handleBulkUpload" :loading="bulkLoading" />
+          <q-btn flat :label="$t('admin.users.cancel')" color="primary" v-close-popup />
+          <q-btn unelevated :label="$t('admin.users.import')" color="secondary" @click="handleBulkUpload" :loading="bulkLoading" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -123,6 +123,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { useQuasar, Dialog } from 'quasar';
+import { useI18n } from 'vue-i18n';
 import * as XLSX from 'xlsx';
 import { getAllUsers, updateUser, bulkCreateUsers, register } from '@/stores/auth/authService';
 import { useGroupModule } from '@/stores/group/groupModule';
@@ -133,6 +134,7 @@ definePageMeta({
 });
 
 const $q = useQuasar();
+const { t } = useI18n();
 const users = ref<any[]>([]);
 const loading = ref(false);
 const filter = ref('');
@@ -171,22 +173,22 @@ const editForm = ref({
   avatar: ''
 });
 
-const columns = [
+const columns = computed(() => [
   { name: 'avatar', label: '', field: 'avatar', align: 'left' },
-  { name: 'username', label: 'Email', field: 'username', align: 'left', sortable: true },
-  { name: 'firstName', label: 'Prénom', field: 'firstName', align: 'left', sortable: true },
-  { name: 'lastName', label: 'Nom', field: 'lastName', align: 'left', sortable: true },
-  { name: 'role', label: 'Rôle', field: 'role', align: 'center', sortable: true },
-  { name: 'group', label: 'Groupe', field: 'group', align: 'left', sortable: true },
-  { name: 'actions', label: 'Actions', align: 'center' }
-];
+  { name: 'username', label: t('admin.users.columns.email'), field: 'username', align: 'left', sortable: true },
+  { name: 'firstName', label: t('admin.users.columns.firstName'), field: 'firstName', align: 'left', sortable: true },
+  { name: 'lastName', label: t('admin.users.columns.lastName'), field: 'lastName', align: 'left', sortable: true },
+  { name: 'role', label: t('admin.users.columns.role'), field: 'role', align: 'center', sortable: true },
+  { name: 'group', label: t('admin.users.columns.group'), field: 'group', align: 'left', sortable: true },
+  { name: 'actions', label: t('admin.users.columns.actions'), align: 'center' }
+]);
 
-const roleOptions = [
-  { label: 'Étudiant', value: 'student' },
-  { label: 'Enseignant', value: 'teacher' },
-  { label: 'Administrateur', value: 'admin' },
-  { label: 'Coordinateur', value: 'coordinator' }
-];
+const roleOptions = computed(() => [
+  { label: t('admin.users.roles.student'), value: 'student' },
+  { label: t('admin.users.roles.teacher'), value: 'teacher' },
+  { label: t('admin.users.roles.admin'), value: 'admin' },
+  { label: t('admin.users.roles.coordinator'), value: 'coordinator' }
+]);
 
 const groupOptions = computed(() => {
   return groupStore.groups.map(g => {
@@ -233,10 +235,10 @@ const saveUser = async () => {
   try {
     if (isEditing.value) {
       await updateUser(editForm.value.id, editForm.value);
-      $q.notify({ type: 'positive', message: 'Utilisateur mis à jour' });
+      $q.notify({ type: 'positive', message: t('admin.users.successUpdate') });
     } else {
       await register(editForm.value);
-      $q.notify({ type: 'positive', message: 'Utilisateur créé' });
+      $q.notify({ type: 'positive', message: t('admin.users.successCreate') });
     }
     editDialog.value = false;
     fetchUsers();
@@ -252,13 +254,13 @@ const handleBulkUpload = async () => {
 
     bulkLoading.value = true;
     await bulkCreateUsers(data);
-    $q.notify({ type: 'positive', message: 'Importation réussie' });
+    $q.notify({ type: 'positive', message: t('admin.users.successImport') });
     showBulkDialog.value = false;
     bulkJson.value = '';
     excelFile.value = null;
     fetchUsers();
   } catch (e: any) {
-    $q.notify({ type: 'negative', message: 'Format JSON invalide' });
+    $q.notify({ type: 'negative', message: t('admin.users.invalidJson') });
   } finally {
     bulkLoading.value = false;
   }
@@ -266,14 +268,12 @@ const handleBulkUpload = async () => {
 
 const confirmDelete = (user: any) => {
   Dialog.create({
-    title: 'Confirmer la suppression',
-    message: `Voulez-vous vraiment supprimer ${user.firstName} ${user.lastName} ?`,
+    title: t('admin.users.confirmDeleteTitle'),
+    message: t('admin.users.confirmDeleteMessage', { name: `${user.firstName} ${user.lastName}` }),
     cancel: true,
     persistent: true
   }).onOk(() => {
-    // API delete non spécifiée par l'utilisateur, mais on pourrait l'ajouter
-    // TODO
-    $q.notify({ message: 'Fonction de suppression non implémentée côté serveur', color: 'warning' });
+    $q.notify({ message: t('admin.users.deleteNotImplemented'), color: 'warning' });
   });
 };
 

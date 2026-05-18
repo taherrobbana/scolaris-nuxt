@@ -1,12 +1,12 @@
 <template>
   <q-page padding>
     <div style="max-width: 600px; margin: 0 auto;">
-      <div class="text-h5 text-primary text-weight-bold q-mb-lg">Paramètres</div>
+      <div class="text-h5 text-primary text-weight-bold q-mb-lg">{{ $t('settings.title') }}</div>
 
       <!-- Préférences de l'application -->
       <q-card flat bordered class="q-mb-md">
         <q-card-section>
-          <div class="text-h6 text-primary q-mb-md">Préférences de l'interface</div>
+          <div class="text-h6 text-primary q-mb-md">{{ $t('settings.uiPreferences') }}</div>
           
           <q-list>
             <!-- Mode Sombre -->
@@ -15,8 +15,8 @@
                 <q-icon :name="isDark ? 'dark_mode' : 'light_mode'" color="primary" />
               </q-item-section>
               <q-item-section>
-                <q-item-label>Mode sombre</q-item-label>
-                <q-item-label caption>Activer le thème sombre pour l'application</q-item-label>
+                <q-item-label>{{ $t('settings.darkMode') }}</q-item-label>
+                <q-item-label caption>{{ $t('settings.darkModeCaption') }}</q-item-label>
               </q-item-section>
               <q-item-section side>
                 <q-toggle v-model="isDark" color="primary" @update:model-value="toggleDarkMode" />
@@ -29,8 +29,8 @@
                 <q-icon name="language" color="primary" />
               </q-item-section>
               <q-item-section>
-                <q-item-label>Langue par défaut</q-item-label>
-                <q-item-label caption>Choisir la langue de l'interface</q-item-label>
+                <q-item-label>{{ $t('settings.language') }}</q-item-label>
+                <q-item-label caption>{{ $t('settings.languageCaption') }}</q-item-label>
               </q-item-section>
               <q-item-section side style="width: 150px">
                 <q-select
@@ -51,7 +51,7 @@
       <!-- Notifications -->
       <q-card flat bordered class="q-mb-md">
         <q-card-section>
-          <div class="text-h6 text-primary q-mb-md">Notifications</div>
+          <div class="text-h6 text-primary q-mb-md">{{ $t('settings.notifications') }}</div>
           
           <q-list>
             <q-item tag="label" v-ripple>
@@ -59,8 +59,8 @@
                 <q-icon name="notifications" color="primary" />
               </q-item-section>
               <q-item-section>
-                <q-item-label>Notifications par email</q-item-label>
-                <q-item-label caption>Recevoir des emails pour les événements importants</q-item-label>
+                <q-item-label>{{ $t('settings.emailNotifications') }}</q-item-label>
+                <q-item-label caption>{{ $t('settings.emailNotificationsCaption') }}</q-item-label>
               </q-item-section>
               <q-item-section side>
                 <q-toggle v-model="emailNotifications" color="primary" />
@@ -72,8 +72,8 @@
                 <q-icon name="phonelink_ring" color="primary" />
               </q-item-section>
               <q-item-section>
-                <q-item-label>Notifications push</q-item-label>
-                <q-item-label caption>Recevoir des notifications sur votre appareil</q-item-label>
+                <q-item-label>{{ $t('settings.pushNotifications') }}</q-item-label>
+                <q-item-label caption>{{ $t('settings.pushNotificationsCaption') }}</q-item-label>
               </q-item-section>
               <q-item-section side>
                 <q-toggle v-model="pushNotifications" color="primary" />
@@ -85,7 +85,7 @@
 
       <!-- Bouton Enregistrer -->
       <div class="row justify-end q-mt-lg">
-        <q-btn label="Enregistrer les préférences" color="primary" @click="savePreferences" />
+        <q-btn :label="$t('settings.save')" color="primary" @click="savePreferences" />
       </div>
     </div>
   </q-page>
@@ -94,6 +94,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 import { ALL_ROLES } from '~/utils/types';
 
 definePageMeta({
@@ -106,6 +107,7 @@ useHead({
 })
 
 const $q = useQuasar();
+const { t } = useI18n();
 
 // Données mockées (initialisées avec des valeurs par défaut)
 const isDark = ref($q.dark.isActive);
@@ -126,7 +128,7 @@ const toggleDarkMode = (val: boolean) => {
 const savePreferences = () => {
   $q.notify({
     type: 'positive',
-    message: 'Préférences enregistrées avec succès (Simulation)',
+    message: t('settings.simulation'),
     position: 'top'
   });
 };
