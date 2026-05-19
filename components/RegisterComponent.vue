@@ -149,6 +149,13 @@ const onSubmit = async () => {
   transition: all 0.3s ease;
 }
 
+.custom-input :deep(input:-webkit-autofill) {
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+  -webkit-text-fill-color: #1e293b !important;
+  box-shadow: 0 0 0 1000px white inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 .custom-input :deep(.q-field__control:hover) {
   border-color: var(--q-primary);
 }
