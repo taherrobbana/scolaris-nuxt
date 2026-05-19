@@ -1,5 +1,8 @@
 <template>
-  <div class="login-page flex flex-center">
+  <div class="login-page flex flex-center" @mousemove="onMouseMove">
+    <!-- Interactive Mouse Glow -->
+    <div class="mouse-glow" :class="{ active: hasMoved }" :style="glowStyle"></div>
+
     <!-- Animated Aurora Background Blobs -->
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
@@ -79,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useQuasar } from "quasar";
 import { useAuthModule } from "~/stores/auth/authModule";
 import { useLangModule } from "~/stores/lang/langModule";
@@ -112,6 +115,23 @@ const resetPassword = async () => {
     });
 };
 
+// Interactive mouse glow logic
+const mouseX = ref(0);
+const mouseY = ref(0);
+const hasMoved = ref(false);
+
+const onMouseMove = (event: MouseEvent) => {
+  mouseX.value = event.clientX;
+  mouseY.value = event.clientY;
+  if (!hasMoved.value) hasMoved.value = true;
+};
+
+const glowStyle = computed(() => {
+  return {
+    transform: `translate3d(${mouseX.value}px, ${mouseY.value}px, 0) translate(-50%, -50%)`
+  };
+});
+
 definePageMeta({
   layout: "default",
 });
@@ -130,6 +150,29 @@ useHead({
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Interactive Mouse Glow Aura */
+.mouse-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle,
+      rgba(34, 192, 194, 0.12) 0%,
+      rgba(0, 71, 143, 0.04) 40%,
+      rgba(255, 255, 255, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.8s ease, transform 0.1s cubic-bezier(0.25, 0.8, 0.25, 1);
+  will-change: transform;
+}
+
+.mouse-glow.active {
+  opacity: 1;
 }
 
 /* Background Animated Blobs */
