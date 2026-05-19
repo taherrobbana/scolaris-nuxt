@@ -44,3 +44,67 @@ export function formatDate(dateString: any, inputFormat: any, outputFormat: any)
     // Retourne la date formatée
     return date.format(outputFormat);
 }
+import { computed } from 'vue';
+import { ALL_ROLES } from './types';
+
+export const routes = computed(() => {
+  const { $t } = useNuxtApp();
+  return [
+    {
+      caption: $t("sidebar.usersCaption"),
+      icon: "people",
+      label: $t("sidebar.users"),
+      roles: ['admin'],
+      route: "/admin/users",
+    },
+    {
+      caption: $t("sidebar.groupsCaption"),
+      icon: "diversity_3",
+      label: $t("sidebar.groups"),
+      roles: ['admin'],
+      route: "/admin/groups",
+    },
+    {
+      caption: $t("sidebar.profileCaption"),
+      icon: "account_circle",
+      label: $t("sidebar.profile"),
+      roles: ALL_ROLES,
+      route: "/profile",
+      secondaryRoutes: ["/mon-profil", "/account"],
+    },
+    {
+      icon: "help_outline",
+      label: $t("sidebar.help"),
+      caption: $t("sidebar.helpCaption"),
+      roles: ALL_ROLES,
+      route: "/help",
+      isFooter: true,
+    },
+    {
+      icon: "settings",
+      label: $t("sidebar.settings"),
+      caption: $t("sidebar.settingsCaption"),
+      roles: ALL_ROLES,
+      route: "/settings",
+      isFooter: true,
+    },
+    {
+      icon: "logout",
+      label: $t("sidebar.logout"),
+      caption: $t("sidebar.logoutCaption"),
+      roles: ALL_ROLES,
+      isFooter: true,
+      action: () => {
+        // Simulation de déconnexion ou appel à une fonction globale
+        window.location.href = '/login';
+      },
+    },
+    {
+      icon: "calendar_month",
+      label: $t("sidebar.calTest"),
+      caption: $t("sidebar.calTest"),
+      roles: ALL_ROLES,
+      route: "/vue-cal-test",
+    },
+  ];
+});

@@ -6,7 +6,7 @@
         <div class="header">
           <div class="logo-container">
             <img :src="!isDarkActive ? '/sesameLogo.png' : '/sesameDarkLogo.png'" class="sesame-logo"
-              @click="navigateTo('/')" />
+              @click="navigateTo(role ? `/${role}` : '/login')" />
           </div>
           <div>
             <q-btn flat no-caps @click="changeLanguage" icon="translate" :label="$t('header.switchLanguage')" class="q-mr-sm" />
@@ -61,6 +61,7 @@ const firstName = computed(() => authModule.getFirstName);
 const lastName = computed(() => authModule.getLastName);
 const fullName = computed(() => firstName.value + " " + lastName.value);
 const avatar = computed(() => authModule.getAvatar);
+const role = computed(() => authModule.getRole);
 
 function darkMode() {
   Dark.toggle();

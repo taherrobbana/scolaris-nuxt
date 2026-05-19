@@ -1,6 +1,7 @@
 {
   "commun": {
-    "welcome": "Bienvenue dans notre application"
+    "welcome": "Bienvenue dans notre application",
+    "quickLinks": "Liens Rapides"
   },
   "unauthorizedPage": {
     "unauthorizedMessage": "Désolé {name}, votre rôle ({role}) ne vous permet pas d'accéder à cette page."
@@ -267,6 +268,39 @@
       "title": "Dashboard Administrateur",
       "usersPending": "Utilisateurs en attente",
       "offersPending": "Offres en attente"
+    },
+    "index": {
+      "title": "Tableau de Bord Administrateur",
+      "recentActivity": "Activité Récente",
+      "quickLinks": "Liens Rapides",
+      "manageUsers": "Gérer les utilisateurs",
+      "manageGroups": "Gérer les groupes"
+    }
+  },
+  "coordinator": {
+    "index": {
+      "title": "Dashboard Entreprise / Coordinateur",
+      "interns": "Stagiaires sous ma responsabilité",
+      "evaluate": "Évaluer"
+    }
+  },
+  "student": {
+    "index": {
+      "title": "Mon Dashboard Étudiant",
+      "timeline": "Timeline du stage",
+      "validated": "Validé",
+      "pending": "En attente"
+    }
+  },
+  "teacher": {
+    "index": {
+      "title": "Dashboard Enseignant",
+      "supervisedStages": "Stages encadrés",
+      "columns": {
+        "student": "Étudiant",
+        "company": "Entreprise",
+        "status": "Statut"
+      }
     }
   }
 }

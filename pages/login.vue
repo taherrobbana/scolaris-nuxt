@@ -31,7 +31,7 @@ const changeLanguage = () => {
 };
 
 onMounted(() => {
-  authModule.setConnected(false);
+  authModule.initAuth();
 });
 
 definePageMeta({

@@ -83,9 +83,24 @@ export const useAuthModule = defineStore("authModule", {
     getEmergencyContacts: (state) => state.emergencyContacts,
     getDocuments: (state) => {
       state.localStorageTick;
-      return typeof window !== 'undefined' && localStorage.getItem('user_documents') 
-        ? JSON.parse(localStorage.getItem('user_documents')!) 
-        : {};
+      if (typeof window === 'undefined') return {};
+      
+      // Si state.documents est vide (comme après une actualisation), on charge les documents depuis localStorage
+      if ((!state.documents || Object.keys(state.documents).length === 0) && state.id) {
+        const restored: Record<string, string> = {};
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && key.startsWith(`scolaris_doc_${state.id}_`)) {
+            const docId = key.substring(`scolaris_doc_${state.id}_`.length);
+            const content = localStorage.getItem(key);
+            if (content) {
+              restored[docId] = content;
+            }
+          }
+        }
+        state.documents = restored;
+      }
+      return state.documents || {};
     },
     getRole: (state) => state.role,
     isConnected: (state) => state.connected,
@@ -145,11 +160,16 @@ export const useAuthModule = defineStore("authModule", {
     },
     setDocuments(documents: Record<string, string>) {
       this.documents = documents;
-      if (typeof window !== 'undefined') {
-        localStorage.setItem("user_documents", JSON.stringify(documents));
+      if (typeof window !== 'undefined' && this.id) {
+        // Enregistrer chaque document séparément
+        Object.entries(documents).forEach(([docId, base64Str]) => {
+          if (base64Str) {
+            localStorage.setItem(`scolaris_doc_${this.id}_${docId}`, base64Str);
+          }
+        });
       }
       this.localStorageTick++;
-    },
+    }, 
     setRole(role: Role | string) {
       this.role = role;
     },
@@ -163,6 +183,18 @@ export const useAuthModule = defineStore("authModule", {
       this.refreshToken = refreshToken;
     },
     initAuth() {
+      // Nettoyer tous les documents stockés individuellement pour cet utilisateur
+      if (typeof window !== 'undefined' && this.id) {
+        const keysToRemove: string[] = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && key.startsWith(`scolaris_doc_${this.id}_`)) {
+            keysToRemove.push(key);
+          }
+        }
+        keysToRemove.forEach(k => localStorage.removeItem(k));
+      }
+
       this.setId("");
       this.setUsername("");
       this.setFirstName("");
@@ -173,6 +205,7 @@ export const useAuthModule = defineStore("authModule", {
       this.setRefreshToken("");
       localStorage.removeItem("avatar");
       localStorage.removeItem("user_documents");
+      this.documents = {};
       this.localStorageTick++;
       this.setGroup("");
       this.setGender("");
@@ -282,6 +315,13 @@ export const useAuthModule = defineStore("authModule", {
       }
     },
   },
-
-  persist: true,
+  // persist: {
+  //   paths: [
+  //     'id', 'username', 'firstName', 'lastName', 'localStorageTick',
+  //     'group', 'gender', 'birthDate', 'birthPlace', 'nationality',
+  //     'phone', 'address', 'postalCode', 'city', 'country',
+  //     'emergencyContacts', 'role', 'connected', 'token', 'refreshToken'
+  //   ]
+  // },
+  persist: true
 });

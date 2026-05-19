@@ -1,6 +1,7 @@
 {
   "commun": {
-    "welcome": "Welcome to our app"
+    "welcome": "Welcome to our app",
+    "quickLinks": "Quick Links"
   },
   "unauthorizedPage": {
     "unauthorizedMessage": "Sorry {name}, Your role ({role}) does not allow you to access this page."
@@ -267,6 +268,39 @@
       "title": "Admin Dashboard",
       "usersPending": "Pending Users",
       "offersPending": "Pending Offers"
+    },
+    "index": {
+      "title": "Admin Dashboard",
+      "recentActivity": "Recent Activity",
+      "quickLinks": "Quick Links",
+      "manageUsers": "Manage Users",
+      "manageGroups": "Manage Groups"
+    }
+  },
+  "coordinator": {
+    "index": {
+      "title": "Coordinator Dashboard",
+      "interns": "Interns under my responsibility",
+      "evaluate": "Evaluate"
+    }
+  },
+  "student": {
+    "index": {
+      "title": "My Student Dashboard",
+      "timeline": "Internship Timeline",
+      "validated": "Validated",
+      "pending": "Pending"
+    }
+  },
+  "teacher": {
+    "index": {
+      "title": "Teacher Dashboard",
+      "supervisedStages": "Supervised Stages",
+      "columns": {
+        "student": "Student",
+        "company": "Company",
+        "status": "Status"
+      }
     }
   }
 }
