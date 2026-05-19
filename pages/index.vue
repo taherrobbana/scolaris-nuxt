@@ -16,9 +16,9 @@ const role = computed(() => authModule.getRole);
 
 onMounted(() => {
   if (role.value) {
-    router.push(`/${role.value}`);
+    router.replace(`/${role.value}`);
   } else {
-    router.push('/login');
+    router.replace('/login');
   }
 });
 
