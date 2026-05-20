@@ -1,7 +1,8 @@
 {
   "commun": {
     "welcome": "Bienvenue sur Scolaris",
-    "quickLinks": "Liens Rapides"
+    "quickLinks": "Liens Rapides",
+    "or": "OU"
   },
   "unauthorizedPage": {
     "unauthorizedMessage": "Désolé {name}, votre rôle ({role}) ne vous permet pas d'accéder à cette page."
@@ -153,6 +154,7 @@
     },
     "register": {
       "title": "Créer un compte",
+      "subtitle": "Rejoignez la plateforme Scolaris",
       "submit": "Créer un compte",
       "alreadyAccount": "Déjà un compte ?",
       "login": "Se connecter"
@@ -165,6 +167,20 @@
       "login": "Se connecter",
       "noAccount": "Pas de compte ?",
       "createAccount": "Créer un compte"
+    },
+    "reset": {
+      "subtitle": "Merci de saisir votre nouveau mot de passe",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "submit": "Réinitialiser mot de passe",
+      "backToLogin": "Revenir à l'écran de connexion ?",
+      "loginLink": "Se connecter",
+      "validation": {
+        "passwordRequired": "Mot de passe requis",
+        "passwordMin": "Minimum 6 caractères",
+        "confirmRequired": "Confirmation requise",
+        "mismatch": "Les mots de passe ne correspondent pas"
+      }
     },
     "fields": {
       "email": "Email",

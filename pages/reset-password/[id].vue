@@ -17,14 +17,14 @@
             <img src="/sesameLogo.png" class="brand-logo" alt="Scolaris Logo" />
           </div>
           <h2 class="text-h5 text-weight-bold text-primary q-mt-sm q-mb-xs">{{ $t("commun.welcome") }}</h2>
-          <p class="text-subtitle2 text-grey-6">Merci de saisir votre nouveau mot de passe</p>
+          <p class="text-subtitle2 text-grey-6">{{ $t('auth.reset.subtitle') }}</p>
         </div>
 
         <q-form @submit="resetPassword" class="q-gutter-y-lg">
-          <q-input v-model="form.newPassword" label="Nouveau mot de passe" :type="showPassword ? 'text' : 'password'"
+          <q-input v-model="form.newPassword" :label="$t('auth.reset.newPassword')" :type="showPassword ? 'text' : 'password'"
             outlined rounded bg-color="white" class="custom-input" :rules="[
-              (val) => !!val || 'Mot de passe requis',
-              (val) => val.length >= 6 || 'Minimum 6 caractères',
+              (val) => !!val || $t('auth.reset.validation.passwordRequired'),
+              (val) => val.length >= 6 || $t('auth.reset.validation.passwordMin'),
             ]">
             <template v-slot:prepend>
               <q-icon name="lock" color="grey-6" />
@@ -35,11 +35,11 @@
             </template>
           </q-input>
 
-          <q-input v-model="form.confirmPassword" label="Confirmer le mot de passe"
+          <q-input v-model="form.confirmPassword" :label="$t('auth.reset.confirmPassword')"
             :type="showConfirmPassword ? 'text' : 'password'" outlined rounded bg-color="white" class="custom-input"
             :rules="[
-              (val) => !!val || 'Confirmation requise',
-              (val) => val === form.newPassword || 'Les mots de passe ne correspondent pas',
+              (val) => !!val || $t('auth.reset.validation.confirmRequired'),
+              (val) => val === form.newPassword || $t('auth.reset.validation.mismatch'),
             ]">
             <template v-slot:prepend>
               <q-icon name="lock_reset" color="grey-6" />
@@ -54,7 +54,7 @@
           <div class="text-center q-mt-xl">
             <q-btn type="submit" color="primary" :loading="loading" class="submit-btn full-width" rounded unelevated>
               <div class="row items-center justify-center q-gutter-xs">
-                <span class="text-weight-bold">Réinitialiser mot de passe</span>
+                <span class="text-weight-bold">{{ $t('auth.reset.submit') }}</span>
                 <q-icon name="check_circle" size="18px" />
               </div>
             </q-btn>
@@ -62,8 +62,8 @@
 
           <!-- Redirect Link -->
           <div class="text-center q-mt-lg">
-            <span class="text-grey-7 text-caption">Revenir à l'écran de connexion ? </span>
-            <q-btn flat color="secondary" label="Se connecter" @click="router.push('/login')" dense no-caps
+            <span class="text-grey-7 text-caption">{{ $t('auth.reset.backToLogin') }} </span>
+            <q-btn flat color="secondary" :label="$t('auth.reset.loginLink')" @click="router.push('/login')" dense no-caps
               class="hover-underline-secondary text-weight-bold" />
           </div>
         </q-form>
