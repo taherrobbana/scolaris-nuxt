@@ -105,7 +105,7 @@ useHead({
   pointer-events: none;
   z-index: 1;
   opacity: 0;
-  transition: opacity 0.8s ease, transform 0.1s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: opacity 0.8s ease, transform 1s cubic-bezier(0.25, 0.8, 0.25, 1);
   will-change: transform;
 }
 
