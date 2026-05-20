@@ -73,7 +73,6 @@
 import { ref, computed } from "vue";
 import { useQuasar } from "quasar";
 import { useI18n } from "vue-i18n";
-import Upload from "~/components/cropper/Upload.vue";
 import ImageCropper from "~/components/cropper/ImageCropper.vue";
 import ProfileIdentity from "~/components/profile/ProfileIdentity.vue";
 import ProfileContactDetails from "~/components/profile/ProfileContactDetails.vue";
@@ -142,7 +141,7 @@ definePageMeta({
 })
 
 useHead({
-  title: t('profile.title'),
+  title: computed(() => t('useHead.profile')),
 })
 </script>
 

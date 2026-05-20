@@ -22,6 +22,8 @@
   </q-page>
 </template>
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 
 const router = useRouter()
 
@@ -30,7 +32,7 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Page introuvable',
+  title: computed(() => t('useHead.slug')),
 })
 </script>
 <style scoped lang="scss">

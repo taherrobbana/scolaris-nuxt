@@ -162,7 +162,7 @@ const processExcel = (file: any) => {
   reader.readAsArrayBuffer(file);
 };
 
-const editForm = ref({
+const editForm : any = ref({
   id: '',
   username: '',
   password: '',
@@ -289,6 +289,10 @@ const getRoleColor = (role: string) => {
 onMounted(() => {
   fetchUsers();
   fetchGroups();
+});
+
+useHead({
+  title: computed(() => t('useHead.admin.users')),
 });
 </script>
 

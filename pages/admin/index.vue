@@ -50,11 +50,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import QuickLinks from '~/components/QuickLinks.vue';
+
+const { t } = useI18n();
+
 definePageMeta({
   middleware: 'auth',
   roles: ['admin'],
+});
+
+useHead({
+  title: computed(() => t('useHead.admin.index'))
 });
 
 const stats = ref([

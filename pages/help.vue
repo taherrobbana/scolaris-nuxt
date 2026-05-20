@@ -147,17 +147,17 @@ import { useQuasar } from 'quasar';
 import { useI18n } from 'vue-i18n';
 import { ALL_ROLES } from '~/utils/types';
 
+const $q = useQuasar();
+const { t } = useI18n();
+
 definePageMeta({
     middleware: 'auth',
     roles: ALL_ROLES,
 })
 
 useHead({
-    title: 'Aide',
+    title: computed(() => t('useHead.help')),
 })
-
-const $q = useQuasar();
-const { t } = useI18n();
 
 const ticket = ref({
   subject: '',

@@ -5,14 +5,16 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { useAuthModule } from '~/stores/auth/authModule';
 import { ALL_ROLES } from '~/utils/types';
 
 const authModule = useAuthModule();
 const router = useRouter();
 const role = computed(() => authModule.getRole);
+const { t } = useI18n();
 
 onMounted(() => {
   if (role.value) {
@@ -28,6 +30,6 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Accueil',
+  title: computed(() => t('useHead.index')),
 })
 </script>

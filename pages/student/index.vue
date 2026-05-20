@@ -31,8 +31,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import QuickLinks from '~/components/QuickLinks.vue';
+
+const { t } = useI18n();
 
 definePageMeta({
   middleware: 'auth',
@@ -44,6 +47,10 @@ const stats = ref([
   { title: "Moyenne Générale", value: "14.5", color: "positive", icon: "assessment" },
   { title: "Absences", value: "2", color: "warning", icon: "event_busy" },
 ]);
+
+useHead({
+  title: computed(() => t('useHead.student.index')),
+});
 </script>
 
 <style scoped>

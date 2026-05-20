@@ -219,13 +219,16 @@ function getBadgeColor(eventClass: string): string {
 //     event.event.classList.remove("custom-dragging-class");
 //   }
 
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
+
 definePageMeta({
     middleware: 'auth',
     roles: ALL_ROLES,
 })
 
 useHead({
-    title: 'Emploi du temps',
+    title: computed(() => t('useHead.vue-cal-test')),
 })
 </script>
 <style lang="scss">

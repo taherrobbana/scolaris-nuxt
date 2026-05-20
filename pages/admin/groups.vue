@@ -228,6 +228,10 @@ const confirmDelete = (group: any) => {
 onMounted(() => {
   fetchGroups();
 });
+
+useHead({
+  title: computed(() => t('useHead.admin.groups')),
+});
 </script>
 
 <style scoped>

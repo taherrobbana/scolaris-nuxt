@@ -27,6 +27,8 @@
 
 <script setup lang="ts">
 import { useAuthModule } from '~/stores/auth/authModule';
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 
 const router = useRouter()
 const authModule = useAuthModule();
@@ -37,7 +39,7 @@ definePageMeta({
 })
 
 useHead({
-    title: 'Accès restreint',
+    title: computed(() => t('useHead.unauthorized')),
 })
 </script>
 <style scoped lang="scss">

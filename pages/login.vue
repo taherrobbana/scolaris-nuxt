@@ -35,6 +35,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
 import LoginComponent from "@/components/LoginComponent.vue";
 import RegisterComponent from "@/components/RegisterComponent.vue";
 import ForgotPasswordComponent from "@/components/ForgotPasswordComponent.vue";
@@ -44,6 +45,7 @@ import { useLangModule } from "@/stores/lang/langModule";
 const componentToShow = ref("LoginComponent");
 const authModule = useAuthModule();
 const langModule = useLangModule();
+const { t } = useI18n();
 
 const changeLanguage = () => {
   langModule.setLanguage();
@@ -75,7 +77,7 @@ definePageMeta({
 });
 
 useHead({
-  title: "Connexion",
+  title: computed(() => t("useHead.login")),
 });
 </script>
 

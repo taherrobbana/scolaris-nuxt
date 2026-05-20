@@ -4,6 +4,34 @@
     "quickLinks": "Quick Links",
     "or": "OR"
   },
+  "useHead": {
+    "app": "School Platform",
+    "admin": {
+      "groups": "Groups Management",
+      "index": "Admin Dashboard",
+      "users": "Users Management"
+    },
+    "coordinator": {
+      "index": "Coordinator Dashboard"
+    },
+    "reset-password": {
+      "id": "Reset Password"
+    },
+    "student": {
+      "index": "My Student Dashboard"
+    },
+    "teacher": {
+      "index": "Teacher Dashboard"
+    },
+    "slug": "Page Not Found",
+    "help": "Help Center & Support",
+    "index": "Home",
+    "login": "Login",
+    "profile": "Profile",
+    "settings": "Settings",
+    "unauthorized": "Restricted Access",
+    "vue-cal-test": "Schedule"
+  },
   "unauthorizedPage": {
     "unauthorizedMessage": "Sorry {name}, Your role ({role}) does not allow you to access this page."
   },

@@ -97,17 +97,17 @@ import { useQuasar } from 'quasar';
 import { useI18n } from 'vue-i18n';
 import { ALL_ROLES } from '~/utils/types';
 
+const $q = useQuasar();
+const { t } = useI18n();
+
 definePageMeta({
   middleware: 'auth',
   roles: ALL_ROLES,
 })
 
 useHead({
-  title: 'Paramètres',
+  title: computed(() => t('useHead.settings')),
 })
-
-const $q = useQuasar();
-const { t } = useI18n();
 
 // Données mockées (initialisées avec des valeurs par défaut)
 const isDark = ref($q.dark.isActive);

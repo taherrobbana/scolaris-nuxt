@@ -5,7 +5,10 @@
 </template>
 <script setup lang="ts">
 import { Dark, setCssVar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 import { useAuthModule } from './stores/auth/authModule';
+
+const { t } = useI18n();
 
 // TODO : temporaire, jusq'a fixer quasar-variable.scss
 // if (process.client) {
@@ -33,7 +36,7 @@ const isUserLoggedIn = computed(() => authModule.isConnected);
 useHead({
   titleTemplate: (titleChunk) => {
     const prefix = isUserLoggedIn.value && numberOfNotifications.value > 0 ? `(${numberOfNotifications.value}) ` : ''
-    const baseTitle = 'Plateforme Scolaire'
+    const baseTitle = t('useHead.app')
 
     return titleChunk && titleChunk !== baseTitle
       ? `${prefix}${titleChunk} - ${baseTitle}`

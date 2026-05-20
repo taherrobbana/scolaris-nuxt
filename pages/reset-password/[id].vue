@@ -84,6 +84,7 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useQuasar } from "quasar";
+import { useI18n } from "vue-i18n";
 import { useAuthModule } from "~/stores/auth/authModule";
 import { useLangModule } from "~/stores/lang/langModule";
 
@@ -94,6 +95,8 @@ const $q = useQuasar();
 
 const authModule = useAuthModule();
 const langModule = useLangModule();
+const { t } = useI18n();
+
 const changeLanguage = () => {
   langModule.setLanguage();
 };
@@ -137,7 +140,7 @@ definePageMeta({
 });
 
 useHead({
-  title: "Réinitialiser le mot de passe",
+  title: computed(() => t("useHead.reset-password.id")),
 });
 </script>
 
