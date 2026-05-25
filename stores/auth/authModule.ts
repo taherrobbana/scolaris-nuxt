@@ -159,12 +159,27 @@ export const useAuthModule = defineStore("authModule", {
       this.emergencyContacts = emergencyContacts;
     },
     setDocuments(documents: Record<string, string>) {
-      this.documents = documents;
+      this.documents = documents || {};
       if (typeof window !== 'undefined' && this.id) {
+        // Supprimer du localStorage les documents qui ne sont plus présents ou vides
+        const keysToRemove: string[] = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && key.startsWith(`scolaris_doc_${this.id}_`)) {
+            const docId = key.substring(`scolaris_doc_${this.id}_`.length);
+            if (!this.documents[docId]) {
+              keysToRemove.push(key);
+            }
+          }
+        }
+        keysToRemove.forEach(k => localStorage.removeItem(k));
+
         // Enregistrer chaque document séparément
-        Object.entries(documents).forEach(([docId, base64Str]) => {
+        Object.entries(this.documents).forEach(([docId, base64Str]) => {
           if (base64Str) {
             localStorage.setItem(`scolaris_doc_${this.id}_${docId}`, base64Str);
+          } else {
+            localStorage.removeItem(`scolaris_doc_${this.id}_${docId}`);
           }
         });
       }

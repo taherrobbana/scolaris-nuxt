@@ -241,6 +241,7 @@ const handleFileUpload = (event: Event) => {
         documents: updatedDocuments,
       });
       if (res) {
+        authModule.setDocuments(updatedDocuments);
         $q.notify({
           type: "positive",
           message: t("documents.messages.success"),
@@ -304,6 +305,7 @@ const confirmDelete = (doc: any) => {
         documents: updatedDocuments,
       });
       if (res) {
+        authModule.setDocuments(updatedDocuments);
         $q.notify({
           type: "positive",
           message: t("documents.messages.deleteSuccess"),
