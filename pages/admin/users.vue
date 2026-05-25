@@ -224,7 +224,7 @@
           <q-input
             v-model="bulkJson"
             type="textarea"
-            label="JSON Payload"
+            :label="$t('admin.users.jsonPayload')"
             outlined
             placeholder='[{
   "username": "",
@@ -428,7 +428,7 @@ const saveUser = async () => {
 const handleBulkUpload = async () => {
   try {
     const data = JSON.parse(bulkJson.value);
-    if (!Array.isArray(data)) throw new Error("Le format doit être un tableau");
+    if (!Array.isArray(data)) throw new Error(t("admin.users.formatMustBeArray"));
 
     bulkLoading.value = true;
     await bulkCreateUsers(data);

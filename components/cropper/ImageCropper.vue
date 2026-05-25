@@ -5,12 +5,12 @@
 
     <div class="row justify-center q-mt-md q-gutter-sm">
       <q-btn color="primary" flat @click="rotate(-90)" icon="rotate_left">
-        <q-tooltip>Rotation gauche</q-tooltip>
+        <q-tooltip>{{ $t("cropper.rotateLeft") }}</q-tooltip>
       </q-btn>
       <q-btn color="primary" flat @click="rotate(90)" icon="rotate_right">
-        <q-tooltip>Rotation droite</q-tooltip>
+        <q-tooltip>{{ $t("cropper.rotateRight") }}</q-tooltip>
       </q-btn>
-      <q-btn color="positive" unelevated @click="crop" icon="check" label="Valider" />
+      <q-btn color="positive" unelevated @click="crop" icon="check" :label="$t('cropper.validate')" />
     </div>
   </div>
 </template>

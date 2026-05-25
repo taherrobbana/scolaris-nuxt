@@ -56,10 +56,10 @@ useHead({
   title: computed(() => t("useHead.teacher.index")),
 });
 
-const stats = ref([
-  { title: "Groupes en charge", value: "3", color: "primary", icon: "groups" },
-  { title: "Cours Actifs", value: "4", color: "secondary", icon: "class" },
-  { title: "Copies à corriger", value: "25", color: "warning", icon: "edit" },
+const stats = computed(() => [
+  { title: t("teacher.index.stats.assignedGroups"), value: "3", color: "primary", icon: "groups" },
+  { title: t("teacher.index.stats.activeCourses"), value: "4", color: "secondary", icon: "class" },
+  { title: t("teacher.index.stats.papersToGrade"), value: "25", color: "warning", icon: "edit" },
 ]);
 </script>
 

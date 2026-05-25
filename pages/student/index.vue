@@ -56,15 +56,15 @@ useHead({
   title: computed(() => t("useHead.student.index")),
 });
 
-const stats = ref([
-  { title: "Cours inscrits", value: "6", color: "primary", icon: "book" },
+const stats = computed(() => [
+  { title: t("student.index.stats.enrolledCourses"), value: "6", color: "primary", icon: "book" },
   {
-    title: "Moyenne Générale",
+    title: t("student.index.stats.gpa"),
     value: "14.5",
     color: "positive",
     icon: "assessment",
   },
-  { title: "Absences", value: "2", color: "warning", icon: "event_busy" },
+  { title: t("student.index.stats.absences"), value: "2", color: "warning", icon: "event_busy" },
 ]);
 </script>
 

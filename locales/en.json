@@ -1,7 +1,9 @@
 {
   "commun": {
     "welcome": "Welcome to Scolaris",
-    "quickLinks": "Quick Links"
+    "quickLinks": "Quick Links",
+    "or": "OR",
+    "close": "Close"
   },
   "useHead": {
     "app": "Scolaire",
@@ -32,7 +34,9 @@
     "vue-cal-test": "Schedule"
   },
   "unauthorizedPage": {
-    "unauthorizedMessage": "Sorry {name}, Your role ({role}) does not allow you to access this page."
+    "title": "Restricted Access",
+    "unauthorizedMessage": "Sorry {name}, Your role ({role}) does not allow you to access this page.",
+    "user": "user"
   },
   "error": {
     "pageNotFoundTitle": "Page Not Found",
@@ -86,6 +90,11 @@
       "id9": "Nomination Decision"
     }
   },
+  "cropper": {
+    "rotateLeft": "Rotate left",
+    "rotateRight": "Rotate right",
+    "validate": "Validate"
+  },
   "settings": {
     "title": "Settings",
     "uiPreferences": "Interface Preferences",
@@ -109,9 +118,12 @@
     "email": "Email",
     "phone": "Phone",
     "schedule": "Schedule",
+    "scheduleDetails": "Mon - Fri, 8:00 AM - 5:00 PM",
     "sendMessage": "Send a Message",
     "subject": "Subject",
+    "subjectRequired": "Subject is required",
     "message": "Your message",
+    "messageRequired": "Message is required",
     "send": "Send",
     "simulation": "Your message has been sent to support (Simulation)",
     "q1": "How do I modify my personal information?",
@@ -186,8 +198,21 @@
     },
     "register": {
       "title": "Create an Account",
+      "subtitle": "Join the Scolaris platform",
       "submit": "Create Account",
       "alreadyAccount": "Already have an account?",
+      "login": "Login"
+    },
+    "reset": {
+      "subtitle": "Please enter your new password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "passwordRequired": "Password required",
+      "passwordMin": "Minimum 6 characters",
+      "confirmRequired": "Confirmation required",
+      "mismatch": "Passwords do not match",
+      "submit": "Reset Password",
+      "backToLogin": "Return to login screen?",
       "login": "Login"
     },
     "forgot": {
@@ -251,6 +276,8 @@
       "successCreate": "User created",
       "successImport": "Import successful",
       "invalidJson": "Invalid JSON format",
+      "jsonPayload": "JSON Payload",
+      "formatMustBeArray": "Format must be an array",
       "confirmDeleteTitle": "Confirm Delete",
       "confirmDeleteMessage": "Do you really want to delete {name} ?",
       "deleteNotImplemented": "Delete function not implemented on server side",
@@ -307,14 +334,35 @@
       "recentActivity": "Recent Activity",
       "quickLinks": "Quick Links",
       "manageUsers": "Manage Users",
-      "manageGroups": "Manage Groups"
+      "manageGroups": "Manage Groups",
+      "stats": {
+        "totalStudents": "Total Students",
+        "teachers": "Teachers",
+        "activeGroups": "Active Groups",
+        "pendingRequests": "Pending Requests"
+      },
+      "activity": {
+        "newUser": "New user registered: {name}",
+        "groupUpdated": "Group \"{name}\" updated",
+        "docValidated": "Document validated for {name}"
+      },
+      "time": {
+        "minsAgo": "{count} min ago",
+        "hoursAgo": "{count} hour ago",
+        "hoursAgoPlural": "{count} hours ago"
+      }
     }
   },
   "coordinator": {
     "index": {
       "title": "Coordinator Dashboard",
       "interns": "Interns under my responsibility",
-      "evaluate": "Evaluate"
+      "evaluate": "Evaluate",
+      "stats": {
+        "managedGroups": "Managed Groups",
+        "totalStudents": "Total Students",
+        "pendingValidations": "Pending Validations"
+      }
     }
   },
   "student": {
@@ -322,7 +370,12 @@
       "title": "My Student Dashboard",
       "timeline": "Internship Timeline",
       "validated": "Validated",
-      "pending": "Pending"
+      "pending": "Pending",
+      "stats": {
+        "enrolledCourses": "Enrolled Courses",
+        "gpa": "GPA",
+        "absences": "Absences"
+      }
     }
   },
   "teacher": {
@@ -333,6 +386,11 @@
         "student": "Student",
         "company": "Company",
         "status": "Status"
+      },
+      "stats": {
+        "assignedGroups": "Assigned Groups",
+        "activeCourses": "Active Courses",
+        "papersToGrade": "Papers to Grade"
       }
     }
   }

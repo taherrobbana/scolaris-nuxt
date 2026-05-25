@@ -4,11 +4,11 @@
       <div class="unauthorized-container">
         <div class="content">
           <div class="icon">🚫</div>
-          <h1>Accès Restreint</h1>
+          <h1>{{ $t("unauthorizedPage.title") }}</h1>
           <p>
             <i18n-t keypath="unauthorizedPage.unauthorizedMessage" tag="p">
               <template #name>
-                <strong>{{ user?.firstName || "utilisateur" }}</strong>
+                <strong>{{ user?.firstName || $t("unauthorizedPage.user") }}</strong>
               </template>
               <template #role>
                 <span class="text-red text-bold">{{ user?.role }}</span>

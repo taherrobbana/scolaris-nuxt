@@ -56,16 +56,16 @@ useHead({
   title: computed(() => t("useHead.coordinator.index")),
 });
 
-const stats = ref([
-  { title: "Groupes Gérés", value: "5", color: "primary", icon: "diversity_3" },
+const stats = computed(() => [
+  { title: t("coordinator.index.stats.managedGroups"), value: "5", color: "primary", icon: "diversity_3" },
   {
-    title: "Total Étudiants",
+    title: t("coordinator.index.stats.totalStudents"),
     value: "150",
     color: "secondary",
     icon: "school",
   },
   {
-    title: "Validations en attente",
+    title: t("coordinator.index.stats.pendingValidations"),
     value: "3",
     color: "warning",
     icon: "pending_actions",

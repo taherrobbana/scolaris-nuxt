@@ -34,7 +34,7 @@
       <!-- Divider -->
       <div class="row items-center q-my-lg">
         <q-separator class="col" />
-        <span class="q-px-sm text-grey-5 text-caption">OU</span>
+        <span class="q-px-sm text-grey-5 text-caption">{{ $t("commun.or") }}</span>
         <q-separator class="col" />
       </div>
 

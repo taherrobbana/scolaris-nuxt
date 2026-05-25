@@ -1,7 +1,9 @@
 {
   "commun": {
     "welcome": "Bienvenue sur Scolaris",
-    "quickLinks": "Liens Rapides"
+    "quickLinks": "Liens Rapides",
+    "or": "OU",
+    "close": "Fermer"
   },
   "useHead": {
     "app": "Scolaire",
@@ -32,7 +34,9 @@
     "vue-cal-test": "Emploi du temps"
   },
   "unauthorizedPage": {
-    "unauthorizedMessage": "Désolé {name}, votre rôle ({role}) ne vous permet pas d'accéder à cette page."
+    "title": "Accès Restreint",
+    "unauthorizedMessage": "Désolé {name}, votre rôle ({role}) ne vous permet pas d'accéder à cette page.",
+    "user": "utilisateur"
   },
   "error": {
     "pageNotFoundTitle": "Page non trouvée",
@@ -86,6 +90,11 @@
       "id9": "Décision de nomination"
     }
   },
+  "cropper": {
+    "rotateLeft": "Rotation gauche",
+    "rotateRight": "Rotation droite",
+    "validate": "Valider"
+  },
   "settings": {
     "title": "Paramètres",
     "uiPreferences": "Préférences de l'interface",
@@ -109,9 +118,12 @@
     "email": "Email",
     "phone": "Téléphone",
     "schedule": "Horaires",
+    "scheduleDetails": "Lun - Ven, 8h00 - 17h00",
     "sendMessage": "Envoyer un message",
     "subject": "Sujet",
+    "subjectRequired": "Le sujet est requis",
     "message": "Votre message",
+    "messageRequired": "Le message est requis",
     "send": "Envoyer",
     "simulation": "Votre message a été envoyé au support (Simulation)",
     "q1": "Comment modifier mes informations personnelles ?",
@@ -186,8 +198,21 @@
     },
     "register": {
       "title": "Créer un compte",
+      "subtitle": "Rejoignez la plateforme Scolaris",
       "submit": "Créer un compte",
       "alreadyAccount": "Déjà un compte ?",
+      "login": "Se connecter"
+    },
+    "reset": {
+      "subtitle": "Merci de saisir votre nouveau mot de passe",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "passwordRequired": "Mot de passe requis",
+      "passwordMin": "Minimum 6 caractères",
+      "confirmRequired": "Confirmation requise",
+      "mismatch": "Les mots de passe ne correspondent pas",
+      "submit": "Réinitialiser mot de passe",
+      "backToLogin": "Revenir à l'écran de connexion ?",
       "login": "Se connecter"
     },
     "forgot": {
@@ -251,6 +276,8 @@
       "successCreate": "Utilisateur créé",
       "successImport": "Importation réussie",
       "invalidJson": "Format JSON invalide",
+      "jsonPayload": "JSON Payload",
+      "formatMustBeArray": "Le format doit être un tableau",
       "confirmDeleteTitle": "Confirmer la suppression",
       "confirmDeleteMessage": "Voulez-vous vraiment supprimer {name} ?",
       "deleteNotImplemented": "Fonction de suppression non implémentée côté serveur",
@@ -307,14 +334,35 @@
       "recentActivity": "Activité Récente",
       "quickLinks": "Liens Rapides",
       "manageUsers": "Gérer les utilisateurs",
-      "manageGroups": "Gérer les groupes"
+      "manageGroups": "Gérer les groupes",
+      "stats": {
+        "totalStudents": "Total Étudiants",
+        "teachers": "Enseignants",
+        "activeGroups": "Groupes Actifs",
+        "pendingRequests": "Demandes en attente"
+      },
+      "activity": {
+        "newUser": "Nouvel utilisateur enregistré : {name}",
+        "groupUpdated": "Groupe \"{name}\" mis à jour",
+        "docValidated": "Document validé pour {name}"
+      },
+      "time": {
+        "minsAgo": "Il y a {count} min",
+        "hoursAgo": "Il y a {count} heure",
+        "hoursAgoPlural": "Il y a {count} heures"
+      }
     }
   },
   "coordinator": {
     "index": {
       "title": "Dashboard Entreprise / Coordinateur",
       "interns": "Stagiaires sous ma responsabilité",
-      "evaluate": "Évaluer"
+      "evaluate": "Évaluer",
+      "stats": {
+        "managedGroups": "Groupes Gérés",
+        "totalStudents": "Total Étudiants",
+        "pendingValidations": "Validations en attente"
+      }
     }
   },
   "student": {
@@ -322,7 +370,12 @@
       "title": "Mon Dashboard Étudiant",
       "timeline": "Timeline du stage",
       "validated": "Validé",
-      "pending": "En attente"
+      "pending": "En attente",
+      "stats": {
+        "enrolledCourses": "Cours inscrits",
+        "gpa": "Moyenne Générale",
+        "absences": "Absences"
+      }
     }
   },
   "teacher": {
@@ -333,6 +386,11 @@
         "student": "Étudiant",
         "company": "Entreprise",
         "status": "Statut"
+      },
+      "stats": {
+        "assignedGroups": "Groupes en charge",
+        "activeCourses": "Cours Actifs",
+        "papersToGrade": "Copies à corriger"
       }
     }
   }

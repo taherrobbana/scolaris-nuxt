@@ -24,22 +24,22 @@
             {{ $t("commun.welcome") }}
           </h2>
           <p class="text-subtitle2 text-grey-6">
-            Merci de saisir votre nouveau mot de passe
+            {{ $t("auth.reset.subtitle") }}
           </p>
         </div>
 
         <q-form @submit="resetPassword" class="q-gutter-y-lg">
           <q-input
             v-model="form.newPassword"
-            label="Nouveau mot de passe"
+            :label="$t('auth.reset.newPassword')"
             :type="showPassword ? 'text' : 'password'"
             outlined
             rounded
             bg-color="white"
             class="custom-input"
             :rules="[
-              (val) => !!val || 'Mot de passe requis',
-              (val) => val.length >= 6 || 'Minimum 6 caractères',
+              (val) => !!val || t('auth.reset.passwordRequired'),
+              (val) => val.length >= 6 || t('auth.reset.passwordMin'),
             ]"
           >
             <template v-slot:prepend>
@@ -56,17 +56,17 @@
 
           <q-input
             v-model="form.confirmPassword"
-            label="Confirmer le mot de passe"
+            :label="$t('auth.reset.confirmPassword')"
             :type="showConfirmPassword ? 'text' : 'password'"
             outlined
             rounded
             bg-color="white"
             class="custom-input"
             :rules="[
-              (val) => !!val || 'Confirmation requise',
+              (val) => !!val || t('auth.reset.confirmRequired'),
               (val) =>
                 val === form.newPassword ||
-                'Les mots de passe ne correspondent pas',
+                t('auth.reset.mismatch'),
             ]"
           >
             <template v-slot:prepend>
@@ -92,7 +92,7 @@
               unelevated
             >
               <div class="row items-center justify-center q-gutter-xs">
-                <span class="text-weight-bold">Réinitialiser mot de passe</span>
+                <span class="text-weight-bold">{{ $t("auth.reset.submit") }}</span>
                 <q-icon name="check_circle" size="18px" />
               </div>
             </q-btn>
@@ -101,12 +101,12 @@
           <!-- Redirect Link -->
           <div class="text-center q-mt-lg">
             <span class="text-grey-7 text-caption"
-              >Revenir à l'écran de connexion ?
+              >{{ $t("auth.reset.backToLogin") }}
             </span>
             <q-btn
               flat
               color="secondary"
-              label="Se connecter"
+              :label="$t('auth.reset.login')"
               @click="router.push('/login')"
               dense
               no-caps

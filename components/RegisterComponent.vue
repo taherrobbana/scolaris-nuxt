@@ -6,7 +6,7 @@
         <img src="/sesameLogo.png" class="brand-logo" alt="Scolaris Logo" />
       </div>
       <h2 class="text-h5 text-weight-bold text-primary q-mt-sm q-mb-xs">{{ $t('auth.register.title') }}</h2>
-      <p class="text-subtitle2 text-grey-6">Rejoignez la plateforme Scolaris</p>
+      <p class="text-subtitle2 text-grey-6">{{ $t("auth.register.subtitle") }}</p>
     </div>
 
     <!-- Registration Form -->

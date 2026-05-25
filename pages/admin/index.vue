@@ -73,42 +73,42 @@ useHead({
   title: computed(() => t("useHead.admin.index")),
 });
 
-const stats = ref([
+const stats = computed(() => [
   {
-    title: "Total Étudiants",
+    title: t("admin.index.stats.totalStudents"),
     value: "1,250",
     color: "primary",
     icon: "school",
   },
-  { title: "Enseignants", value: "85", color: "secondary", icon: "person" },
-  { title: "Groupes Actifs", value: "42", color: "positive", icon: "group" },
+  { title: t("admin.index.stats.teachers"), value: "85", color: "secondary", icon: "person" },
+  { title: t("admin.index.stats.activeGroups"), value: "42", color: "positive", icon: "group" },
   {
-    title: "Demandes en attente",
+    title: t("admin.index.stats.pendingRequests"),
     value: "12",
     color: "warning",
     icon: "hourglass_empty",
   },
 ]);
 
-const activities = ref([
+const activities = computed(() => [
   {
     id: 1,
-    message: "Nouvel utilisateur enregistré : John Doe",
-    date: "Il y a 10 min",
+    message: t("admin.index.activity.newUser", { name: "John Doe" }),
+    date: t("admin.index.time.minsAgo", { count: 10 }),
     icon: "person_add",
     color: "primary",
   },
   {
     id: 2,
-    message: 'Groupe "Classe A" mis à jour',
-    date: "Il y a 1 heure",
+    message: t("admin.index.activity.groupUpdated", { name: "Classe A" }),
+    date: t("admin.index.time.hoursAgo", { count: 1 }),
     icon: "edit",
     color: "secondary",
   },
   {
     id: 3,
-    message: "Document validé pour Sarah Smith",
-    date: "Il y a 2 heures",
+    message: t("admin.index.activity.docValidated", { name: "Sarah Smith" }),
+    date: t("admin.index.time.hoursAgoPlural", { count: 2 }),
     icon: "verified",
     color: "positive",
   },

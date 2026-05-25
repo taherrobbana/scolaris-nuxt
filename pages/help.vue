@@ -103,7 +103,7 @@
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>{{ $t("help.schedule") }}</q-item-label>
-                    <q-item-label caption>Lun - Ven, 8h00 - 17h00</q-item-label>
+                    <q-item-label caption>{{ $t("help.scheduleDetails") }}</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
@@ -125,7 +125,7 @@
                   :label="$t('help.subject')"
                   outlined
                   dense
-                  :rules="[(val) => !!val || 'Le sujet est requis']"
+                  :rules="[(val) => !!val || t('help.subjectRequired')]"
                 />
 
                 <q-input
@@ -134,7 +134,7 @@
                   type="textarea"
                   outlined
                   dense
-                  :rules="[(val) => !!val || 'Le message est requis']"
+                  :rules="[(val) => !!val || t('help.messageRequired')]"
                 />
 
                 <div class="row justify-end">

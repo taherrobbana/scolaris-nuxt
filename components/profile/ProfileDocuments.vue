@@ -81,7 +81,7 @@
             {{ currentViewedDocTitle }}
           </div>
           <q-btn dense flat icon="close" @click="closeViewer">
-            <q-tooltip class="bg-white text-primary">Fermer</q-tooltip>
+            <q-tooltip class="bg-white text-primary">{{ $t("commun.close") }}</q-tooltip>
           </q-btn>
         </div>
         <q-card
