@@ -202,7 +202,7 @@ const documents = computed(() => {
         icon: "history_edu",
         date: "01/10/2025",
       },
-      { id: 9, name: t("documents.list.id9"), icon: "assignment", date: "" },   
+      { id: 9, name: t("documents.list.id9"), icon: "assignment", date: "" },
     ];
   }
 
