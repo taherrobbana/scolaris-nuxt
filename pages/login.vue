@@ -1,8 +1,5 @@
 <template>
-  <div class="login-page flex flex-center" @mousemove="onMouseMove">
-    <!-- Interactive Mouse Glow -->
-    <div class="mouse-glow" :class="{ active: hasMoved }" :style="glowStyle"></div>
-
+  <div class="login-page flex flex-center">
     <!-- Animated Aurora Background Blobs -->
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
@@ -11,22 +8,41 @@
     <!-- Main Container -->
     <div class="auth-container q-pa-md">
       <transition name="fade-slide" mode="out-in">
-        <LoginComponent v-if="componentToShow == 'LoginComponent'"
+        <LoginComponent
+          v-if="componentToShow == 'LoginComponent'"
           @switch-to-register="componentToShow = 'RegisterComponent'"
-          @switch-to-forgot-password="componentToShow = 'ForgotPasswordComponent'" />
-        <RegisterComponent v-else-if="componentToShow == 'RegisterComponent'"
-          @switch-to-login="componentToShow = 'LoginComponent'" />
-        <ForgotPasswordComponent v-else-if="componentToShow == 'ForgotPasswordComponent'"
+          @switch-to-forgot-password="
+            componentToShow = 'ForgotPasswordComponent'
+          "
+        />
+        <RegisterComponent
+          v-else-if="componentToShow == 'RegisterComponent'"
           @switch-to-login="componentToShow = 'LoginComponent'"
-          @switch-to-register="componentToShow = 'RegisterComponent'" />
+        />
+        <ForgotPasswordComponent
+          v-else-if="componentToShow == 'ForgotPasswordComponent'"
+          @switch-to-login="componentToShow = 'LoginComponent'"
+          @switch-to-register="componentToShow = 'RegisterComponent'"
+        />
       </transition>
     </div>
 
     <!-- Floating Language Selector -->
     <div class="floating-lang">
-      <q-btn round color="primary" icon="translate" class="lang-btn" flat @click="changeLanguage">
-        <q-tooltip class="bg-primary text-white" anchor="center left" self="center right">
-          {{ $t('header.switchLanguage') }}
+      <q-btn
+        round
+        color="primary"
+        icon="translate"
+        class="lang-btn"
+        flat
+        @click="changeLanguage"
+      >
+        <q-tooltip
+          class="bg-primary text-white"
+          anchor="center left"
+          self="center right"
+        >
+          {{ $t("header.switchLanguage") }}
         </q-tooltip>
       </q-btn>
     </div>
@@ -35,6 +51,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
 import LoginComponent from "@/components/LoginComponent.vue";
 import RegisterComponent from "@/components/RegisterComponent.vue";
 import ForgotPasswordComponent from "@/components/ForgotPasswordComponent.vue";
@@ -44,27 +61,11 @@ import { useLangModule } from "@/stores/lang/langModule";
 const componentToShow = ref("LoginComponent");
 const authModule = useAuthModule();
 const langModule = useLangModule();
+const { t } = useI18n();
 
 const changeLanguage = () => {
   langModule.setLanguage();
 };
-
-// Interactive mouse glow logic
-const mouseX = ref(0);
-const mouseY = ref(0);
-const hasMoved = ref(false);
-
-const onMouseMove = (event: MouseEvent) => {
-  mouseX.value = event.clientX;
-  mouseY.value = event.clientY;
-  if (!hasMoved.value) hasMoved.value = true;
-};
-
-const glowStyle = computed(() => {
-  return {
-    transform: `translate3d(${mouseX.value}px, ${mouseY.value}px, 0) translate(-50%, -50%)`
-  };
-});
 
 onMounted(() => {
   authModule.initAuth();
@@ -75,7 +76,7 @@ definePageMeta({
 });
 
 useHead({
-  title: "Connexion",
+  title: computed(() => t("useHead.login")),
 });
 </script>
 
@@ -88,29 +89,6 @@ useHead({
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Interactive Mouse Glow Aura */
-.mouse-glow {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle,
-      rgba(34, 192, 194, 0.12) 0%,
-      rgba(0, 71, 143, 0.04) 40%,
-      rgba(255, 255, 255, 0) 70%);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0;
-  transition: opacity 0.8s ease, transform 0.1s cubic-bezier(0.25, 0.8, 0.25, 1);
-  will-change: transform;
-}
-
-.mouse-glow.active {
-  opacity: 1;
 }
 
 /* Background Animated Blobs */
@@ -126,7 +104,7 @@ useHead({
 .blob-1 {
   width: 450px;
   height: 450px;
-  background: #00478F;
+  background: #00478f;
   /* Primary Scolaris Blue */
   top: -15%;
   left: -10%;
@@ -135,7 +113,7 @@ useHead({
 .blob-2 {
   width: 500px;
   height: 500px;
-  background: #22C0C2;
+  background: #22c0c2;
   /* Secondary Scolaris Turquoise */
   bottom: -15%;
   right: -10%;

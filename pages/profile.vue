@@ -141,7 +141,7 @@ definePageMeta({
 })
 
 useHead({
-  title: t('profile.title'),
+  title: computed(() => t('useHead.profile')),
 })
 </script>
 

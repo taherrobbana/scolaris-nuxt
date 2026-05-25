@@ -3,6 +3,34 @@
     "welcome": "Bienvenue sur Scolaris",
     "quickLinks": "Liens Rapides"
   },
+  "useHead": {
+    "app": "Scolaire",
+    "admin": {
+      "groups": "Gestion des groupes",
+      "index": "Tableau de Bord Administrateur",
+      "users": "Gestion des utilisateurs"
+    },
+    "coordinator": {
+      "index": "Dashboard Entreprise / Coordinateur"
+    },
+    "reset-password": {
+      "id": "Réinitialiser le mot de passe"
+    },
+    "student": {
+      "index": "Mon Dashboard Étudiant"
+    },
+    "teacher": {
+      "index": "Dashboard Enseignant"
+    },
+    "slug": "Page non trouvée",
+    "help": "Centre d'aide & Support",
+    "index": "Accueil",
+    "login": "Connexion",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "unauthorized": "Accès restreint",
+    "vue-cal-test": "Emploi du temps"
+  },
   "unauthorizedPage": {
     "unauthorizedMessage": "Désolé {name}, votre rôle ({role}) ne vous permet pas d'accéder à cette page."
   },

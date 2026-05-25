@@ -3,17 +3,20 @@
     <div class="myCard">
       <div class="unauthorized-container">
         <div class="content">
-          <div style="font-size: 10vh" class="text-primary">
-            404
-          </div>
-          <div class="text-h2" style="opacity:.4">
-            {{ $t('error.pageNotFoundTitle') }}
+          <div style="font-size: 10vh" class="text-primary">404</div>
+          <div class="text-h2" style="opacity: 0.4">
+            {{ $t("error.pageNotFoundTitle") }}
           </div>
           <p class="text-faded">
-            {{ $t('error.pageNotFoundSubtitle') }}
+            {{ $t("error.pageNotFoundSubtitle") }}
           </p>
           <div class="actions">
-            <q-btn flat no-caps :label="$t('error.back')" @click="router.back()" />
+            <q-btn
+              flat
+              no-caps
+              :label="$t('error.back')"
+              @click="router.back()"
+            />
             <q-btn no-caps :label="$t('error.home')" color="primary" to="/" />
           </div>
         </div>
@@ -22,16 +25,19 @@
   </q-page>
 </template>
 <script setup lang="ts">
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 
-const router = useRouter()
+const router = useRouter();
+const { t } = useI18n();
 
 definePageMeta({
-  layout: 'default'
-})
+  layout: "default",
+});
 
 useHead({
-  title: 'Page introuvable',
-})
+  title: computed(() => t("useHead.slug")),
+});
 </script>
 <style scoped lang="scss">
 .unauthorized-container {

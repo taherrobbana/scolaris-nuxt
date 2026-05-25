@@ -5,29 +5,31 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { useAuthModule } from '~/stores/auth/authModule';
-import { ALL_ROLES } from '~/utils/types';
+import { onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
+import { useAuthModule } from "~/stores/auth/authModule";
+import { ALL_ROLES } from "~/utils/types";
 
 const authModule = useAuthModule();
 const router = useRouter();
 const role = computed(() => authModule.getRole);
+const { t } = useI18n();
 
 onMounted(() => {
   if (role.value) {
     router.replace(`/${role.value}`);
   } else {
-    router.replace('/login');
+    router.replace("/login");
   }
 });
 
 definePageMeta({
-  middleware: 'auth',
+  middleware: "auth",
   roles: ALL_ROLES,
-})
+});
 
 useHead({
-  title: 'Accueil',
-})
+  title: computed(() => t("useHead.index")),
+});
 </script>

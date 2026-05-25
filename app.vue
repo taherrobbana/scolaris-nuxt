@@ -36,7 +36,7 @@ useHead({
       isUserLoggedIn.value && numberOfNotifications.value > 0
         ? `(${numberOfNotifications.value}) `
         : "";
-    const baseTitle = "Plateforme Scolaire";
+    const baseTitle = "Scolaire";
 
     return titleChunk && titleChunk !== baseTitle
       ? `${prefix}${titleChunk} - ${baseTitle}`

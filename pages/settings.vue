@@ -1,25 +1,38 @@
 <template>
   <q-page padding>
-    <div style="max-width: 600px; margin: 0 auto;">
-      <div class="text-h5 text-primary text-weight-bold q-mb-lg">{{ $t('settings.title') }}</div>
+    <div style="max-width: 600px; margin: 0 auto">
+      <div class="text-h5 text-primary text-weight-bold q-mb-lg">
+        {{ $t("settings.title") }}
+      </div>
 
       <!-- Préférences de l'application -->
       <q-card flat bordered class="q-mb-md">
         <q-card-section>
-          <div class="text-h6 text-primary q-mb-md">{{ $t('settings.uiPreferences') }}</div>
-          
+          <div class="text-h6 text-primary q-mb-md">
+            {{ $t("settings.uiPreferences") }}
+          </div>
+
           <q-list>
             <!-- Mode Sombre -->
             <q-item tag="label" v-ripple>
               <q-item-section avatar>
-                <q-icon :name="isDark ? 'dark_mode' : 'light_mode'" color="primary" />
+                <q-icon
+                  :name="isDark ? 'dark_mode' : 'light_mode'"
+                  color="primary"
+                />
               </q-item-section>
               <q-item-section>
-                <q-item-label>{{ $t('settings.darkMode') }}</q-item-label>
-                <q-item-label caption>{{ $t('settings.darkModeCaption') }}</q-item-label>
+                <q-item-label>{{ $t("settings.darkMode") }}</q-item-label>
+                <q-item-label caption>{{
+                  $t("settings.darkModeCaption")
+                }}</q-item-label>
               </q-item-section>
               <q-item-section side>
-                <q-toggle v-model="isDark" color="primary" @update:model-value="toggleDarkMode" />
+                <q-toggle
+                  v-model="isDark"
+                  color="primary"
+                  @update:model-value="toggleDarkMode"
+                />
               </q-item-section>
             </q-item>
 
@@ -29,8 +42,10 @@
                 <q-icon name="language" color="primary" />
               </q-item-section>
               <q-item-section>
-                <q-item-label>{{ $t('settings.language') }}</q-item-label>
-                <q-item-label caption>{{ $t('settings.languageCaption') }}</q-item-label>
+                <q-item-label>{{ $t("settings.language") }}</q-item-label>
+                <q-item-label caption>{{
+                  $t("settings.languageCaption")
+                }}</q-item-label>
               </q-item-section>
               <q-item-section side style="width: 150px">
                 <q-select
@@ -51,16 +66,22 @@
       <!-- Notifications -->
       <q-card flat bordered class="q-mb-md">
         <q-card-section>
-          <div class="text-h6 text-primary q-mb-md">{{ $t('settings.notifications') }}</div>
-          
+          <div class="text-h6 text-primary q-mb-md">
+            {{ $t("settings.notifications") }}
+          </div>
+
           <q-list>
             <q-item tag="label" v-ripple>
               <q-item-section avatar>
                 <q-icon name="notifications" color="primary" />
               </q-item-section>
               <q-item-section>
-                <q-item-label>{{ $t('settings.emailNotifications') }}</q-item-label>
-                <q-item-label caption>{{ $t('settings.emailNotificationsCaption') }}</q-item-label>
+                <q-item-label>{{
+                  $t("settings.emailNotifications")
+                }}</q-item-label>
+                <q-item-label caption>{{
+                  $t("settings.emailNotificationsCaption")
+                }}</q-item-label>
               </q-item-section>
               <q-item-section side>
                 <q-toggle v-model="emailNotifications" color="primary" />
@@ -72,8 +93,12 @@
                 <q-icon name="phonelink_ring" color="primary" />
               </q-item-section>
               <q-item-section>
-                <q-item-label>{{ $t('settings.pushNotifications') }}</q-item-label>
-                <q-item-label caption>{{ $t('settings.pushNotificationsCaption') }}</q-item-label>
+                <q-item-label>{{
+                  $t("settings.pushNotifications")
+                }}</q-item-label>
+                <q-item-label caption>{{
+                  $t("settings.pushNotificationsCaption")
+                }}</q-item-label>
               </q-item-section>
               <q-item-section side>
                 <q-toggle v-model="pushNotifications" color="primary" />
@@ -85,40 +110,44 @@
 
       <!-- Bouton Enregistrer -->
       <div class="row justify-end q-mt-lg">
-        <q-btn :label="$t('settings.save')" color="primary" @click="savePreferences" />
+        <q-btn
+          :label="$t('settings.save')"
+          color="primary"
+          @click="savePreferences"
+        />
       </div>
     </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useQuasar } from 'quasar';
-import { useI18n } from 'vue-i18n';
-import { ALL_ROLES } from '~/utils/types';
+import { ref, computed } from "vue";
+import { useQuasar } from "quasar";
+import { useI18n } from "vue-i18n";
+import { ALL_ROLES } from "~/utils/types";
 
 definePageMeta({
-  middleware: 'auth',
+  middleware: "auth",
   roles: ALL_ROLES,
-})
-
-useHead({
-  title: 'Paramètres',
-})
+});
 
 const $q = useQuasar();
 const { t } = useI18n();
 
+useHead({
+  title: computed(() => t("useHead.settings")),
+});
+
 // Données mockées (initialisées avec des valeurs par défaut)
 const isDark = ref($q.dark.isActive);
-const selectedLanguage = ref('fr');
+const selectedLanguage = ref("fr");
 const emailNotifications = ref(true);
 const pushNotifications = ref(false);
 
 const languageOptions = [
-  { label: 'Français', value: 'fr' },
-  { label: 'English', value: 'en' },
-  { label: 'العربية', value: 'ar' }
+  { label: "Français", value: "fr" },
+  { label: "English", value: "en" },
+  { label: "العربية", value: "ar" },
 ];
 
 const toggleDarkMode = (val: boolean) => {
@@ -127,12 +156,11 @@ const toggleDarkMode = (val: boolean) => {
 
 const savePreferences = () => {
   $q.notify({
-    type: 'positive',
-    message: t('settings.simulation'),
-    position: 'top'
+    type: "positive",
+    message: t("settings.simulation"),
+    position: "top",
   });
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -1,7 +1,11 @@
 <template>
-  <div class="login-page flex flex-center" @mousemove="onMouseMove">
+  <div class="login-page flex flex-center">
     <!-- Interactive Mouse Glow -->
-    <div class="mouse-glow" :class="{ active: hasMoved }" :style="glowStyle"></div>
+    <div
+      class="mouse-glow"
+      :class="{ active: hasMoved }"
+      :style="glowStyle"
+    ></div>
 
     <!-- Animated Aurora Background Blobs -->
     <div class="blob blob-1"></div>
@@ -16,43 +20,77 @@
           <div class="logo-container q-mb-md">
             <img src="/sesameLogo.png" class="brand-logo" alt="Scolaris Logo" />
           </div>
-          <h2 class="text-h5 text-weight-bold text-primary q-mt-sm q-mb-xs">{{ $t("commun.welcome") }}</h2>
-          <p class="text-subtitle2 text-grey-6">Merci de saisir votre nouveau mot de passe</p>
+          <h2 class="text-h5 text-weight-bold text-primary q-mt-sm q-mb-xs">
+            {{ $t("commun.welcome") }}
+          </h2>
+          <p class="text-subtitle2 text-grey-6">
+            Merci de saisir votre nouveau mot de passe
+          </p>
         </div>
 
         <q-form @submit="resetPassword" class="q-gutter-y-lg">
-          <q-input v-model="form.newPassword" label="Nouveau mot de passe" :type="showPassword ? 'text' : 'password'"
-            outlined rounded bg-color="white" class="custom-input" :rules="[
+          <q-input
+            v-model="form.newPassword"
+            label="Nouveau mot de passe"
+            :type="showPassword ? 'text' : 'password'"
+            outlined
+            rounded
+            bg-color="white"
+            class="custom-input"
+            :rules="[
               (val) => !!val || 'Mot de passe requis',
               (val) => val.length >= 6 || 'Minimum 6 caractères',
-            ]">
+            ]"
+          >
             <template v-slot:prepend>
               <q-icon name="lock" color="grey-6" />
             </template>
             <template v-slot:append>
-              <q-icon :name="showPassword ? 'visibility_off' : 'visibility'" class="cursor-pointer eye-icon"
-                @click="showPassword = !showPassword" />
+              <q-icon
+                :name="showPassword ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer eye-icon"
+                @click="showPassword = !showPassword"
+              />
             </template>
           </q-input>
 
-          <q-input v-model="form.confirmPassword" label="Confirmer le mot de passe"
-            :type="showConfirmPassword ? 'text' : 'password'" outlined rounded bg-color="white" class="custom-input"
+          <q-input
+            v-model="form.confirmPassword"
+            label="Confirmer le mot de passe"
+            :type="showConfirmPassword ? 'text' : 'password'"
+            outlined
+            rounded
+            bg-color="white"
+            class="custom-input"
             :rules="[
               (val) => !!val || 'Confirmation requise',
-              (val) => val === form.newPassword || 'Les mots de passe ne correspondent pas',
-            ]">
+              (val) =>
+                val === form.newPassword ||
+                'Les mots de passe ne correspondent pas',
+            ]"
+          >
             <template v-slot:prepend>
               <q-icon name="lock_reset" color="grey-6" />
             </template>
             <template v-slot:append>
-              <q-icon :name="showConfirmPassword ? 'visibility_off' : 'visibility'" class="cursor-pointer eye-icon"
-                @click="showConfirmPassword = !showConfirmPassword" />
+              <q-icon
+                :name="showConfirmPassword ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer eye-icon"
+                @click="showConfirmPassword = !showConfirmPassword"
+              />
             </template>
           </q-input>
 
           <!-- Submit Button -->
           <div class="text-center q-mt-xl">
-            <q-btn type="submit" color="primary" :loading="loading" class="submit-btn full-width" rounded unelevated>
+            <q-btn
+              type="submit"
+              color="primary"
+              :loading="loading"
+              class="submit-btn full-width"
+              rounded
+              unelevated
+            >
               <div class="row items-center justify-center q-gutter-xs">
                 <span class="text-weight-bold">Réinitialiser mot de passe</span>
                 <q-icon name="check_circle" size="18px" />
@@ -62,9 +100,18 @@
 
           <!-- Redirect Link -->
           <div class="text-center q-mt-lg">
-            <span class="text-grey-7 text-caption">Revenir à l'écran de connexion ? </span>
-            <q-btn flat color="secondary" label="Se connecter" @click="router.push('/login')" dense no-caps
-              class="hover-underline-secondary text-weight-bold" />
+            <span class="text-grey-7 text-caption"
+              >Revenir à l'écran de connexion ?
+            </span>
+            <q-btn
+              flat
+              color="secondary"
+              label="Se connecter"
+              @click="router.push('/login')"
+              dense
+              no-caps
+              class="hover-underline-secondary text-weight-bold"
+            />
           </div>
         </q-form>
       </q-card>
@@ -72,9 +119,20 @@
 
     <!-- Floating Language Selector -->
     <div class="floating-lang">
-      <q-btn round color="primary" icon="translate" class="lang-btn" flat @click="changeLanguage">
-        <q-tooltip class="bg-primary text-white" anchor="center left" self="center right">
-          {{ $t('header.switchLanguage') }}
+      <q-btn
+        round
+        color="primary"
+        icon="translate"
+        class="lang-btn"
+        flat
+        @click="changeLanguage"
+      >
+        <q-tooltip
+          class="bg-primary text-white"
+          anchor="center left"
+          self="center right"
+        >
+          {{ $t("header.switchLanguage") }}
         </q-tooltip>
       </q-btn>
     </div>
@@ -84,6 +142,7 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useQuasar } from "quasar";
+import { useI18n } from "vue-i18n";
 import { useAuthModule } from "~/stores/auth/authModule";
 import { useLangModule } from "~/stores/lang/langModule";
 
@@ -94,6 +153,7 @@ const $q = useQuasar();
 
 const authModule = useAuthModule();
 const langModule = useLangModule();
+const { t } = useI18n();
 const changeLanguage = () => {
   langModule.setLanguage();
 };
@@ -109,35 +169,17 @@ const loading = ref(false);
 
 const resetPassword = async () => {
   loading.value = true;
-  await authModule.resetPassword(form.value)
-    .finally(() => {
-      loading.value = false;
-    });
+  await authModule.resetPassword(form.value).finally(() => {
+    loading.value = false;
+  });
 };
-
-// Interactive mouse glow logic
-const mouseX = ref(0);
-const mouseY = ref(0);
-const hasMoved = ref(false);
-
-const onMouseMove = (event: MouseEvent) => {
-  mouseX.value = event.clientX;
-  mouseY.value = event.clientY;
-  if (!hasMoved.value) hasMoved.value = true;
-};
-
-const glowStyle = computed(() => {
-  return {
-    transform: `translate3d(${mouseX.value}px, ${mouseY.value}px, 0) translate(-50%, -50%)`
-  };
-});
 
 definePageMeta({
   layout: "default",
 });
 
 useHead({
-  title: "Réinitialiser le mot de passe",
+  title: computed(() => t("useHead.reset-password.id")),
 });
 </script>
 
@@ -150,29 +192,6 @@ useHead({
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Interactive Mouse Glow Aura */
-.mouse-glow {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle,
-      rgba(34, 192, 194, 0.12) 0%,
-      rgba(0, 71, 143, 0.04) 40%,
-      rgba(255, 255, 255, 0) 70%);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0;
-  transition: opacity 0.8s ease, transform 0.1s cubic-bezier(0.25, 0.8, 0.25, 1);
-  will-change: transform;
-}
-
-.mouse-glow.active {
-  opacity: 1;
 }
 
 /* Background Animated Blobs */
@@ -188,7 +207,7 @@ useHead({
 .blob-1 {
   width: 450px;
   height: 450px;
-  background: #00478F;
+  background: #00478f;
   /* Primary Scolaris Blue */
   top: -15%;
   left: -10%;
@@ -197,7 +216,7 @@ useHead({
 .blob-2 {
   width: 500px;
   height: 500px;
-  background: #22C0C2;
+  background: #22c0c2;
   /* Secondary Scolaris Turquoise */
   bottom: -15%;
   right: -10%;
@@ -288,7 +307,7 @@ useHead({
 /* Submit Button styling */
 .submit-btn {
   height: 48px;
-  background: linear-gradient(135deg, #00478F 0%, #002d5c 100%) !important;
+  background: linear-gradient(135deg, #00478f 0%, #002d5c 100%) !important;
   box-shadow: 0 8px 20px rgba(0, 71, 143, 0.2) !important;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
@@ -331,7 +350,7 @@ useHead({
 }
 
 .hover-underline-secondary::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 0;
   height: 2px;
