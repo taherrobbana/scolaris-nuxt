@@ -62,13 +62,18 @@
     "actions": {
       "view": "View",
       "download": "Download",
-      "update": "Update"
+      "update": "Update",
+      "delete": "Delete"
     },
     "messages": {
       "invalidPdf": "Please select a valid PDF file",
       "success": "Document updated successfully",
       "error": "Error updating document",
-      "notFound": "Document not found"
+      "notFound": "Document not found",
+      "deleteSuccess": "Document deleted successfully",
+      "deleteError": "Error deleting document",
+      "confirmDeleteTitle": "Confirm Deletion",
+      "confirmDeleteMessage": "Are you sure you want to delete the document \"{name}\"?"
     },
     "list": {
       "id1": "ID Card / Passport",

@@ -33,6 +33,10 @@
                 <q-btn flat round dense icon="upload" color="secondary" @click="triggerUpload(doc)">
                   <q-tooltip>{{ $t('documents.actions.update') }}</q-tooltip>
                 </q-btn>
+                <q-btn flat round dense icon="delete" color="negative" v-if="doc.status === 'uploaded'"
+                  @click="confirmDelete(doc)">
+                  <q-tooltip>{{ $t('documents.actions.delete') }}</q-tooltip>
+                </q-btn>
               </div>
             </q-item-section>
           </q-item>
@@ -197,6 +201,30 @@ const downloadDocument = (doc: any) => {
   } else {
     $q.notify({ type: 'warning', message: t('documents.messages.notFound') });
   }
+};
+
+const confirmDelete = (doc: any) => {
+  $q.dialog({
+    title: t('documents.messages.confirmDeleteTitle'),
+    message: t('documents.messages.confirmDeleteMessage', { name: doc.name }),
+    cancel: true,
+    persistent: true
+  }).onOk(async () => {
+    const updatedDocuments = { ...(authModule.getDocuments || {}) };
+    delete updatedDocuments[doc.id];
+
+    try {
+      const res = await authModule.updateProfile({ documents: updatedDocuments });
+      if (res) {
+        $q.notify({ type: 'positive', message: t('documents.messages.deleteSuccess') });
+        if (currentViewedDocTitle.value === doc.name) {
+          closeViewer();
+        }
+      }
+    } catch (err) {
+      $q.notify({ type: 'negative', message: t('documents.messages.deleteError') });
+    }
+  });
 };
 </script>
 

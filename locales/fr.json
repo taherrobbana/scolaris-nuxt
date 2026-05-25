@@ -62,13 +62,18 @@
     "actions": {
       "view": "Visualiser",
       "download": "Télécharger",
-      "update": "Mettre à jour"
+      "update": "Mettre à jour",
+      "delete": "Supprimer"
     },
     "messages": {
       "invalidPdf": "Veuillez sélectionner un fichier PDF valide",
       "success": "Document mis à jour avec succès",
       "error": "Erreur lors de la mise à jour du document",
-      "notFound": "Document introuvable"
+      "notFound": "Document introuvable",
+      "deleteSuccess": "Document supprimé avec succès",
+      "deleteError": "Erreur lors de la suppression du document",
+      "confirmDeleteTitle": "Confirmer la suppression",
+      "confirmDeleteMessage": "Êtes-vous sûr de vouloir supprimer le document \"{name}\" ?"
     },
     "list": {
       "id1": "Carte d'identité / Passeport",
