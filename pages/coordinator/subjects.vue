@@ -342,8 +342,9 @@ const filteredSubjects = computed(() => {
       (s) =>
         (s.code && s.code.toLowerCase().includes(term)) ||
         (s.name && s.name.toLowerCase().includes(term)) ||
-        (s.description && s.description.toLowerCase().includes(term)) ||
-        (s.specialty && s.specialty.toLowerCase().includes(term)),
+        (s.specialty && s.specialty.toLowerCase().includes(term)) ||
+        (s.coefficient && s.coefficient.toString().toLowerCase().includes(term)) ||
+        (s.description && s.description.toLowerCase().includes(term)),
     );
   }
   return rows;
