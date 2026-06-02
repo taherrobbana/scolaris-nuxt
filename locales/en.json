@@ -13,7 +13,43 @@
       "users": "Users Management"
     },
     "coordinator": {
-      "index": "Coordinator Dashboard"
+      "index": "Coordinator Dashboard",
+      "subjects": {
+        "title": "Subjects Management",
+        "add": "Add Subject",
+        "edit": "Edit",
+        "delete": "Delete",
+        "editSubject": "Edit Subject",
+        "addSubject": "Add Subject",
+        "code": "Subject Code",
+        "name": "Subject Name",
+        "coefficient": "Coefficient",
+        "description": "Description",
+        "specialty": "Specialty",
+        "specialtyPlaceholder": "Select or enter a specialty",
+        "allSpecialties": "All Specialties",
+        "noSpecialty": "No specialty",
+        "search": "Search",
+        "cancel": "Cancel",
+        "update": "Update",
+        "create": "Create",
+        "successUpdate": "Subject updated successfully",
+        "successCreate": "Subject created successfully",
+        "successDelete": "Subject deleted successfully",
+        "confirmDeleteTitle": "Confirm Delete",
+        "confirmDeleteMessage": "Do you really want to delete subject \"{name}\" ?",
+        "codeRequired": "Subject code is required",
+        "nameRequired": "Subject name is required",
+        "coeffRequired": "Coefficient is required",
+        "columns": {
+          "code": "Code",
+          "name": "Name",
+          "coefficient": "Coefficient",
+          "description": "Description",
+          "specialty": "Specialty",
+          "actions": "Actions"
+        }
+      }
     },
     "reset-password": {
       "id": "Reset Password"
@@ -182,7 +218,9 @@
     "settingsCaption": "Account Preferences",
     "logout": "Logout",
     "logoutCaption": "End Session",
-    "calTest": "Cal Test View"
+    "calTest": "Cal Test View",
+    "subjects": "Subjects",
+    "subjectsCaption": "Subjects Management"
   },
   "header": {
     "switchLanguage": "Passer en Français"
@@ -362,6 +400,42 @@
         "managedGroups": "Managed Groups",
         "totalStudents": "Total Students",
         "pendingValidations": "Pending Validations"
+      }
+    },
+    "subjects": {
+      "title": "Subjects Management",
+      "add": "Add Subject",
+      "edit": "Edit",
+      "delete": "Delete",
+      "editSubject": "Edit Subject",
+      "addSubject": "Add Subject",
+      "code": "Subject Code",
+      "name": "Subject Name",
+      "coefficient": "Coefficient",
+      "description": "Description",
+      "specialty": "Specialty",
+      "specialtyPlaceholder": "Select or enter a specialty",
+      "allSpecialties": "All Specialties",
+      "noSpecialty": "No specialty",
+      "search": "Search",
+      "cancel": "Cancel",
+      "update": "Update",
+      "create": "Create",
+      "successUpdate": "Subject updated successfully",
+      "successCreate": "Subject created successfully",
+      "successDelete": "Subject deleted successfully",
+      "confirmDeleteTitle": "Confirm Delete",
+      "confirmDeleteMessage": "Do you really want to delete subject \"{name}\" ?",
+      "codeRequired": "Subject code is required",
+      "nameRequired": "Subject name is required",
+      "coeffRequired": "Coefficient is required",
+      "columns": {
+        "code": "Code",
+        "name": "Name",
+        "coefficient": "Coefficient",
+        "description": "Description",
+        "specialty": "Specialty",
+        "actions": "Actions"
       }
     }
   },

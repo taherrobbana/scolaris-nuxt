@@ -7,8 +7,8 @@ export const connectDB = async () => {
   if (isConnected) return;
   
   try {
-    const baseUri = process.env.MONGODB_URI;
-    const dbName = process.env.DB_NAME;
+    const baseUri = process.env.MONGODB_URI2;
+    const dbName = process.env.DB_NAME2;
     const uri = `${baseUri}/${dbName}`;
 
     if (!uri) {

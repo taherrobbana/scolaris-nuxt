@@ -130,6 +130,13 @@ const routes: ComputedRef<RouteConfig[]> = computed(() => [
     roles: ALL_ROLES,
     route: "/vue-cal-test",
   },
+  {
+    icon: "menu_book",
+    label: t("sidebar.subjects"),
+    caption: t("sidebar.subjectsCaption"),
+    roles: [Role.coordinator],
+    route: "/coordinator/subjects",
+  },
 ]);
 
 const filtredRoutesByRole = computed(() =>

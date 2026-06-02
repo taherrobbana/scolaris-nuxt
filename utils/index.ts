@@ -106,5 +106,12 @@ export const routes = computed(() => {
       roles: ALL_ROLES,
       route: "/vue-cal-test",
     },
+    {
+      icon: "menu_book",
+      label: $t("sidebar.subjects"),
+      caption: $t("sidebar.subjectsCaption"),
+      roles: ['coordinator'],
+      route: "/coordinator/subjects",
+    },
   ];
 });
