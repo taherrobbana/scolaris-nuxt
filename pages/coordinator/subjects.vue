@@ -157,6 +157,19 @@
             <template #prepend><q-icon name="calculate" /></template>
           </q-input>
 
+          <!-- Specialty -->
+          <q-input
+            v-model="form.specialty"
+            :label="t('coordinator.subjects.specialty')"
+            outlined
+            dense
+            :placeholder="t('coordinator.subjects.specialtyPlaceholder')"
+            :rules="[(v) => !!v || t('coordinator.subjects.specialtyRequired')]"
+            ref="specialtyRef"
+          >
+            <template #prepend><q-icon name="school" /></template>
+          </q-input>
+
           <!-- Description -->
           <q-input
             v-model="form.description"
@@ -285,6 +298,13 @@ const columns = computed(() => [
     sortable: true,
   },
   {
+    name: "specialty",
+    label: t("coordinator.subjects.columns.specialty"),
+    field: "specialty",
+    align: "left" as const,
+    sortable: true,
+  },
+  {
     name: "description",
     label: t("coordinator.subjects.columns.description"),
     field: "description",
@@ -322,7 +342,8 @@ const filteredSubjects = computed(() => {
       (s) =>
         (s.code && s.code.toLowerCase().includes(term)) ||
         (s.name && s.name.toLowerCase().includes(term)) ||
-        (s.description && s.description.toLowerCase().includes(term)),
+        (s.description && s.description.toLowerCase().includes(term)) ||
+        (s.specialty && s.specialty.toLowerCase().includes(term)),
     );
   }
   return rows;
@@ -339,6 +360,7 @@ const emptyForm = () => ({
   name: "",
   coefficient: 1,
   description: "",
+  specialty: "",
 });
 const form = ref(emptyForm());
 
@@ -346,6 +368,7 @@ const form = ref(emptyForm());
 const codeRef = ref<any>(null);
 const nameRef = ref<any>(null);
 const coeffRef = ref<any>(null);
+const specialtyRef = ref<any>(null);
 
 function openAddDialog() {
   form.value = emptyForm();
@@ -360,6 +383,7 @@ function openEditDialog(row: Subject) {
     name: row.name,
     coefficient: row.coefficient,
     description: row.description ?? "",
+    specialty: row.specialty ?? "",
   };
   editMode.value = true;
   editingId.value = row.id;
@@ -372,6 +396,7 @@ async function submitForm() {
     codeRef.value?.validate(),
     nameRef.value?.validate(),
     coeffRef.value?.validate(),
+    specialtyRef.value?.validate(),
   ]);
   if (validations.some((v) => v === false)) return;
 
@@ -382,6 +407,7 @@ async function submitForm() {
       name: form.value.name.trim(),
       coefficient: Number(form.value.coefficient),
       description: form.value.description?.trim(),
+      specialty: form.value.specialty?.trim(),
     };
 
     if (editMode.value && editingId.value) {

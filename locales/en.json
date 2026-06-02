@@ -429,6 +429,7 @@
       "codeRequired": "Subject code is required",
       "nameRequired": "Subject name is required",
       "coeffRequired": "Coefficient is required",
+      "specialtyRequired": "Specialty is required",
       "columns": {
         "code": "Code",
         "name": "Name",

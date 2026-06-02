@@ -429,6 +429,7 @@
       "codeRequired": "Le code de la matière est requis",
       "nameRequired": "Le nom de la matière est requis",
       "coeffRequired": "Le coefficient est requis",
+      "specialtyRequired": "La spécialité est requise",
       "columns": {
         "code": "Code",
         "name": "Nom",
