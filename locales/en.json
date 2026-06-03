@@ -67,7 +67,7 @@
     "profile": "Profile",
     "settings": "Settings",
     "unauthorized": "Restricted Access",
-    "vue-cal-test": "Schedule"
+    "planning": "Schedule"
   },
   "unauthorizedPage": {
     "title": "Restricted Access",

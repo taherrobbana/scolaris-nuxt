@@ -67,7 +67,7 @@
     "profile": "Profil",
     "settings": "Paramètres",
     "unauthorized": "Accès restreint",
-    "vue-cal-test": "Emploi du temps"
+    "planning": "Emploi du temps"
   },
   "unauthorizedPage": {
     "title": "Accès Restreint",

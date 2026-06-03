@@ -128,7 +128,7 @@ const routes: ComputedRef<RouteConfig[]> = computed(() => [
     label: t("sidebar.calTest"),
     caption: t("sidebar.calTest"),
     roles: ALL_ROLES,
-    route: "/vue-cal-test",
+    route: "/planning",
   },
   {
     icon: "menu_book",

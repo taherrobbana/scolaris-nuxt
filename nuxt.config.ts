@@ -35,6 +35,7 @@ export default defineNuxtConfig({
     public: {
       authApiBase: process.env.SCOLARIS_AUTH_URI || 'http://localhost:8080/api/',
       subjectApiBase: process.env.SCOLARIS_SUBJECT_URI || 'http://localhost:3000/api/subjects',
+      planningApiBase: process.env.SCOLARIS_PLANNING_URI || 'http://localhost:3000/api/planning',
     }
   },
   modules: ["@pinia/nuxt", "@pinia-plugin-persistedstate/nuxt", 'nuxt-quasar-ui'],
