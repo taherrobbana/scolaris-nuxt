@@ -218,9 +218,10 @@
     "settingsCaption": "Préférences du compte",
     "logout": "Déconnexion",
     "logoutCaption": "Quitter la session",
-    "calTest": "Vue Cal Test",
     "subjects": "Matières",
-    "subjectsCaption": "Gestion des matières"
+    "subjectsCaption": "Gestion des matières",
+    "planning": "Emploi du temps",
+    "planningCaption": "Gestion de l'emploi du temps"
   },
   "header": {
     "switchLanguage": "Switch to English"

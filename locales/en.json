@@ -218,9 +218,10 @@
     "settingsCaption": "Account Preferences",
     "logout": "Logout",
     "logoutCaption": "End Session",
-    "calTest": "Cal Test View",
     "subjects": "Subjects",
-    "subjectsCaption": "Subjects Management"
+    "subjectsCaption": "Subjects Management",
+    "planning": "Planning",
+    "planningCaption": "Planning Management"
   },
   "header": {
     "switchLanguage": "Passer en Français"

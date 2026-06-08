@@ -9,12 +9,12 @@
       small
       @cell-dblclick="emit('cell-dblclick', $event)"
       :events="events"
-      :time-from="8 * 60"
-      :time-to="20 * 60"
+      :time-from="(8 * 60) + 30"
+      :time-to="(22 * 60) - 15"
       :locale="getLanguage"
       today-button
       :today-button-style="{ color: 'white', border: '1px solid white' }"
-      :editable-events="{ title: false, drag: true, resize: true }"
+      :editable-events="{ title: false, drag: true, resize: false }"
       :drag-to-create-event="false"
       @event-drag-create="emit('event-drag-create', $event)"
       @event-drop="emit('event-drop', $event)"

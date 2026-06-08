@@ -125,8 +125,8 @@ const routes: ComputedRef<RouteConfig[]> = computed(() => [
   },
   {
     icon: "calendar_month",
-    label: t("sidebar.calTest"),
-    caption: t("sidebar.calTest"),
+    label: t("sidebar.planning"),
+    caption: t("sidebar.planningCaption"),
     roles: ALL_ROLES,
     route: "/planning",
   },

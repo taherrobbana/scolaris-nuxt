@@ -89,6 +89,7 @@
       </div>
       <div v-else>
         <MyCalender
+          :key="calendarKey"
           :events="filteredEvents"
           @cell-dblclick="cellDblClick"
           @event-edit="onEditEvent"
@@ -285,6 +286,39 @@ import { getAllUsers } from "~/stores/auth/authService";
 import { ALL_ROLES } from "~/utils/types";
 import moment from "moment";
 
+const STANDARD_SLOTS = [
+  { start: "08:30", end: "10:15" },
+  { start: "10:30", end: "12:15" },
+  { start: "12:30", end: "14:15" },
+  { start: "14:30", end: "16:15" },
+  { start: "16:30", end: "18:15" },
+  { start: "18:15", end: "20:00" },
+  { start: "20:00", end: "21:45" },
+];
+
+function snapToPlanningSlot(date: Date | string | moment.Moment): { start: moment.Moment; end: moment.Moment } {
+  const mDate = moment(date);
+  const dayStr = mDate.format("YYYY-MM-DD");
+  const targetMinutes = mDate.hours() * 60 + mDate.minutes();
+
+  let closestSlot = STANDARD_SLOTS[0];
+  let minDiff = Infinity;
+
+  for (const slot of STANDARD_SLOTS) {
+    const [startH, startM] = slot.start.split(":").map(Number);
+    const slotStartMinutes = startH * 60 + startM;
+    const diff = Math.abs(targetMinutes - slotStartMinutes);
+    if (diff < minDiff) {
+      minDiff = diff;
+      closestSlot = slot;
+    }
+  }
+
+  const start = moment(`${dayStr} ${closestSlot.start}`, "YYYY-MM-DD HH:mm");
+  const end = moment(`${dayStr} ${closestSlot.end}`, "YYYY-MM-DD HH:mm");
+  return { start, end };
+}
+
 const { t } = useI18n();
 
 definePageMeta({
@@ -309,6 +343,8 @@ const filterSpecialty = ref<string | null>(null);
 const filterGroup = ref<string | null>(null);
 const filterSubject = ref<string | null>(null);
 const filterTeacher = ref<string | null>(null);
+
+const calendarKey = ref(0);
 
 // Dialog form states
 const showEditEventDialog = ref(false);
@@ -473,8 +509,9 @@ const dialogGroupOptions = computed(() => {
 // Double click cell to create an event
 function cellDblClick(date: Date) {
   mode.value = "add";
-  const startStr = moment(date).format("YYYY-MM-DD HH:mm");
-  const endStr = moment(date).add(1, "hours").format("YYYY-MM-DD HH:mm");
+  const snapped = snapToPlanningSlot(date);
+  const startStr = snapped.start.format("YYYY-MM-DD HH:mm");
+  const endStr = snapped.end.format("YYYY-MM-DD HH:mm");
 
   eventForm.value = {
     id: "",
@@ -514,10 +551,14 @@ async function onEventDrop({ event, originalEvent }: any) {
   const index = events.value.findIndex((e) => e.id === originalEvent.id);
   if (index !== -1) {
     const original = events.value[index];
+    const snapped = snapToPlanningSlot(event.start);
+    const startStr = snapped.start.format("YYYY-MM-DD HH:mm");
+    const endStr = snapped.end.format("YYYY-MM-DD HH:mm");
+
     const payload = {
       title: original.title,
-      start: moment(event.start).format("YYYY-MM-DD HH:mm"),
-      end: moment(event.end).format("YYYY-MM-DD HH:mm"),
+      start: startStr,
+      end: endStr,
       subjectId: original.subjectId,
       groupId: original.groupId,
       teacherId: original.teacherId,
@@ -533,6 +574,11 @@ async function onEventDrop({ event, originalEvent }: any) {
         icon: "check_circle",
       });
     } catch (err) {
+      // Revert event times to original values
+      event.start = originalEvent.start;
+      event.end = originalEvent.end;
+      calendarKey.value++;
+
       Notify.create({
         type: "negative",
         message: "Erreur lors du déplacement",
@@ -578,8 +624,9 @@ async function onEventResize({ event, originalEvent }: any) {
 // Drag create trigger
 function onEventDragCreate(event: any) {
   mode.value = "add";
-  const startStr = moment(event.start).format("YYYY-MM-DD HH:mm");
-  const endStr = moment(event.end).format("YYYY-MM-DD HH:mm");
+  const snapped = snapToPlanningSlot(event.start);
+  const startStr = snapped.start.format("YYYY-MM-DD HH:mm");
+  const endStr = snapped.end.format("YYYY-MM-DD HH:mm");
 
   eventForm.value = {
     id: "",
