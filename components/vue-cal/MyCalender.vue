@@ -3,11 +3,13 @@
     <vue-cal
       :class="{ 'vuecal--dark': isDarkActive }"
       :disable-views="['year', 'years']"
+      v-model:active-view="currentView"
+      :dblclick-to-navigate="currentView === 'month'"
       default-view="week"
       :timeStep="60"
       :eventsOnMonthView="false"
       small
-      @cell-dblclick="emit('cell-dblclick', $event)"
+      @cell-dblclick="onCellDblClick"
       :events="events"
       :time-from="(8 * 60) + 30"
       :time-to="(22 * 60) - 15"
@@ -88,7 +90,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { ref, computed } from "vue";
 import { Dark } from "quasar";
 import { useLangModule } from "~/stores/lang/langModule";
 import { formatDate } from "~/utils";
@@ -115,6 +117,14 @@ const emit = defineEmits([
 const langModule = useLangModule();
 const getLanguage = computed(() => langModule.getLanguage);
 const isDarkActive = computed(() => Dark.isActive);
+
+const currentView = ref('week');
+
+function onCellDblClick(date: Date) {
+  if (currentView.value !== 'month') {
+    emit('cell-dblclick', date);
+  }
+}
 
 function getBadgeColor(eventClass: string): string {
   switch (eventClass) {
