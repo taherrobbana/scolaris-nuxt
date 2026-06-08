@@ -82,6 +82,31 @@
       </div>
 
       <q-separator class="q-mb-lg" />
+      <!-- Conflicts Warning Banner -->
+      <div v-if="allConflicts.length > 0" class="q-mb-lg">
+        <q-banner inline-actions class="bg-red-1 text-red-9 rounded-borders border-red shadow-1 q-pa-md">
+          <template #avatar>
+            <q-icon name="warning" color="negative" size="md" />
+          </template>
+          <div class="text-subtitle1 text-weight-bold">
+            {{ allConflicts.length }} conflit(s) de planification détecté(s) !
+          </div>
+          <div>
+            Certains enseignants ou groupes d'élèves ont plusieurs cours prévus sur les mêmes créneaux horaires.
+          </div>
+          <template #action>
+            <q-btn
+              flat
+              color="negative"
+              label="Résoudre les conflits"
+              no-caps
+              icon="offline_pin"
+              class="q-px-md bg-red-2 text-weight-bold"
+              @click="showConflictsDialog = true"
+            />
+          </template>
+        </q-banner>
+      </div>
 
       <!-- Calendar Presenter -->
       <div v-if="planningStore.isLoading && events.length === 0" class="row justify-center q-my-xl">
@@ -271,13 +296,141 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <!-- Dialog Conflits -->
+    <q-dialog v-model="showConflictsDialog">
+      <q-card style="min-width: 600px; max-width: 800px; border-radius: 16px" class="q-pa-sm">
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6 text-weight-bold text-negative row items-center">
+            <q-icon name="warning" color="negative" class="q-mr-sm" size="md" />
+            Conflits de Planification Détectés
+          </div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-card-section class="q-pt-md" style="max-height: 70vh; overflow-y: auto;">
+          <div v-if="allConflicts.length === 0" class="text-center q-py-xl">
+            <q-icon name="check_circle" color="positive" size="50px" />
+            <div class="text-subtitle1 text-grey-8 q-mt-md">Aucun conflit détecté. Tout est en ordre !</div>
+          </div>
+          <div v-else class="q-gutter-y-md">
+            <div
+              v-for="conflict in allConflicts"
+              :key="conflict.id"
+              class="conflict-card q-pa-md rounded-borders bg-red-0"
+              style="border: 1px solid #ffcdd2; border-left: 6px solid #f44336; border-radius: 8px;"
+            >
+              <div class="row items-center justify-between q-mb-sm">
+                <div class="text-subtitle2 text-weight-bold text-red-9">
+                  <span v-if="conflict.type === 'teacher'">
+                    👨‍🏫 Conflit Enseignant : {{ getTeacherName(conflict.teacherId) }}
+                  </span>
+                  <span v-else-if="conflict.type === 'student'">
+                    👥 Conflit Groupe : {{ getGroupName(conflict.groupId) }}
+                  </span>
+                  <span v-else>
+                    ⚠️ Double Conflit (Enseignant & Groupe)
+                  </span>
+                </div>
+                <div class="text-caption text-grey-7 bg-red-1 q-px-sm q-py-xs rounded-borders">
+                  Créneaux qui se chevauchent
+                </div>
+              </div>
+
+              <div class="row q-col-gutter-sm items-stretch">
+                <!-- Event 1 Card -->
+                <div class="col-12 col-sm-6">
+                  <q-card flat bordered class="column justify-between full-height q-pa-sm bg-white">
+                    <div>
+                      <div class="text-weight-bold text-primary">{{ conflict.event1.title }}</div>
+                      <div class="text-caption text-grey-8 q-mt-xs">
+                        <q-icon name="schedule" size="xs" class="q-mr-xs" />
+                        {{ formatConflictTime(conflict.event1.start, conflict.event1.end) }}
+                      </div>
+                      <div v-if="conflict.event1.discription" class="text-caption text-grey-6 text-italic q-mt-xs ellipsis-2-lines">
+                        {{ conflict.event1.discription }}
+                      </div>
+                    </div>
+                    <div class="row justify-end q-mt-md q-gutter-xs">
+                      <q-btn
+                        flat
+                        dense
+                        round
+                        color="primary"
+                        icon="edit"
+                        @click="openEditConflictEvent(conflict.event1)"
+                      >
+                        <q-tooltip>Modifier la séance</q-tooltip>
+                      </q-btn>
+                      <q-btn
+                        flat
+                        dense
+                        round
+                        color="negative"
+                        icon="delete"
+                        @click="confirmDeleteEvent(conflict.event1)"
+                      >
+                        <q-tooltip>Supprimer la séance</q-tooltip>
+                      </q-btn>
+                    </div>
+                  </q-card>
+                </div>
+
+                <!-- Event 2 Card -->
+                <div class="col-12 col-sm-6">
+                  <q-card flat bordered class="column justify-between full-height q-pa-sm bg-white">
+                    <div>
+                      <div class="text-weight-bold text-primary">{{ conflict.event2.title }}</div>
+                      <div class="text-caption text-grey-8 q-mt-xs">
+                        <q-icon name="schedule" size="xs" class="q-mr-xs" />
+                        {{ formatConflictTime(conflict.event2.start, conflict.event2.end) }}
+                      </div>
+                      <div v-if="conflict.event2.discription" class="text-caption text-grey-6 text-italic q-mt-xs ellipsis-2-lines">
+                        {{ conflict.event2.discription }}
+                      </div>
+                    </div>
+                    <div class="row justify-end q-mt-md q-gutter-xs">
+                      <q-btn
+                        flat
+                        dense
+                        round
+                        color="primary"
+                        icon="edit"
+                        @click="openEditConflictEvent(conflict.event2)"
+                      >
+                        <q-tooltip>Modifier la séance</q-tooltip>
+                      </q-btn>
+                      <q-btn
+                        flat
+                        dense
+                        round
+                        color="negative"
+                        icon="delete"
+                        @click="confirmDeleteEvent(conflict.event2)"
+                      >
+                        <q-tooltip>Supprimer la séance</q-tooltip>
+                      </q-btn>
+                    </div>
+                  </q-card>
+                </div>
+              </div>
+            </div>
+          </div>
+        </q-card-section>
+
+        <q-card-actions align="right" class="q-pa-md">
+          <q-btn flat label="Fermer" color="grey" no-caps v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-import { Notify } from "quasar";
+import { Notify, useQuasar } from "quasar";
 import MyCalender from "~/components/vue-cal/MyCalender.vue";
 import { usePlanningModule } from "~/stores/planning/planningModule";
 import { useSubjectModule } from "~/stores/subject/subjectModule";
@@ -337,6 +490,9 @@ const groupStore = useGroupModule();
 
 // Reactive data lists loaded from API
 const teachers = ref<any[]>([]);
+
+const $q = useQuasar();
+const showConflictsDialog = ref(false);
 
 // Filter selections
 const filterSpecialty = ref<string | null>(null);
@@ -462,6 +618,73 @@ const filteredSubjectOptions = computed(() => {
 // Final events list to pass to calendar component (filtered dynamically)
 const events = computed(() => planningStore.getEvents);
 
+// Get teacher name helper
+function getTeacherName(teacherId: string | null | undefined) {
+  if (!teacherId) return "";
+  const t = teacherOptions.value.find((o) => o.value === teacherId);
+  return t ? t.label : "Enseignant inconnu";
+}
+
+// Get group name helper
+function getGroupName(groupId: string | null | undefined) {
+  if (!groupId) return "";
+  const g = groupOptions.value.find((o) => o.value === groupId);
+  return g ? g.label : "Groupe inconnu";
+}
+
+// Detect conflicts globally across all events
+const allConflicts = computed(() => {
+  const list = events.value;
+  const conflictsList: any[] = [];
+  const checkedPairs = new Set<string>();
+
+  for (let i = 0; i < list.length; i++) {
+    for (let j = i + 1; j < list.length; j++) {
+      const e1 = list[i];
+      const e2 = list[j];
+
+      // Match conditions
+      const sameTeacher = e1.teacherId && e2.teacherId && e1.teacherId === e2.teacherId;
+      const sameGroup = e1.groupId && e2.groupId && e1.groupId === e2.groupId;
+
+      if (!sameTeacher && !sameGroup) continue;
+
+      // Check time overlap
+      const start1 = moment(e1.start);
+      const end1 = moment(e1.end);
+      const start2 = moment(e2.start);
+      const end2 = moment(e2.end);
+
+      const overlap = start1.isBefore(end2) && start2.isBefore(end1);
+      if (overlap) {
+        const pairKey = [e1.id, e2.id].sort().join('-');
+        if (!checkedPairs.has(pairKey)) {
+          checkedPairs.add(pairKey);
+          conflictsList.push({
+            id: pairKey,
+            type: sameTeacher && sameGroup ? 'both' : (sameTeacher ? 'teacher' : 'student'),
+            teacherId: sameTeacher ? e1.teacherId : null,
+            groupId: sameGroup ? e1.groupId : null,
+            event1: e1,
+            event2: e2,
+          });
+        }
+      }
+    }
+  }
+  return conflictsList;
+});
+
+// Set of conflicted event IDs
+const conflictedEventIds = computed(() => {
+  const ids = new Set<string>();
+  for (const c of allConflicts.value) {
+    ids.add(c.event1.id);
+    ids.add(c.event2.id);
+  }
+  return ids;
+});
+
 const filteredEvents = computed(() => {
   let list = events.value;
 
@@ -478,14 +701,73 @@ const filteredEvents = computed(() => {
     list = list.filter((e) => e.teacherId === filterTeacher.value);
   }
 
+  const conflictIds = conflictedEventIds.value;
+
   // Format events to make sure start/end are parsed by vue-cal (YYYY-MM-DD HH:mm format)
-  return list.map((e) => ({
-    ...e,
-    // Vue-cal needs string dates or Date objects
-    start: moment(e.start).format("YYYY-MM-DD HH:mm"),
-    end: moment(e.end).format("YYYY-MM-DD HH:mm"),
-  }));
+  return list.map((e) => {
+    const hasConflict = conflictIds.has(e.id);
+    return {
+      ...e,
+      // Vue-cal needs string dates or Date objects
+      start: moment(e.start).format("YYYY-MM-DD HH:mm"),
+      end: moment(e.end).format("YYYY-MM-DD HH:mm"),
+      hasConflict,
+      class: (e.class || 'meeting') + (hasConflict ? ' conflict-event' : ''),
+    };
+  });
 });
+
+function formatConflictTime(start: any, end: any) {
+  const s = moment(start);
+  const e = moment(end);
+  if (s.isSame(e, 'day')) {
+    return `${s.format("DD/MM/YYYY")} de ${s.format("HH:mm")} à ${e.format("HH:mm")}`;
+  }
+  return `Du ${s.format("DD/MM/YYYY HH:mm")} au ${e.format("DD/MM/YYYY HH:mm")}`;
+}
+
+function openEditConflictEvent(event: any) {
+  showConflictsDialog.value = false;
+  onEditEvent(event);
+}
+
+function confirmDeleteEvent(event: any) {
+  $q.dialog({
+    title: 'Confirmation de suppression',
+    message: `Voulez-vous vraiment supprimer la séance "${event.title}" du planning ?`,
+    cancel: true,
+    persistent: true,
+    ok: {
+      label: 'Supprimer',
+      color: 'negative',
+      flat: true
+    },
+    cancel: {
+      label: 'Annuler',
+      color: 'grey',
+      flat: true
+    }
+  }).onOk(async () => {
+    try {
+      await planningStore.removePlanning(event.id);
+      Notify.create({
+        type: "positive",
+        message: "Séance supprimée avec succès",
+        icon: "delete",
+      });
+      // Check if there are remaining conflicts, if not close dialog
+      if (allConflicts.value.length === 0) {
+        showConflictsDialog.value = false;
+      }
+    } catch (error) {
+      Notify.create({
+        type: "negative",
+        message: "Erreur lors de la suppression",
+        icon: "error",
+      });
+    }
+  });
+}
 
 // ── Dialog Handlers ─────────────────────────────────────────────────────────
 

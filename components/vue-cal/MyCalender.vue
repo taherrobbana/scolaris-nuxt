@@ -32,9 +32,10 @@
     >
       <!-- Slot personnalisé pour les événements -->
       <template #event="{ event }">
-        <div style="display: grid">
-          <span style="overflow: hidden" class="text-weight-bold">
-            {{ event.title }}
+        <div style="display: grid" :class="{ 'text-negative': event.hasConflict }">
+          <span style="overflow: hidden" class="text-weight-bold row no-wrap items-center">
+            <q-icon v-if="event.hasConflict" name="warning" color="negative" class="q-mr-xs" size="14px" />
+            <span class="ellipsis">{{ event.title }}</span>
           </span>
           <span class="vuecal__event-time" style="overflow: hidden">
             {{ formatDate(event.start, "YYYY-MM-DD HH:mm", "HH:mm") }} -
@@ -46,12 +47,19 @@
           floating
           class="edit-badge shadow-2"
           @click.stop="emit('event-edit', event)"
-          :color="getBadgeColor(event.class)"
+          :color="event.hasConflict ? 'negative' : getBadgeColor(event.class)"
         >
-          <q-icon name="edit" color="white" size="12px" />
+          <q-icon :name="event.hasConflict ? 'warning' : 'edit'" color="white" size="12px" />
         </q-badge>
         <q-tooltip>
           <div style="display: grid">
+            <span
+              v-if="event.hasConflict"
+              style="overflow: hidden; text-align: center"
+              class="text-weight-bold text-negative text-subtitle2 q-mb-xs"
+            >
+              ⚠️ CONFLIT DÉTECTÉ ⚠️
+            </span>
             <span
               style="overflow: hidden; text-align: center"
               class="text-weight-bold text-subtitle2"
@@ -263,5 +271,17 @@ function getBadgeColor(eventClass: string): string {
   background-color: #3c0c70;
   border-left-color: #9c27b0;
   color: #f3e5f5 !important;
+}
+
+.vuecal__event.conflict-event {
+  border-left-color: #f44336 !important;
+  background-color: #ffebee !important;
+  color: #c62828 !important;
+}
+
+.vuecal--dark .vuecal__event.conflict-event {
+  border-left-color: #e53935 !important;
+  background-color: #5c1919 !important;
+  color: #ffebee !important;
 }
 </style>
