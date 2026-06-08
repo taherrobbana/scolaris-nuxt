@@ -59,7 +59,7 @@ export default defineEventHandler(async (event) => {
       teacherId: body.teacherId ? String(body.teacherId) : undefined,
       specialty: body.specialty ? String(body.specialty) : undefined,
       discription: body.discription ? String(body.discription) : "",
-      class: body.class ? String(body.class) : "meeting",
+      class: body.class ? String(body.class) : "cours",
       createdAt: existing.createdAt || new Date(),
       updatedAt: new Date(),
     };

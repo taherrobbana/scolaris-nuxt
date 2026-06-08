@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
       teacherId: doc.teacherId,
       specialty: doc.specialty,
       discription: doc.discription || doc.description || "",
-      class: doc.class || "meeting",
+      class: doc.class || "cours",
     }));
   } catch (error: any) {
     throw createError({

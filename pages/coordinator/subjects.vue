@@ -158,7 +158,7 @@
           </q-input>
 
           <!-- Specialty -->
-          <q-input
+          <q-select
             v-model="form.specialty"
             :label="t('coordinator.subjects.specialty')"
             outlined
@@ -166,9 +166,12 @@
             :placeholder="t('coordinator.subjects.specialtyPlaceholder')"
             :rules="[(v) => !!v || t('coordinator.subjects.specialtyRequired')]"
             ref="specialtyRef"
+            emit-value
+            map-options
+            :options="specialtyOptions"
           >
             <template #prepend><q-icon name="school" /></template>
-          </q-input>
+          </q-select>
 
           <!-- Description -->
           <q-input
@@ -322,8 +325,11 @@ const columns = computed(() => [
 const search = ref("");
 const selectedSpecialty = ref("");
 const specialtyOptions = computed(() => {
-  const specs = subjectStore.getSubjects
-    .map((s) => s.specialty)
+  const specs = [
+    { label: t("Software Engineering"), value: "SE" },
+    { label: t("Data Science & IA"), value: "DS" },
+    { label: t("Embedded Systems"), value: "ES" },
+  ].map((s) => s.label)
     .filter(Boolean);
   const unique = Array.from(new Set(specs));
   return [

@@ -247,9 +247,10 @@
           <q-select
             v-model="eventForm.class"
             :options="[
-              { label: 'Cours Standard (Meeting)', value: 'meeting' },
-              { label: 'TD / TP (Workshop)', value: 'workshop' },
-              { label: 'Conférence / Spécial (Conference)', value: 'conference' }
+              { label: 'Cours', value: 'cours' },
+              { label: 'TD / TP', value: 'workshop' },
+              { label: 'Conférence / Spécial', value: 'conference' },
+              { label: 'Examen', value: 'exam' }
             ]"
             emit-value
             map-options
@@ -431,7 +432,7 @@
 import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { Notify, useQuasar } from "quasar";
-import MyCalender from "~/components/vue-cal/MyCalender.vue";
+import MyCalender from "~/components/MyCalender.vue";
 import { usePlanningModule } from "~/stores/planning/planningModule";
 import { useSubjectModule } from "~/stores/subject/subjectModule";
 import { useGroupModule } from "~/stores/group/groupModule";
@@ -515,7 +516,7 @@ const eventForm = ref({
   teacherId: "",
   specialty: "",
   discription: "",
-  class: "meeting",
+  class: "cours",
 });
 
 // Load all required data from stores & auth service
@@ -704,15 +705,30 @@ const filteredEvents = computed(() => {
   const conflictIds = conflictedEventIds.value;
 
   // Format events to make sure start/end are parsed by vue-cal (YYYY-MM-DD HH:mm format)
+  const sessionTypeLabels: Record<string, string> = {
+    cours: 'Cours',
+    workshop: 'TD / TP',
+    conference: 'Conférence / Spécial',
+    exam: 'Examen'
+  };
+
   return list.map((e) => {
     const hasConflict = conflictIds.has(e.id);
+    const baseClass = (e.class || 'cours').split(' ')[0];
+    const subject = subjectStore.getSubjects.find((s) => s.id === e.subjectId);
+    const group = groupOptions.value.find((g) => g.value === e.groupId);
+
     return {
       ...e,
       // Vue-cal needs string dates or Date objects
       start: moment(e.start).format("YYYY-MM-DD HH:mm"),
       end: moment(e.end).format("YYYY-MM-DD HH:mm"),
       hasConflict,
-      class: (e.class || 'meeting') + (hasConflict ? ' conflict-event' : ''),
+      class: baseClass + (hasConflict ? ' conflict-event' : ''),
+      subjectName: subject ? subject.name : (e.subjectId || '—'),
+      groupName: group ? group.label : (e.groupId || '—'),
+      sessionTypeLabel: sessionTypeLabels[baseClass] || baseClass,
+      teacherName: getTeacherName(e.teacherId),
     };
   });
 });
@@ -805,7 +821,7 @@ function cellDblClick(date: Date) {
     teacherId: "",
     specialty: filterSpecialty.value || "",
     discription: "",
-    class: "meeting",
+    class: "cours",
   };
   showEditEventDialog.value = true;
 }
@@ -823,7 +839,7 @@ function onEditEvent(event: any) {
     teacherId: event.teacherId || "",
     specialty: event.specialty || "",
     discription: event.discription || "",
-    class: event.class || "meeting",
+    class: event.class || "cours",
   };
   showEditEventDialog.value = true;
 }
@@ -920,7 +936,7 @@ function onEventDragCreate(event: any) {
     teacherId: "",
     specialty: filterSpecialty.value || "",
     discription: "",
-    class: "meeting",
+    class: "cours",
   };
   showEditEventDialog.value = true;
 }
@@ -956,7 +972,7 @@ async function saveEvent() {
     teacherId: eventForm.value.teacherId,
     specialty: eventForm.value.specialty,
     discription: eventForm.value.discription?.trim() || "",
-    class: eventForm.value.class || "meeting",
+    class: eventForm.value.class || "cours",
   };
 
   try {
