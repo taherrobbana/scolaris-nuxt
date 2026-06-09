@@ -7,6 +7,8 @@ export interface Subject {
   coefficient: number;
   description?: string;
   specialty?: string;
+  sessionsCount?: number;
+  toleratedAbsences?: number;
 }
 
 function getAuthHeaders(): Record<string, string> {

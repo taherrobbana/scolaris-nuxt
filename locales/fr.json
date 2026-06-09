@@ -221,7 +221,9 @@
     "subjects": "Matières",
     "subjectsCaption": "Gestion des matières",
     "planning": "Emploi du temps",
-    "planningCaption": "Gestion de l'emploi du temps"
+    "planningCaption": "Gestion de l'emploi du temps",
+    "absences": "Mes absences",
+    "absencesCaption": "Consulter mes absences et statistiques"
   },
   "header": {
     "switchLanguage": "Switch to English"
@@ -431,12 +433,18 @@
       "nameRequired": "Le nom de la matière est requis",
       "coeffRequired": "Le coefficient est requis",
       "specialtyRequired": "La spécialité est requise",
+      "sessionsCount": "Nombre de séances",
+      "toleratedAbsences": "Absences tolérées",
+      "sessionsCountRequired": "Le nombre de séances est requis",
+      "toleratedAbsencesRequired": "Le nombre d'absences tolérées est requis",
       "columns": {
         "code": "Code",
         "name": "Nom",
         "coefficient": "Coefficient",
         "description": "Description",
         "specialty": "Spécialité",
+        "sessionsCount": "Séances",
+        "toleratedAbsences": "Absences tolérées",
         "actions": "Actions"
       }
     }

@@ -173,6 +173,48 @@
             <template #prepend><q-icon name="school" /></template>
           </q-select>
 
+          <!-- Sessions Count -->
+          <q-input
+            v-model.number="form.sessionsCount"
+            :label="t('coordinator.subjects.sessionsCount')"
+            outlined
+            dense
+            type="number"
+            min="1"
+            :rules="[
+              (v) =>
+                (v !== '' && v !== null && v !== undefined) ||
+                t('coordinator.subjects.sessionsCountRequired'),
+              (v) =>
+                !isNaN(Number(v)) ||
+                t('coordinator.subjects.sessionsCountRequired'),
+            ]"
+            ref="sessionsCountRef"
+          >
+            <template #prepend><q-icon name="calendar_today" /></template>
+          </q-input>
+
+          <!-- Tolerated Absences -->
+          <q-input
+            v-model.number="form.toleratedAbsences"
+            :label="t('coordinator.subjects.toleratedAbsences')"
+            outlined
+            dense
+            type="number"
+            min="0"
+            :rules="[
+              (v) =>
+                (v !== '' && v !== null && v !== undefined) ||
+                t('coordinator.subjects.toleratedAbsencesRequired'),
+              (v) =>
+                !isNaN(Number(v)) ||
+                t('coordinator.subjects.toleratedAbsencesRequired'),
+            ]"
+            ref="toleratedAbsencesRef"
+          >
+            <template #prepend><q-icon name="event_busy" /></template>
+          </q-input>
+
           <!-- Description -->
           <q-input
             v-model="form.description"
@@ -308,6 +350,20 @@ const columns = computed(() => [
     sortable: true,
   },
   {
+    name: "sessionsCount",
+    label: t("coordinator.subjects.columns.sessionsCount"),
+    field: "sessionsCount",
+    align: "center" as const,
+    sortable: true,
+  },
+  {
+    name: "toleratedAbsences",
+    label: t("coordinator.subjects.columns.toleratedAbsences"),
+    field: "toleratedAbsences",
+    align: "center" as const,
+    sortable: true,
+  },
+  {
     name: "description",
     label: t("coordinator.subjects.columns.description"),
     field: "description",
@@ -329,7 +385,8 @@ const specialtyOptions = computed(() => {
     { label: t("Software Engineering"), value: "SE" },
     { label: t("Data Science & IA"), value: "DS" },
     { label: t("Embedded Systems"), value: "ES" },
-  ].map((s) => s.label)
+  ]
+    .map((s) => s.label)
     .filter(Boolean);
   const unique = Array.from(new Set(specs));
   return [
@@ -349,7 +406,8 @@ const filteredSubjects = computed(() => {
         (s.code && s.code.toLowerCase().includes(term)) ||
         (s.name && s.name.toLowerCase().includes(term)) ||
         (s.specialty && s.specialty.toLowerCase().includes(term)) ||
-        (s.coefficient && s.coefficient.toString().toLowerCase().includes(term)) ||
+        (s.coefficient &&
+          s.coefficient.toString().toLowerCase().includes(term)) ||
         (s.description && s.description.toLowerCase().includes(term)),
     );
   }
@@ -368,6 +426,8 @@ const emptyForm = () => ({
   coefficient: 1,
   description: "",
   specialty: "",
+  sessionsCount: 15,
+  toleratedAbsences: 3,
 });
 const form = ref(emptyForm());
 
@@ -376,6 +436,8 @@ const codeRef = ref<any>(null);
 const nameRef = ref<any>(null);
 const coeffRef = ref<any>(null);
 const specialtyRef = ref<any>(null);
+const sessionsCountRef = ref<any>(null);
+const toleratedAbsencesRef = ref<any>(null);
 
 function openAddDialog() {
   form.value = emptyForm();
@@ -391,6 +453,9 @@ function openEditDialog(row: Subject) {
     coefficient: row.coefficient,
     description: row.description ?? "",
     specialty: row.specialty ?? "",
+    sessionsCount: row.sessionsCount !== undefined ? row.sessionsCount : 15,
+    toleratedAbsences:
+      row.toleratedAbsences !== undefined ? row.toleratedAbsences : 3,
   };
   editMode.value = true;
   editingId.value = row.id;
@@ -404,6 +469,8 @@ async function submitForm() {
     nameRef.value?.validate(),
     coeffRef.value?.validate(),
     specialtyRef.value?.validate(),
+    sessionsCountRef.value?.validate(),
+    toleratedAbsencesRef.value?.validate(),
   ]);
   if (validations.some((v) => v === false)) return;
 
@@ -415,6 +482,8 @@ async function submitForm() {
       coefficient: Number(form.value.coefficient),
       description: form.value.description?.trim(),
       specialty: form.value.specialty?.trim(),
+      sessionsCount: Number(form.value.sessionsCount),
+      toleratedAbsences: Number(form.value.toleratedAbsences),
     };
 
     if (editMode.value && editingId.value) {

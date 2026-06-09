@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const body = await readBody(event);
-    
+
     // Validation
     if (!body.code || !body.name || body.coefficient === undefined) {
       throw createError({
@@ -30,12 +30,18 @@ export default defineEventHandler(async (event) => {
       coefficient: Number(body.coefficient),
       description: body.description ? String(body.description) : undefined,
       specialty: body.specialty ? String(body.specialty) : undefined,
+      sessionsCount:
+        body.sessionsCount !== undefined ? Number(body.sessionsCount) : 15,
+      toleratedAbsences:
+        body.toleratedAbsences !== undefined
+          ? Number(body.toleratedAbsences)
+          : 3,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
 
     const result = await db.collection("subjects").insertOne(newSubject);
-    
+
     return {
       id: result.insertedId.toString(),
       ...newSubject,

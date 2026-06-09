@@ -221,7 +221,9 @@
     "subjects": "Subjects",
     "subjectsCaption": "Subjects Management",
     "planning": "Planning",
-    "planningCaption": "Planning Management"
+    "planningCaption": "Planning Management",
+    "absences": "My Absences",
+    "absencesCaption": "Consult my absences and statistics"
   },
   "header": {
     "switchLanguage": "Passer en Français"
@@ -431,12 +433,18 @@
       "nameRequired": "Subject name is required",
       "coeffRequired": "Coefficient is required",
       "specialtyRequired": "Specialty is required",
+      "sessionsCount": "Number of Sessions",
+      "toleratedAbsences": "Tolerated Absences",
+      "sessionsCountRequired": "Number of sessions is required",
+      "toleratedAbsencesRequired": "Tolerated absences is required",
       "columns": {
         "code": "Code",
         "name": "Name",
         "coefficient": "Coefficient",
         "description": "Description",
         "specialty": "Specialty",
+        "sessionsCount": "Sessions",
+        "toleratedAbsences": "Tolerated Absences",
         "actions": "Actions"
       }
     }

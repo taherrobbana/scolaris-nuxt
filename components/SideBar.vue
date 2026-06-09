@@ -1,8 +1,15 @@
 <template>
   <div class="sidebar-container column full-height">
     <q-list style="padding-top: 10px" class="col-grow">
-      <q-item v-for="r in mainRoutes" :key="r.route" clickable @click="r.action ? r.action() : r.route ? navigateTo(r.route) : ''"
-        :active="selectedRoute(r)" active-class="bg-grey-3" style="min-height: 52px">
+      <q-item
+        v-for="r in mainRoutes"
+        :key="r.route"
+        clickable
+        @click="r.action ? r.action() : r.route ? navigateTo(r.route) : ''"
+        :active="selectedRoute(r)"
+        active-class="bg-grey-3"
+        style="min-height: 52px"
+      >
         <q-item-section avatar style="min-width: none">
           <q-icon :name="r.icon" />
         </q-item-section>
@@ -10,9 +17,18 @@
           <q-item-label>{{ r.label }}</q-item-label>
           <q-item-label caption>{{ r.caption }}</q-item-label>
         </q-item-section>
-        <q-tooltip v-if="!leftDrawerOpen" self="center left" class="bg-white text-dark shadow-10">
+        <q-tooltip
+          v-if="!leftDrawerOpen"
+          self="center left"
+          class="bg-white text-dark shadow-10"
+        >
           <div class="row no-wrap items-center q-pa-xs">
-            <q-icon :name="r.icon" size="24px" color="primary" class="q-mr-md" />
+            <q-icon
+              :name="r.icon"
+              size="24px"
+              color="primary"
+              class="q-mr-md"
+            />
             <div>
               <div class="text-weight-bold text-subtitle2">{{ r.label }}</div>
               <div class="text-caption text-grey-8">{{ r.caption }}</div>
@@ -24,8 +40,15 @@
     <div v-if="footerRoutes.length > 0" class="sidebar-footer">
       <q-separator />
       <q-list>
-        <q-item v-for="r in footerRoutes" :key="r.route || r.label" clickable @click="r.action ? r.action() : r.route ? navigateTo(r.route) : ''"
-          :active="selectedRoute(r)" active-class="bg-grey-3" style="min-height: 52px">
+        <q-item
+          v-for="r in footerRoutes"
+          :key="r.route || r.label"
+          clickable
+          @click="r.action ? r.action() : r.route ? navigateTo(r.route) : ''"
+          :active="selectedRoute(r)"
+          active-class="bg-grey-3"
+          style="min-height: 52px"
+        >
           <q-item-section avatar style="min-width: none">
             <q-icon :name="r.icon" />
           </q-item-section>
@@ -33,9 +56,18 @@
             <q-item-label>{{ r.label }}</q-item-label>
             <q-item-label caption>{{ r.caption }}</q-item-label>
           </q-item-section>
-          <q-tooltip v-if="!leftDrawerOpen" self="center left" class="bg-white text-dark shadow-10">
+          <q-tooltip
+            v-if="!leftDrawerOpen"
+            self="center left"
+            class="bg-white text-dark shadow-10"
+          >
             <div class="row no-wrap items-center q-pa-xs">
-              <q-icon :name="r.icon" size="24px" color="primary" class="q-mr-md" />
+              <q-icon
+                :name="r.icon"
+                size="24px"
+                color="primary"
+                class="q-mr-md"
+              />
               <div>
                 <div class="text-weight-bold text-subtitle2">{{ r.label }}</div>
                 <div class="text-caption text-grey-8">{{ r.caption }}</div>
@@ -49,10 +81,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, type ComputedRef } from 'vue';
+import { computed, type ComputedRef } from "vue";
 import { useAuthModule } from "~/stores/auth/authModule";
 import { Role, type RouteConfig, ALL_ROLES } from "~/utils/types";
-import { useI18n } from 'vue-i18n';
+import { useI18n } from "vue-i18n";
 
 const props = defineProps({
   leftDrawerOpen: {
@@ -136,6 +168,13 @@ const routes: ComputedRef<RouteConfig[]> = computed(() => [
     caption: t("sidebar.subjectsCaption"),
     roles: [Role.coordinator],
     route: "/coordinator/subjects",
+  },
+  {
+    icon: "event_busy",
+    label: t("sidebar.absences"),
+    caption: t("sidebar.absencesCaption"),
+    roles: [Role.student],
+    route: "/student/absences",
   },
 ]);
 

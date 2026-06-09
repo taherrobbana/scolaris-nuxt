@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const docs = await db.collection("subjects").find().toArray();
-    
+
     // Map _id to id to match Subject interface
     return docs.map((doc) => ({
       id: doc._id.toString(),
@@ -24,6 +24,10 @@ export default defineEventHandler(async (event) => {
       coefficient: doc.coefficient,
       description: doc.description,
       specialty: doc.specialty,
+      sessionsCount:
+        doc.sessionsCount !== undefined ? Number(doc.sessionsCount) : 15,
+      toleratedAbsences:
+        doc.toleratedAbsences !== undefined ? Number(doc.toleratedAbsences) : 3,
     }));
   } catch (error: any) {
     throw createError({

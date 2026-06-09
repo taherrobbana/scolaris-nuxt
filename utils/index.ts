@@ -5,7 +5,7 @@ export function isEmpty(value: any): boolean {
 }
 
 export function deepClone(obj: any): any {
-  return JSON.parse(JSON.stringify(obj))
+  return JSON.parse(JSON.stringify(obj));
 }
 
 export function decodeJWT(token: any) {
@@ -32,20 +32,24 @@ export function decodeJWT(token: any) {
   }
 }
 
-export function formatDate(dateString: any, inputFormat: any, outputFormat: any) {
-    // Crée un objet moment à partir de la chaîne et du format d'entrée
-    const date = moment(dateString, inputFormat);
-    
-    // Vérifie si la date est valide
-    if (!date.isValid()) {
-        throw new Error("Date invalide ou format d'entrée incorrect.");
-    }
-    
-    // Retourne la date formatée
-    return date.format(outputFormat);
+export function formatDate(
+  dateString: any,
+  inputFormat: any,
+  outputFormat: any,
+) {
+  // Crée un objet moment à partir de la chaîne et du format d'entrée
+  const date = moment(dateString, inputFormat);
+
+  // Vérifie si la date est valide
+  if (!date.isValid()) {
+    throw new Error("Date invalide ou format d'entrée incorrect.");
+  }
+
+  // Retourne la date formatée
+  return date.format(outputFormat);
 }
-import { computed } from 'vue';
-import { ALL_ROLES } from './types';
+import { computed } from "vue";
+import { ALL_ROLES } from "./types";
 
 export const routes = computed(() => {
   const { $t } = useNuxtApp();
@@ -54,14 +58,14 @@ export const routes = computed(() => {
       caption: $t("sidebar.usersCaption"),
       icon: "people",
       label: $t("sidebar.users"),
-      roles: ['admin'],
+      roles: ["admin"],
       route: "/admin/users",
     },
     {
       caption: $t("sidebar.groupsCaption"),
       icon: "diversity_3",
       label: $t("sidebar.groups"),
-      roles: ['admin'],
+      roles: ["admin"],
       route: "/admin/groups",
     },
     {
@@ -96,7 +100,7 @@ export const routes = computed(() => {
       isFooter: true,
       action: () => {
         // Simulation de déconnexion ou appel à une fonction globale
-        window.location.href = '/login';
+        window.location.href = "/login";
       },
     },
     {
@@ -110,8 +114,15 @@ export const routes = computed(() => {
       icon: "menu_book",
       label: $t("sidebar.subjects"),
       caption: $t("sidebar.subjectsCaption"),
-      roles: ['coordinator'],
+      roles: ["coordinator"],
       route: "/coordinator/subjects",
+    },
+    {
+      icon: "event_busy",
+      label: $t("sidebar.absences"),
+      caption: $t("sidebar.absencesCaption"),
+      roles: ["student"],
+      route: "/student/absences",
     },
   ];
 });
