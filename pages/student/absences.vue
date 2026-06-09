@@ -22,7 +22,7 @@
       <div v-else>
         <!-- Stats Cards Row -->
         <div class="row q-col-gutter-md q-mb-lg">
-          <div class="col-12 col-sm-4">
+          <div class="col-12 col-sm-6 col-md-3">
             <q-card flat bordered class="stat-card">
               <q-card-section class="row items-center justify-between">
                 <div>
@@ -32,35 +32,49 @@
                   </div>
                 </div>
                 <q-avatar
-                  color="warning-1"
-                  text-color="warning-9"
+                  color="blue-1"
+                  text-color="blue-9"
                   icon="event_busy"
                 />
               </q-card-section>
             </q-card>
           </div>
 
-          <div class="col-12 col-sm-4">
+          <div class="col-12 col-sm-6 col-md-3">
             <q-card flat bordered class="stat-card">
               <q-card-section class="row items-center justify-between">
                 <div>
                   <div class="text-caption text-grey-7">Matières en Alerte</div>
-                  <div class="text-h5 text-weight-bold text-negative">
+                  <div class="text-h5 text-weight-bold text-warning">
                     {{ subjectsInAlert }}
                   </div>
                 </div>
-                <q-avatar color="red-1" text-color="red-9" icon="warning" />
+                <q-avatar color="orange-1" text-color="orange-9" icon="warning" />
               </q-card-section>
             </q-card>
           </div>
 
-          <div class="col-12 col-sm-4">
+          <div class="col-12 col-sm-6 col-md-3">
+            <q-card flat bordered class="stat-card">
+              <q-card-section class="row items-center justify-between">
+                <div>
+                  <div class="text-caption text-grey-7">Matières Éliminées</div>
+                  <div class="text-h5 text-weight-bold text-negative">
+                    {{ subjectsEliminated }}
+                  </div>
+                </div>
+                <q-avatar color="red-1" text-color="red-9" icon="gavel" />
+              </q-card-section>
+            </q-card>
+          </div>
+
+          <div class="col-12 col-sm-6 col-md-3">
             <q-card flat bordered class="stat-card">
               <q-card-section class="row items-center justify-between">
                 <div>
                   <div class="text-caption text-grey-7">Statut Global</div>
                   <div
-                    class="text-h6 text-weight-bold"
+                    class="text-subtitle1 text-weight-bold"
                     :class="globalStatusColor"
                   >
                     {{ globalStatusText }}
@@ -69,7 +83,7 @@
                 <q-avatar
                   :color="globalStatusBg"
                   :text-color="globalStatusTextColor"
-                  icon="shield"
+                  :icon="globalStatusIcon"
                 />
               </q-card-section>
             </q-card>
@@ -102,10 +116,19 @@
                 </q-item-section>
 
                 <q-item-section>
-                  <q-item-label class="text-weight-bold text-subtitle2">
-                    {{ sub.subjectName }}
-                  </q-item-label>
-                  <q-item-label caption>
+                  <div class="row items-center">
+                    <span class="text-weight-bold text-subtitle2">
+                      {{ sub.subjectName }}
+                    </span>
+                    <q-badge
+                      :color="getBadgeColor(sub.absencesCount, sub.toleratedAbsences)"
+                      :text-color="getBadgeTextColor(sub.absencesCount, sub.toleratedAbsences)"
+                      class="q-ml-sm text-weight-bold"
+                    >
+                      {{ getStatusLabel(sub.absencesCount, sub.toleratedAbsences) }}
+                    </q-badge>
+                  </div>
+                  <q-item-label caption class="q-mt-xs">
                     Code : {{ sub.subjectCode }} | Coefficient :
                     {{ sub.coefficient }}
                   </q-item-label>
@@ -252,52 +275,100 @@ const totalAbsences = computed(() => {
   return absencesData.value.reduce((sum, item) => sum + item.absencesCount, 0);
 });
 
+const getStatusLabel = (count: number, max: number) => {
+  if (max > 0) {
+    if (count >= max) return "Éliminé";
+    if (max - count === 1) return "En alerte";
+  } else if (max === 0 && count > 0) {
+    return "Éliminé";
+  }
+  return "En sécurité";
+};
+
 const subjectsInAlert = computed(() => {
   return absencesData.value.filter(
-    (item) =>
-      item.absencesCount >= item.toleratedAbsences &&
-      item.toleratedAbsences > 0,
+    (item) => getStatusLabel(item.absencesCount, item.toleratedAbsences) === "En alerte"
+  ).length;
+});
+
+const subjectsEliminated = computed(() => {
+  return absencesData.value.filter(
+    (item) => getStatusLabel(item.absencesCount, item.toleratedAbsences) === "Éliminé"
   ).length;
 });
 
 const globalStatusText = computed(() => {
-  if (subjectsInAlert.value === 0) return "En sécurité";
-  if (subjectsInAlert.value === 1) return "1 Alerte active";
-  return `${subjectsInAlert.value} Alertes actives`;
+  if (subjectsEliminated.value > 0) {
+    return subjectsEliminated.value === 1 
+      ? "1 Matière Éliminée" 
+      : `${subjectsEliminated.value} Matières Éliminées`;
+  }
+  if (subjectsInAlert.value > 0) {
+    return subjectsInAlert.value === 1 
+      ? "1 Matière en Alerte" 
+      : `${subjectsInAlert.value} Matières en Alerte`;
+  }
+  return "En sécurité";
 });
 
 const globalStatusColor = computed(() => {
-  if (subjectsInAlert.value === 0) return "text-positive";
-  return "text-negative";
+  if (subjectsEliminated.value > 0) return "text-negative";
+  if (subjectsInAlert.value > 0) return "text-warning";
+  return "text-positive";
 });
 
 const globalStatusBg = computed(() => {
-  if (subjectsInAlert.value === 0) return "green-1";
-  return "red-1";
+  if (subjectsEliminated.value > 0) return "red-1";
+  if (subjectsInAlert.value > 0) return "orange-1";
+  return "green-1";
 });
 
 const globalStatusTextColor = computed(() => {
-  if (subjectsInAlert.value === 0) return "green-9";
-  return "red-9";
+  if (subjectsEliminated.value > 0) return "red-9";
+  if (subjectsInAlert.value > 0) return "orange-9";
+  return "green-9";
+});
+
+const globalStatusIcon = computed(() => {
+  if (subjectsEliminated.value > 0) return "gavel";
+  if (subjectsInAlert.value > 0) return "warning";
+  return "shield";
 });
 
 // Helper styling methods
 const getStatusColor = (count: number, max: number) => {
-  if (count === 0) return "positive";
-  if (count < max) return "warning";
-  return "negative";
+  const status = getStatusLabel(count, max);
+  if (status === "Éliminé") return "negative";
+  if (status === "En alerte") return "warning";
+  return "positive";
 };
 
 const getStatusProgressColor = (count: number, max: number) => {
-  if (count === 0) return "green";
-  if (count < max) return "orange";
-  return "red";
+  const status = getStatusLabel(count, max);
+  if (status === "Éliminé") return "red";
+  if (status === "En alerte") return "orange";
+  return "green";
 };
 
 const getTextColor = (count: number, max: number) => {
-  if (count === 0) return "text-positive";
-  if (count < max) return "text-warning";
-  return "text-negative text-weight-bolder";
+  const status = getStatusLabel(count, max);
+  if (status === "Éliminé") return "text-negative text-weight-bolder";
+  if (status === "En alerte") return "text-warning text-weight-bold";
+  return "text-positive";
+};
+
+const getBadgeColor = (count: number, max: number) => {
+  const status = getStatusLabel(count, max);
+  if (status === "Éliminé") return "red-1";
+  if (status === "En alerte") return "orange-1";
+  return "green-1";
+};
+
+const getBadgeTextColor = (count: number, max: number) => {
+  const status = getStatusLabel(count, max);
+  if (status === "Éliminé") return "red-9";
+  if (status === "En alerte") return "orange-9";
+  return "green-9";
 };
 
 const formatDate = (dateStr: string) => {
