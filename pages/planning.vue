@@ -13,9 +13,30 @@
         </div>
 
         <!-- Filters Bar -->
-        <div class="col-12 col-md-8 row q-col-gutter-sm justify-end">
+        <div class="col row q-col-gutter-sm justify-end">
+          <!-- Session Type Filter -->
+          <div class="col">
+            <q-select
+              v-model="filterType"
+              :options="[
+                { label: 'Cours', value: 'cours' },
+                { label: 'TD / TP', value: 'workshop' },
+                { label: 'Conférence / Spécial', value: 'conference' },
+                { label: 'Examen', value: 'exam' },
+              ]"
+              emit-value
+              map-options
+              outlined
+              dense
+              label="Type de Séance"
+              clearable
+            >
+              <template #prepend><q-icon name="category" size="xs" /></template>
+            </q-select>
+          </div>
+
           <!-- Specialty Filter -->
-          <div class="col-12 col-sm-3">
+          <div class="col">
             <q-select
               v-model="filterSpecialty"
               :options="specialtyOptions"
@@ -32,7 +53,7 @@
           </div>
 
           <!-- Group Filter -->
-          <div class="col-12 col-sm-3">
+          <div class="col">
             <q-select
               v-model="filterGroup"
               :options="filteredGroupOptions"
@@ -48,7 +69,7 @@
           </div>
 
           <!-- Subject Filter -->
-          <div class="col-12 col-sm-3">
+          <div class="col">
             <q-select
               v-model="filterSubject"
               :options="filteredSubjectOptions"
@@ -59,12 +80,14 @@
               emit-value
               map-options
             >
-              <template #prepend><q-icon name="menu_book" size="xs" /></template>
+              <template #prepend
+                ><q-icon name="menu_book" size="xs"
+              /></template>
             </q-select>
           </div>
 
           <!-- Teacher Filter -->
-          <div class="col-12 col-sm-3">
+          <div class="col">
             <q-select
               v-model="filterTeacher"
               :options="teacherOptions"
@@ -84,7 +107,10 @@
       <q-separator class="q-mb-lg" />
       <!-- Conflicts Warning Banner -->
       <div v-if="allConflicts.length > 0" class="q-mb-lg">
-        <q-banner inline-actions class="bg-red-1 text-red-9 rounded-borders border-red shadow-1 q-pa-md">
+        <q-banner
+          inline-actions
+          class="bg-red-1 text-red-9 rounded-borders border-red shadow-1 q-pa-md"
+        >
           <template #avatar>
             <q-icon name="warning" color="negative" size="md" />
           </template>
@@ -92,7 +118,8 @@
             {{ allConflicts.length }} conflit(s) de planification détecté(s) !
           </div>
           <div>
-            Certains enseignants ou groupes d'élèves ont plusieurs cours prévus sur les mêmes créneaux horaires.
+            Certains enseignants ou groupes d'élèves ont plusieurs cours prévus
+            sur les mêmes créneaux horaires.
           </div>
           <template #action>
             <q-btn
@@ -109,7 +136,10 @@
       </div>
 
       <!-- Calendar Presenter -->
-      <div v-if="planningStore.isLoading && events.length === 0" class="row justify-center q-my-xl">
+      <div
+        v-if="planningStore.isLoading && events.length === 0"
+        class="row justify-center q-my-xl"
+      >
         <q-spinner-dots color="primary" size="40px" />
       </div>
       <div v-else>
@@ -129,7 +159,7 @@
       <q-card style="min-width: 480px; border-radius: 16px" class="q-pa-sm">
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6 text-weight-bold text-primary">
-            {{ mode === 'add' ? 'Planifier une séance' : 'Modifier la séance' }}
+            {{ mode === "add" ? "Planifier une séance" : "Modifier la séance" }}
           </div>
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
@@ -143,7 +173,7 @@
             label="Spécialité"
             outlined
             dense
-            :rules="[v => !!v || 'La spécialité est requise']"
+            :rules="[(v) => !!v || 'La spécialité est requise']"
             @update:model-value="onDialogSpecialtyChange"
           >
             <template #prepend><q-icon name="school" /></template>
@@ -158,7 +188,7 @@
             dense
             emit-value
             map-options
-            :rules="[v => !!v || 'La matière est requise']"
+            :rules="[(v) => !!v || 'La matière est requise']"
           >
             <template #prepend><q-icon name="menu_book" /></template>
           </q-select>
@@ -172,7 +202,7 @@
             dense
             emit-value
             map-options
-            :rules="[v => !!v || 'Le groupe est requis']"
+            :rules="[(v) => !!v || 'Le groupe est requis']"
           >
             <template #prepend><q-icon name="groups" /></template>
           </q-select>
@@ -186,19 +216,34 @@
             dense
             emit-value
             map-options
-            :rules="[v => !!v || 'L\'enseignant est requis']"
+            :rules="[(v) => !!v || 'L\'enseignant est requis']"
           >
             <template #prepend><q-icon name="person" /></template>
           </q-select>
 
           <!-- Date de début -->
-          <q-input outlined dense v-model="eventForm.start" label="Date et heure de début" :rules="[v => !!v || 'La date de début est requise']">
+          <q-input
+            outlined
+            dense
+            v-model="eventForm.start"
+            label="Date et heure de début"
+            :rules="[(v) => !!v || 'La date de début est requise']"
+          >
             <template #prepend>
               <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                <q-popup-proxy
+                  cover
+                  transition-show="scale"
+                  transition-hide="scale"
+                >
                   <q-date v-model="eventForm.start" mask="YYYY-MM-DD HH:mm">
                     <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Fermer" color="primary" flat />
+                      <q-btn
+                        v-close-popup
+                        label="Fermer"
+                        color="primary"
+                        flat
+                      />
                     </div>
                   </q-date>
                 </q-popup-proxy>
@@ -206,10 +251,23 @@
             </template>
             <template #append>
               <q-icon name="access_time" class="cursor-pointer">
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-time v-model="eventForm.start" mask="YYYY-MM-DD HH:mm" format24h>
+                <q-popup-proxy
+                  cover
+                  transition-show="scale"
+                  transition-hide="scale"
+                >
+                  <q-time
+                    v-model="eventForm.start"
+                    mask="YYYY-MM-DD HH:mm"
+                    format24h
+                  >
                     <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Fermer" color="primary" flat />
+                      <q-btn
+                        v-close-popup
+                        label="Fermer"
+                        color="primary"
+                        flat
+                      />
                     </div>
                   </q-time>
                 </q-popup-proxy>
@@ -218,13 +276,28 @@
           </q-input>
 
           <!-- Date de fin -->
-          <q-input outlined dense v-model="eventForm.end" label="Date et heure de fin" :rules="[v => !!v || 'La date de fin est requise']">
+          <q-input
+            outlined
+            dense
+            v-model="eventForm.end"
+            label="Date et heure de fin"
+            :rules="[(v) => !!v || 'La date de fin est requise']"
+          >
             <template #prepend>
               <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                <q-popup-proxy
+                  cover
+                  transition-show="scale"
+                  transition-hide="scale"
+                >
                   <q-date v-model="eventForm.end" mask="YYYY-MM-DD HH:mm">
                     <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Fermer" color="primary" flat />
+                      <q-btn
+                        v-close-popup
+                        label="Fermer"
+                        color="primary"
+                        flat
+                      />
                     </div>
                   </q-date>
                 </q-popup-proxy>
@@ -232,10 +305,23 @@
             </template>
             <template #append>
               <q-icon name="access_time" class="cursor-pointer">
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-time v-model="eventForm.end" mask="YYYY-MM-DD HH:mm" format24h>
+                <q-popup-proxy
+                  cover
+                  transition-show="scale"
+                  transition-hide="scale"
+                >
+                  <q-time
+                    v-model="eventForm.end"
+                    mask="YYYY-MM-DD HH:mm"
+                    format24h
+                  >
                     <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Fermer" color="primary" flat />
+                      <q-btn
+                        v-close-popup
+                        label="Fermer"
+                        color="primary"
+                        flat
+                      />
                     </div>
                   </q-time>
                 </q-popup-proxy>
@@ -250,7 +336,7 @@
               { label: 'Cours', value: 'cours' },
               { label: 'TD / TP', value: 'workshop' },
               { label: 'Conférence / Spécial', value: 'conference' },
-              { label: 'Examen', value: 'exam' }
+              { label: 'Examen', value: 'exam' },
             ]"
             emit-value
             map-options
@@ -300,7 +386,10 @@
 
     <!-- Dialog Conflits -->
     <q-dialog v-model="showConflictsDialog">
-      <q-card style="min-width: 600px; max-width: 800px; border-radius: 16px" class="q-pa-sm">
+      <q-card
+        style="min-width: 600px; max-width: 800px; border-radius: 16px"
+        class="q-pa-sm"
+      >
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6 text-weight-bold text-negative row items-center">
             <q-icon name="warning" color="negative" class="q-mr-sm" size="md" />
@@ -310,31 +399,41 @@
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
 
-        <q-card-section class="q-pt-md" style="max-height: 70vh; overflow-y: auto;">
+        <q-card-section
+          class="q-pt-md"
+          style="max-height: 70vh; overflow-y: auto"
+        >
           <div v-if="allConflicts.length === 0" class="text-center q-py-xl">
             <q-icon name="check_circle" color="positive" size="50px" />
-            <div class="text-subtitle1 text-grey-8 q-mt-md">Aucun conflit détecté. Tout est en ordre !</div>
+            <div class="text-subtitle1 text-grey-8 q-mt-md">
+              Aucun conflit détecté. Tout est en ordre !
+            </div>
           </div>
           <div v-else class="q-gutter-y-md">
             <div
               v-for="conflict in allConflicts"
               :key="conflict.id"
               class="conflict-card q-pa-md rounded-borders bg-red-0"
-              style="border: 1px solid #ffcdd2; border-left: 6px solid #f44336; border-radius: 8px;"
+              style="
+                border: 1px solid #ffcdd2;
+                border-left: 6px solid #f44336;
+                border-radius: 8px;
+              "
             >
               <div class="row items-center justify-between q-mb-sm">
                 <div class="text-subtitle2 text-weight-bold text-red-9">
                   <span v-if="conflict.type === 'teacher'">
-                    👨‍🏫 Conflit Enseignant : {{ getTeacherName(conflict.teacherId) }}
+                    👨‍🏫 Conflit Enseignant :
+                    {{ getTeacherName(conflict.teacherId) }}
                   </span>
                   <span v-else-if="conflict.type === 'student'">
                     👥 Conflit Groupe : {{ getGroupName(conflict.groupId) }}
                   </span>
-                  <span v-else>
-                    ⚠️ Double Conflit (Enseignant & Groupe)
-                  </span>
+                  <span v-else> ⚠️ Double Conflit (Enseignant & Groupe) </span>
                 </div>
-                <div class="text-caption text-grey-7 bg-red-1 q-px-sm q-py-xs rounded-borders">
+                <div
+                  class="text-caption text-grey-7 bg-red-1 q-px-sm q-py-xs rounded-borders"
+                >
                   Créneaux qui se chevauchent
                 </div>
               </div>
@@ -342,14 +441,28 @@
               <div class="row q-col-gutter-sm items-stretch">
                 <!-- Event 1 Card -->
                 <div class="col-12 col-sm-6">
-                  <q-card flat bordered class="column justify-between full-height q-pa-sm bg-white">
+                  <q-card
+                    flat
+                    bordered
+                    class="column justify-between full-height q-pa-sm bg-white"
+                  >
                     <div>
-                      <div class="text-weight-bold text-primary">{{ conflict.event1.title }}</div>
+                      <div class="text-weight-bold text-primary">
+                        {{ conflict.event1.title }}
+                      </div>
                       <div class="text-caption text-grey-8 q-mt-xs">
                         <q-icon name="schedule" size="xs" class="q-mr-xs" />
-                        {{ formatConflictTime(conflict.event1.start, conflict.event1.end) }}
+                        {{
+                          formatConflictTime(
+                            conflict.event1.start,
+                            conflict.event1.end,
+                          )
+                        }}
                       </div>
-                      <div v-if="conflict.event1.discription" class="text-caption text-grey-6 text-italic q-mt-xs ellipsis-2-lines">
+                      <div
+                        v-if="conflict.event1.discription"
+                        class="text-caption text-grey-6 text-italic q-mt-xs ellipsis-2-lines"
+                      >
                         {{ conflict.event1.discription }}
                       </div>
                     </div>
@@ -380,14 +493,28 @@
 
                 <!-- Event 2 Card -->
                 <div class="col-12 col-sm-6">
-                  <q-card flat bordered class="column justify-between full-height q-pa-sm bg-white">
+                  <q-card
+                    flat
+                    bordered
+                    class="column justify-between full-height q-pa-sm bg-white"
+                  >
                     <div>
-                      <div class="text-weight-bold text-primary">{{ conflict.event2.title }}</div>
+                      <div class="text-weight-bold text-primary">
+                        {{ conflict.event2.title }}
+                      </div>
                       <div class="text-caption text-grey-8 q-mt-xs">
                         <q-icon name="schedule" size="xs" class="q-mr-xs" />
-                        {{ formatConflictTime(conflict.event2.start, conflict.event2.end) }}
+                        {{
+                          formatConflictTime(
+                            conflict.event2.start,
+                            conflict.event2.end,
+                          )
+                        }}
                       </div>
-                      <div v-if="conflict.event2.discription" class="text-caption text-grey-6 text-italic q-mt-xs ellipsis-2-lines">
+                      <div
+                        v-if="conflict.event2.discription"
+                        class="text-caption text-grey-6 text-italic q-mt-xs ellipsis-2-lines"
+                      >
                         {{ conflict.event2.discription }}
                       </div>
                     </div>
@@ -450,7 +577,10 @@ const STANDARD_SLOTS = [
   { start: "20:00", end: "21:45" },
 ];
 
-function snapToPlanningSlot(date: Date | string | moment.Moment): { start: moment.Moment; end: moment.Moment } {
+function snapToPlanningSlot(date: Date | string | moment.Moment): {
+  start: moment.Moment;
+  end: moment.Moment;
+} {
   const mDate = moment(date);
   const dayStr = mDate.format("YYYY-MM-DD");
   const targetMinutes = mDate.hours() * 60 + mDate.minutes();
@@ -477,7 +607,7 @@ const { t } = useI18n();
 
 definePageMeta({
   middleware: "auth",
-  roles: ALL_ROLES
+  roles: ALL_ROLES,
 });
 
 useHead({
@@ -500,6 +630,7 @@ const filterSpecialty = ref<string | null>(null);
 const filterGroup = ref<string | null>(null);
 const filterSubject = ref<string | null>(null);
 const filterTeacher = ref<string | null>(null);
+const filterType = ref<string | null>(null);
 
 const calendarKey = ref(0);
 
@@ -542,7 +673,9 @@ async function loadTeachers() {
 
 // Specialties list populated from available subjects
 const specialties = computed(() => {
-  const specs = subjectStore.getSubjects.map((s) => s.specialty).filter(Boolean);
+  const specs = subjectStore.getSubjects
+    .map((s) => s.specialty)
+    .filter(Boolean);
   return Array.from(new Set(specs)) as string[];
 });
 
@@ -557,7 +690,7 @@ const dialogSpecialtyOptions = computed(() => {
 // Subjects Options
 const subjectOptions = computed(() => {
   return subjectStore.getSubjects.map((s) => ({
-    label: `${s.code} - ${s.name} (${s.specialty || 'N/A'})`,
+    label: `${s.code} - ${s.name} (${s.specialty || "N/A"})`,
     value: s.id,
     specialty: s.specialty,
     name: s.name,
@@ -573,7 +706,7 @@ const groupOptions = computed(() => {
     // We guess the specialty if the group name contains or matches a specialty keyword
     const groupName = g.name || g.label || g.id;
     const value = g.id || g.name;
-    
+
     // Attempt matching specialty in name
     let matchedSpec = null;
     for (const spec of specialties.value) {
@@ -606,14 +739,16 @@ function onFilterSpecialtyChange() {
 const filteredGroupOptions = computed(() => {
   if (!filterSpecialty.value) return groupOptions.value;
   return groupOptions.value.filter(
-    (g) => !g.specialty || g.specialty === filterSpecialty.value
+    (g) => !g.specialty || g.specialty === filterSpecialty.value,
   );
 });
 
 // Subjects filtered by active specialty
 const filteredSubjectOptions = computed(() => {
   if (!filterSpecialty.value) return subjectOptions.value;
-  return subjectOptions.value.filter((s) => s.specialty === filterSpecialty.value);
+  return subjectOptions.value.filter(
+    (s) => s.specialty === filterSpecialty.value,
+  );
 });
 
 // Final events list to pass to calendar component (filtered dynamically)
@@ -645,7 +780,8 @@ const allConflicts = computed(() => {
       const e2 = list[j];
 
       // Match conditions
-      const sameTeacher = e1.teacherId && e2.teacherId && e1.teacherId === e2.teacherId;
+      const sameTeacher =
+        e1.teacherId && e2.teacherId && e1.teacherId === e2.teacherId;
       const sameGroup = e1.groupId && e2.groupId && e1.groupId === e2.groupId;
 
       if (!sameTeacher && !sameGroup) continue;
@@ -658,12 +794,17 @@ const allConflicts = computed(() => {
 
       const overlap = start1.isBefore(end2) && start2.isBefore(end1);
       if (overlap) {
-        const pairKey = [e1.id, e2.id].sort().join('-');
+        const pairKey = [e1.id, e2.id].sort().join("-");
         if (!checkedPairs.has(pairKey)) {
           checkedPairs.add(pairKey);
           conflictsList.push({
             id: pairKey,
-            type: sameTeacher && sameGroup ? 'both' : (sameTeacher ? 'teacher' : 'student'),
+            type:
+              sameTeacher && sameGroup
+                ? "both"
+                : sameTeacher
+                  ? "teacher"
+                  : "student",
             teacherId: sameTeacher ? e1.teacherId : null,
             groupId: sameGroup ? e1.groupId : null,
             event1: e1,
@@ -701,20 +842,23 @@ const filteredEvents = computed(() => {
   if (filterTeacher.value) {
     list = list.filter((e) => e.teacherId === filterTeacher.value);
   }
+  if (filterType.value) {
+    list = list.filter((e) => e.class === filterType.value);
+  }
 
   const conflictIds = conflictedEventIds.value;
 
   // Format events to make sure start/end are parsed by vue-cal (YYYY-MM-DD HH:mm format)
   const sessionTypeLabels: Record<string, string> = {
-    cours: 'Cours',
-    workshop: 'TD / TP',
-    conference: 'Conférence / Spécial',
-    exam: 'Examen'
+    cours: "Cours",
+    workshop: "TD / TP",
+    conference: "Conférence / Spécial",
+    exam: "Examen",
   };
 
   return list.map((e) => {
     const hasConflict = conflictIds.has(e.id);
-    const baseClass = (e.class || 'cours').split(' ')[0];
+    const baseClass = (e.class || "cours").split(" ")[0];
     const subject = subjectStore.getSubjects.find((s) => s.id === e.subjectId);
     const group = groupOptions.value.find((g) => g.value === e.groupId);
 
@@ -724,9 +868,9 @@ const filteredEvents = computed(() => {
       start: moment(e.start).format("YYYY-MM-DD HH:mm"),
       end: moment(e.end).format("YYYY-MM-DD HH:mm"),
       hasConflict,
-      class: baseClass + (hasConflict ? ' conflict-event' : ''),
-      subjectName: subject ? subject.name : (e.subjectId || '—'),
-      groupName: group ? group.label : (e.groupId || '—'),
+      class: baseClass + (hasConflict ? " conflict-event" : ""),
+      subjectName: subject ? subject.name : e.subjectId || "—",
+      groupName: group ? group.label : e.groupId || "—",
       sessionTypeLabel: sessionTypeLabels[baseClass] || baseClass,
       teacherName: getTeacherName(e.teacherId),
     };
@@ -736,7 +880,7 @@ const filteredEvents = computed(() => {
 function formatConflictTime(start: any, end: any) {
   const s = moment(start);
   const e = moment(end);
-  if (s.isSame(e, 'day')) {
+  if (s.isSame(e, "day")) {
     return `${s.format("DD/MM/YYYY")} de ${s.format("HH:mm")} à ${e.format("HH:mm")}`;
   }
   return `Du ${s.format("DD/MM/YYYY HH:mm")} au ${e.format("DD/MM/YYYY HH:mm")}`;
@@ -749,20 +893,20 @@ function openEditConflictEvent(event: any) {
 
 function confirmDeleteEvent(event: any) {
   $q.dialog({
-    title: 'Confirmation de suppression',
+    title: "Confirmation de suppression",
     message: `Voulez-vous vraiment supprimer la séance "${event.title}" du planning ?`,
     cancel: true,
     persistent: true,
     ok: {
-      label: 'Supprimer',
-      color: 'negative',
-      flat: true
+      label: "Supprimer",
+      color: "negative",
+      flat: true,
     },
     cancel: {
-      label: 'Annuler',
-      color: 'grey',
-      flat: true
-    }
+      label: "Annuler",
+      color: "grey",
+      flat: true,
+    },
   }).onOk(async () => {
     try {
       await planningStore.removePlanning(event.id);
@@ -794,13 +938,15 @@ function onDialogSpecialtyChange(newSpec: string) {
 
 const dialogSubjectOptions = computed(() => {
   if (!eventForm.value.specialty) return subjectOptions.value;
-  return subjectOptions.value.filter((s) => s.specialty === eventForm.value.specialty);
+  return subjectOptions.value.filter(
+    (s) => s.specialty === eventForm.value.specialty,
+  );
 });
 
 const dialogGroupOptions = computed(() => {
   if (!eventForm.value.specialty) return groupOptions.value;
   return groupOptions.value.filter(
-    (g) => !g.specialty || g.specialty === eventForm.value.specialty
+    (g) => !g.specialty || g.specialty === eventForm.value.specialty,
   );
 });
 
@@ -943,7 +1089,12 @@ function onEventDragCreate(event: any) {
 
 // Save form handler (Add / Edit)
 async function saveEvent() {
-  if (!eventForm.value.specialty || !eventForm.value.subjectId || !eventForm.value.groupId || !eventForm.value.teacherId) {
+  if (
+    !eventForm.value.specialty ||
+    !eventForm.value.subjectId ||
+    !eventForm.value.groupId ||
+    !eventForm.value.teacherId
+  ) {
     Notify.create({
       type: "negative",
       message: "Veuillez renseigner tous les champs obligatoires",
@@ -953,9 +1104,15 @@ async function saveEvent() {
   }
 
   // Auto-generate title using subject name, teacher name, and group label
-  const matchedSubject = subjectOptions.value.find((s) => s.value === eventForm.value.subjectId);
-  const matchedTeacher = teacherOptions.value.find((t) => t.value === eventForm.value.teacherId);
-  const matchedGroup = groupOptions.value.find((g) => g.value === eventForm.value.groupId);
+  const matchedSubject = subjectOptions.value.find(
+    (s) => s.value === eventForm.value.subjectId,
+  );
+  const matchedTeacher = teacherOptions.value.find(
+    (t) => t.value === eventForm.value.teacherId,
+  );
+  const matchedGroup = groupOptions.value.find(
+    (g) => g.value === eventForm.value.groupId,
+  );
 
   const subjectName = matchedSubject ? matchedSubject.name : "Cours";
   const teacherName = matchedTeacher ? matchedTeacher.label : "Enseignant";
