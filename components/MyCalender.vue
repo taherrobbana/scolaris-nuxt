@@ -51,6 +51,17 @@
           :color="event.hasConflict ? 'negative' : getBadgeColor(event.class)"
         >
           <q-icon :name="event.hasConflict ? 'warning' : 'edit'" color="white" size="12px" />
+          <q-tooltip>Modifier</q-tooltip>
+        </q-badge>
+        <q-badge
+          rounded
+          floating
+          class="attendance-badge shadow-2"
+          @click.stop="emit('event-attendance', event)"
+          color="teal"
+        >
+          <q-icon name="how_to_reg" color="white" size="12px" />
+          <q-tooltip>Faire l'appel</q-tooltip>
         </q-badge>
         <q-tooltip
           class="bg-transparent q-pa-none shadow-0"
@@ -198,6 +209,7 @@ const emit = defineEmits([
   "event-duration-change",
   "event-drag-start",
   "event-drag-end",
+  "event-attendance",
 ]);
 
 const langModule = useLangModule();
@@ -331,7 +343,23 @@ function getBadgeColor(eventClass: string): string {
   justify-content: center;
 }
 
-.vuecal__event:hover .edit-badge {
+.attendance-badge {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  position: absolute;
+  cursor: pointer;
+  top: 4px;
+  right: 28px;
+  height: 20px;
+  width: 20px;
+  border-radius: 50% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vuecal__event:hover .edit-badge,
+.vuecal__event:hover .attendance-badge {
   opacity: 1;
 }
 

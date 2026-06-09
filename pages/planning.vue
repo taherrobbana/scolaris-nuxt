@@ -150,6 +150,7 @@
           @event-edit="onEditEvent"
           @event-drop="onEventDrop"
           @event-resize="onEventResize"
+          @event-attendance="onEventAttendance"
         />
       </div>
     </div>
@@ -552,6 +553,107 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <!-- Dialog Appel / Présence -->
+    <q-dialog v-model="showAttendanceDialog" persistent>
+      <q-card style="min-width: 500px; border-radius: 16px" class="q-pa-sm">
+        <q-card-section class="row items-center q-pb-none">
+          <div class="column">
+            <div class="text-h6 text-weight-bold text-teal">
+              Feuille d'Appel
+            </div>
+            <div class="text-caption text-grey-7">
+              {{ attendanceEvent?.subjectName || attendanceEvent?.title }} - {{ attendanceEvent?.groupName }}
+            </div>
+          </div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-card-section class="q-pt-md" style="max-height: 60vh; overflow-y: auto">
+          <div v-if="attendanceLoading" class="row justify-center q-my-xl">
+            <q-spinner color="teal" size="40px" />
+          </div>
+          <div v-else>
+            <div v-if="attendanceStudents.length === 0" class="text-center q-py-xl text-grey-7">
+              <q-icon name="group_off" size="50px" class="q-mb-md" />
+              <div>Aucun étudiant n'est inscrit dans ce groupe.</div>
+            </div>
+            <div v-else>
+              <!-- Global Actions -->
+              <div class="row justify-end q-mb-md q-gutter-x-sm">
+                <q-btn
+                  size="sm"
+                  color="teal-1"
+                  text-color="teal-9"
+                  label="Tous présents"
+                  no-caps
+                  icon="check"
+                  @click="markAll(true)"
+                  unelevated
+                />
+                <q-btn
+                  size="sm"
+                  color="red-1"
+                  text-color="red-9"
+                  label="Tous absents"
+                  no-caps
+                  icon="close"
+                  @click="markAll(false)"
+                  unelevated
+                />
+              </div>
+
+              <q-list bordered separator class="rounded-borders overflow-hidden">
+                <q-item v-for="student in attendanceStudents" :key="student.id" class="q-py-sm">
+                  <q-item-section avatar>
+                    <q-avatar size="32px" color="teal" text-color="white">
+                      {{ student.firstName?.charAt(0).toUpperCase() }}{{ student.lastName?.charAt(0).toUpperCase() }}
+                    </q-avatar>
+                  </q-item-section>
+
+                  <q-item-section>
+                    <q-item-label class="text-weight-medium">
+                      {{ student.firstName }} {{ student.lastName }}
+                    </q-item-label>
+                    <q-item-label caption>
+                      {{ student.username }}
+                    </q-item-label>
+                  </q-item-section>
+
+                  <q-item-section side>
+                    <div class="row items-center q-gutter-x-sm">
+                      <q-btn
+                        flat
+                        round
+                        dense
+                        :color="getRecord(student.id)?.present ? 'positive' : 'grey-4'"
+                        :icon="getRecord(student.id)?.present ? 'check_circle' : 'radio_button_unchecked'"
+                        @click="toggleStudentPresence(student.id)"
+                      >
+                        <q-tooltip>{{ getRecord(student.id)?.present ? 'Présent' : 'Absent' }}</q-tooltip>
+                      </q-btn>
+                    </div>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </div>
+          </div>
+        </q-card-section>
+
+        <q-card-actions align="right" class="q-pa-md">
+          <q-btn flat label="Annuler" color="grey" v-close-popup />
+          <q-btn
+            unelevated
+            label="Enregistrer"
+            color="teal"
+            :loading="savingAttendance"
+            :disable="attendanceStudents.length === 0"
+            @click="saveAttendance"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -621,9 +723,18 @@ const groupStore = useGroupModule();
 
 // Reactive data lists loaded from API
 const teachers = ref<any[]>([]);
+const students = ref<any[]>([]);
 
 const $q = useQuasar();
 const showConflictsDialog = ref(false);
+
+// Attendance / Roll call states
+const showAttendanceDialog = ref(false);
+const attendanceEvent = ref<any>(null);
+const attendanceRecords = ref<any[]>([]);
+const attendanceStudents = ref<any[]>([]);
+const attendanceLoading = ref(false);
+const savingAttendance = ref(false);
 
 // Filter selections
 const filterSpecialty = ref<string | null>(null);
@@ -656,16 +767,17 @@ onMounted(async () => {
     planningStore.loadPlanning(),
     subjectStore.loadSubjects(),
     groupStore.fetchGroups(),
-    loadTeachers(),
+    loadUsers(),
   ]);
 });
 
-async function loadTeachers() {
+async function loadUsers() {
   try {
     const list = await getAllUsers();
     teachers.value = (list || []).filter((u: any) => u.role === "teacher");
+    students.value = (list || []).filter((u: any) => u.role === "student");
   } catch (error) {
-    console.error("Failed to load teachers", error);
+    console.error("Failed to load users", error);
   }
 }
 
@@ -1174,6 +1286,88 @@ async function deleteEvent() {
       message: "Erreur lors de la suppression",
       icon: "error",
     });
+  }
+}
+
+// Attendance handlers
+async function onEventAttendance(calEvent: any) {
+  attendanceEvent.value = calEvent;
+  showAttendanceDialog.value = true;
+  attendanceLoading.value = true;
+
+  const matchedGroup = groupOptions.value.find((g) => g.value === calEvent.groupId);
+  const groupName = matchedGroup ? matchedGroup.label : "";
+
+  attendanceStudents.value = students.value.filter((s) => s.group === groupName);
+
+  try {
+    const res: any = await $fetch(`/api/attendance`, {
+      params: { eventId: calEvent.id },
+    });
+    const dbRecords = res?.records || [];
+    attendanceRecords.value = attendanceStudents.value.map((s) => {
+      const dbRec = dbRecords.find((r: any) => r.studentId === s.id);
+      return {
+        studentId: s.id,
+        present: dbRec ? dbRec.present : true,
+      };
+    });
+  } catch (error) {
+    console.error("Failed to load attendance", error);
+    Notify.create({
+      type: "negative",
+      message: "Erreur lors de la récupération des présences",
+    });
+  } finally {
+    attendanceLoading.value = false;
+  }
+}
+
+function getRecord(studentId: string) {
+  return attendanceRecords.value.find((r) => r.studentId === studentId);
+}
+
+function toggleStudentPresence(studentId: string) {
+  const rec = getRecord(studentId);
+  if (rec) {
+    rec.present = !rec.present;
+  }
+}
+
+function markAll(present: boolean) {
+  attendanceRecords.value.forEach((r) => {
+    r.present = present;
+  });
+}
+
+async function saveAttendance() {
+  if (!attendanceEvent.value) return;
+
+  savingAttendance.value = true;
+  try {
+    await $fetch(`/api/attendance`, {
+      method: "POST",
+      body: {
+        eventId: attendanceEvent.value.id,
+        records: attendanceRecords.value,
+      },
+    });
+
+    Notify.create({
+      type: "positive",
+      message: "Feuille d'appel enregistrée avec succès !",
+      icon: "check_circle",
+    });
+    showAttendanceDialog.value = false;
+  } catch (error) {
+    console.error("Failed to save attendance", error);
+    Notify.create({
+      type: "negative",
+      message: "Erreur lors de l'enregistrement de l'appel",
+      icon: "error",
+    });
+  } finally {
+    savingAttendance.value = false;
   }
 }
 </script>
