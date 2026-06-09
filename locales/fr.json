@@ -14,48 +14,14 @@
     },
     "coordinator": {
       "index": "Dashboard Entreprise / Coordinateur",
-      "subjects": {
-        "title": "Gestion des matières",
-        "add": "Ajouter une matière",
-        "edit": "Modifier",
-        "delete": "Supprimer",
-        "editSubject": "Modifier une matière",
-        "addSubject": "Ajouter une matière",
-        "code": "Code de la matière",
-        "name": "Nom de la matière",
-        "coefficient": "Coefficient",
-        "description": "Déscription",
-        "specialty": "Spécialité",
-        "specialtyPlaceholder": "Sélectionner ou entrer une spécialité",
-        "allSpecialties": "Toutes les spécialités",
-        "noSpecialty": "Aucune spécialité",
-        "search": "Rechercher",
-        "cancel": "Annuler",
-        "update": "Mettre à jour",
-        "create": "Créer",
-        "successUpdate": "Matière mise à jour avec succès",
-        "successCreate": "Matière créée avec succès",
-        "successDelete": "Matière supprimée avec succès",
-        "confirmDeleteTitle": "Confirmer la suppression",
-        "confirmDeleteMessage": "Voulez-vous vraiment supprimer la matière \"{name}\" ?",
-        "codeRequired": "Le code de la matière est requis",
-        "nameRequired": "Le nom de la matière est requis",
-        "coeffRequired": "Le coefficient est requis",
-        "columns": {
-          "code": "Code",
-          "name": "Nom",
-          "coefficient": "Coefficient",
-          "description": "Déscription",
-          "specialty": "Spécialité",
-          "actions": "Actions"
-        }
-      }
+      "subjects": "Gestion des matières"
     },
     "reset-password": {
       "id": "Réinitialiser le mot de passe"
     },
     "student": {
-      "index": "Mon Dashboard Étudiant"
+      "index": "Mon Dashboard Étudiant",
+      "absences": "Mes absences"
     },
     "teacher": {
       "index": "Dashboard Enseignant"

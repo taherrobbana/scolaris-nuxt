@@ -14,48 +14,14 @@
     },
     "coordinator": {
       "index": "Coordinator Dashboard",
-      "subjects": {
-        "title": "Subjects Management",
-        "add": "Add Subject",
-        "edit": "Edit",
-        "delete": "Delete",
-        "editSubject": "Edit Subject",
-        "addSubject": "Add Subject",
-        "code": "Subject Code",
-        "name": "Subject Name",
-        "coefficient": "Coefficient",
-        "description": "Description",
-        "specialty": "Specialty",
-        "specialtyPlaceholder": "Select or enter a specialty",
-        "allSpecialties": "All Specialties",
-        "noSpecialty": "No specialty",
-        "search": "Search",
-        "cancel": "Cancel",
-        "update": "Update",
-        "create": "Create",
-        "successUpdate": "Subject updated successfully",
-        "successCreate": "Subject created successfully",
-        "successDelete": "Subject deleted successfully",
-        "confirmDeleteTitle": "Confirm Delete",
-        "confirmDeleteMessage": "Do you really want to delete subject \"{name}\" ?",
-        "codeRequired": "Subject code is required",
-        "nameRequired": "Subject name is required",
-        "coeffRequired": "Coefficient is required",
-        "columns": {
-          "code": "Code",
-          "name": "Name",
-          "coefficient": "Coefficient",
-          "description": "Description",
-          "specialty": "Specialty",
-          "actions": "Actions"
-        }
-      }
+      "subjects": "Subjects Management"
     },
     "reset-password": {
       "id": "Reset Password"
     },
     "student": {
-      "index": "My Student Dashboard"
+      "index": "My Student Dashboard",
+      "absences": "My Absences"
     },
     "teacher": {
       "index": "Teacher Dashboard"

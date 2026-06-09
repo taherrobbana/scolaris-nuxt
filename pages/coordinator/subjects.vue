@@ -309,7 +309,7 @@ definePageMeta({
 const { t } = useI18n();
 
 useHead({
-  title: computed(() => t("useHead.coordinator.subjects")),
+  title: computed(() => t("useHead.coordinator.subjects.title")), 
 });
 
 // ── Store ────────────────────────────────────────────────────────────────────

@@ -239,12 +239,18 @@
 import { ref, computed, onMounted } from "vue";
 import { useAuthModule } from "~/stores/auth/authModule";
 import moment from "moment";
+import { useI18n } from "vue-i18n";
 
 definePageMeta({
   middleware: "auth",
   roles: ["student"],
 });
 
+const { t } = useI18n();
+
+useHead({
+  title: computed(() => t("useHead.student.absences")),
+});
 const authModule = useAuthModule();
 const loading = ref(true);
 const absencesData = ref<any[]>([]);
