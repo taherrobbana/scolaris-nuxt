@@ -34,7 +34,7 @@
     >
       <!-- Slot personnalisé pour les événements -->
       <template #event="{ event }">
-        <div style="display: grid" :class="{ 'text-negative': event.hasConflict }">
+        <div style="display: grid">
           <span class="text-weight-bold" style="overflow: hidden">
             {{ event.subjectName || event.title }}
           </span>
@@ -55,7 +55,11 @@
             color: 'white',
           }"
         >
-          <q-icon :name="event.hasConflict ? 'warning' : 'edit'" color="white" size="12px" />
+          <q-icon
+            :name="event.hasConflict ? 'warning' : 'edit'"
+            color="white"
+            size="12px"
+          />
           <q-tooltip>Modifier</q-tooltip>
         </q-badge>
         <q-badge
@@ -282,9 +286,9 @@ function getBadgeColor(eventClass: string): string {
 }
 
 .vuecal--dark .vuecal__event.cours {
-  background-color: #d6ecfd;
-  border-left-color: #2196f3;
-  color: #0d47a1;
+  background-color: #1a4d8c;
+  border-left-color: #64b5f6;
+  color: #e3f2fd;
 }
 
 .vuecal__event.workshop {
@@ -294,45 +298,45 @@ function getBadgeColor(eventClass: string): string {
 }
 
 .vuecal--dark .vuecal__event.workshop {
-  background-color: #ddf3de;
-  border-left-color: #4caf50;
-  color: #1b5e20;
+  background-color: #1b5e20;
+  border-left-color: #81c784;
+  color: #e8f5e9;
 }
 
 .vuecal__event.exam {
   background-color: #ffe8c7;
   border-left-color: #f18d05;
-  color: #f18d05;
+  color: #e65100; /* Changé pour meilleur contraste */
 }
 
 .vuecal--dark .vuecal__event.exam {
-  background-color: #ffe8c7;
-  border-left-color: #f18d05;
-  color: #f18d05;
+  background-color: #b85c00;
+  border-left-color: #ffb74d;
+  color: #fff3e0;
 }
 
 .vuecal__event.conference {
   background-color: #e6d8e0;
   border-left-color: #713e5a;
-  color: #713e5a;
+  color: #4a1a36;
 }
 
 .vuecal--dark .vuecal__event.conference {
-  background-color: #e6d8e0;
-  border-left-color: #713e5a;
-  color: #713e5a;
+  background-color: #5c2e4a;
+  border-left-color: #ab47bc;
+  color: #f3e5f5;
 }
 
 .vuecal__event.conflict-event {
   background-color: #fcd9cf !important;
   border-left-color: #eb4511 !important;
-  color: #ffffff !important;
+  color: #bf360c !important;
 }
 
 .vuecal--dark .vuecal__event.conflict-event {
-  background-color: #fcd9cf !important;
-  border-left-color: #eb4511 !important;
-  color: #ffffff !important;
+  background-color: #a8320c !important;
+  border-left-color: #ff7043 !important;
+  color: #ffccbc !important;
 }
 
 .vuecal__event-time {
