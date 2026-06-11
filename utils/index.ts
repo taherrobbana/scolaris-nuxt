@@ -7,6 +7,85 @@ export function isEmpty(value: any): boolean {
 export function deepClone(obj: any): any {
   return JSON.parse(JSON.stringify(obj));
 }
+export function detectRoleFromHeader(token: any) {
+  try {
+    if (!token || typeof token !== "string") {
+      throw new Error("Token doit être une chaîne de caractères");
+    }
+
+    if (!token || !token.startsWith("Bearer ")) {
+      throw createError({
+        statusCode: 401,
+        statusMessage: "Authorization token is missing or invalid",
+      });
+    }
+
+    // Extract the token part (remove "Bearer ")
+    const tokenValue = token.slice(7);
+    const payloadBase64 = tokenValue.split(".")[1];
+
+    if (!payloadBase64) {
+      throw createError({
+        statusCode: 401,
+        statusMessage: "Invalid token: missing payload",
+      });
+    }
+
+    // Decode base64 URL-safe to base64
+    let base64 = payloadBase64.replace(/-/g, "+").replace(/_/g, "/");
+    // Add padding if needed
+    while (base64.length % 4) {
+      base64 += "=";
+    }
+
+    // Use atob() for browser, or fallback for Node.js
+    const payloadStr =
+      typeof window !== "undefined" && window.atob
+        ? atob(base64)
+        : Buffer.from(base64, "base64").toString("utf-8");
+
+    const payload = JSON.parse(payloadStr);
+
+    // Check multiple possible locations for roles
+    const roles =
+      payload.roles ||
+      payload.realm_access?.roles ||
+      payload.resource_access?.account?.roles ||
+      [];
+
+    if (!roles || roles.length === 0 || !Array.isArray(roles)) {
+      throw createError({
+        statusCode: 401,
+        statusMessage: "Invalid token: missing roles",
+      });
+    }
+
+    const is_admin = roles.includes("admin");
+    const is_coordinator = roles.includes("coordinator");
+    const is_teacher = roles.includes("teacher");
+    const is_student = roles.includes("student");
+
+    console.log("payload in header", {
+      is_admin,
+      is_coordinator,
+      is_teacher,
+      is_student,
+      available_roles: roles,
+    });
+
+    return {
+      is_admin,
+      is_coordinator,
+      is_teacher,
+      is_student,
+    };
+  } catch (error: any) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: "Invalid token",
+    });
+  }
+}
 
 export function decodeJWT(token: any) {
   try {

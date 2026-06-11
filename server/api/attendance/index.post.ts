@@ -1,6 +1,7 @@
-import { defineEventHandler, createError, readBody } from "h3";
+import { defineEventHandler, createError, readBody, getHeader } from "h3";
 import mongoose from "mongoose";
 import { connectDB } from "~/server/utils/mongo";
+import { detectRoleFromHeader } from "~/utils";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -11,6 +12,20 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: 500,
         statusMessage: "Database not connected",
+      });
+    }
+
+    const authHeader = getHeader(event, "authorization");
+    const HeaderRole = detectRoleFromHeader(authHeader);
+    if (
+      !HeaderRole.is_coordinator &&
+      !HeaderRole.is_teacher &&
+      !HeaderRole.is_admin
+    ) {
+      throw createError({
+        statusCode: 403,
+        statusMessage:
+          "Forbidden: Only coordinators, teachers, and admins can register attendance",
       });
     }
 
@@ -34,7 +49,7 @@ export default defineEventHandler(async (event) => {
           updatedAt: new Date(),
         },
       },
-      { upsert: true }
+      { upsert: true },
     );
 
     return { success: true };

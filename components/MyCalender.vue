@@ -16,15 +16,15 @@
       :locale="getLanguage"
       today-button
       :today-button-style="{ color: 'white', border: '1px solid white' }"
-      :editable-events="{ title: false, drag: true, resize: false }"
+      :editable-events="editableEventsConfig"
       :drag-to-create-event="false"
       @event-drag-create="emit('event-drag-create', $event)"
       @event-drop="emit('event-drop', $event)"
-      :disable-drag="false"
+      :disable-drag="!isStaff"
       :drag-to-create-threshold="10"
       :drag-to-move-threshold="10"
       :snap-to-time="60"
-      :drag-to-move-events="{ enable: true }"
+      :drag-to-move-events="{ enable: isStaff }"
       :event-editable="false"
       @event-title-change="emit('event-title-change', $event)"
       @event-resize="emit('event-resize', $event)"
@@ -44,6 +44,7 @@
           </span>
         </div>
         <q-badge
+          v-if="isStaff"
           rounded
           floating
           class="edit-badge shadow-2"
@@ -63,6 +64,7 @@
           <q-tooltip>Modifier</q-tooltip>
         </q-badge>
         <q-badge
+          v-if="!isStudent"
           rounded
           floating
           class="attendance-badge shadow-2"
@@ -196,32 +198,54 @@
           </div>
         </q-tooltip>
 
-        <q-menu context-menu>
+        <q-menu v-if="userRole !== 'student'" context-menu>
           <q-list style="min-width: 180px">
-            <q-item clickable v-close-popup @click="emit('event-edit', event)">
+            <q-item
+              v-if="isStaff"
+              clickable
+              v-close-popup
+              @click="emit('event-edit', event)"
+            >
               <q-item-section avatar>
                 <q-icon name="edit" color="primary" />
               </q-item-section>
               <q-item-section>Modifier la séance</q-item-section>
             </q-item>
-            <q-item clickable v-close-popup @click="emit('event-attendance', event)">
+            <q-item
+              v-if="!isStudent"
+              clickable
+              v-close-popup
+              @click="emit('event-attendance', event)"
+            >
               <q-item-section avatar>
                 <q-icon name="how_to_reg" color="teal" />
               </q-item-section>
               <q-item-section>Faire l'appel</q-item-section>
             </q-item>
-            <q-item clickable v-close-popup @click="emit('event-duplicate', event)">
+            <q-item
+              v-if="isStaff"
+              clickable
+              v-close-popup
+              @click="emit('event-duplicate', event)"
+            >
               <q-item-section avatar>
                 <q-icon name="content_copy" color="secondary" />
               </q-item-section>
               <q-item-section>Dupliquer la séance</q-item-section>
             </q-item>
-            <q-separator />
-            <q-item clickable v-close-popup @click="emit('event-delete', event)">
+            <q-separator v-if="isStaff" />
+            <q-item
+              v-if="isStaff"
+              clickable
+              v-close-popup
+              @click="emit('event-delete', event)"
+            >
               <q-item-section avatar>
                 <q-icon name="delete" color="negative" />
               </q-item-section>
-              <q-item-section class="text-negative text-weight-bold">Supprimer la séance</q-item-section>
+              <q-item-section class="text-negative text-weight-bold"
+                >Supprimer la séance</q-item-section
+              >
             </q-item>
           </q-list>
         </q-menu>
@@ -234,6 +258,7 @@
 import { ref, computed } from "vue";
 import { Dark } from "quasar";
 import { useLangModule } from "~/stores/lang/langModule";
+import { useAuthModule } from "~/stores/auth/authModule";
 import { formatDate } from "~/utils";
 
 const props = defineProps({
@@ -259,12 +284,29 @@ const emit = defineEmits([
 ]);
 
 const langModule = useLangModule();
+const authModule = useAuthModule();
+
 const getLanguage = computed(() => langModule.getLanguage);
 const isDarkActive = computed(() => Dark.isActive);
+const userRole = computed(() => authModule.getRole);
+
+// isStaff means admin or coordinator (full write privileges)
+const isStaff = computed(
+  () => userRole.value === "admin" || userRole.value === "coordinator",
+);
+const isStudent = computed(() => userRole.value === "student");
+
+const editableEventsConfig = computed(() => {
+  if (isStaff.value) {
+    return { title: false, drag: true, resize: false };
+  }
+  return { title: false, drag: false, resize: false };
+});
 
 const currentView = ref("week");
 
 function onCellDblClick(date: Date) {
+  if (!isStaff.value) return;
   if (currentView.value !== "month") {
     emit("cell-dblclick", date);
   }
@@ -416,7 +458,7 @@ function getBadgeColor(eventClass: string): string {
   position: absolute;
   cursor: pointer;
   top: 4px;
-  right: 4px;
+  right: 28px;
   height: 20px;
   width: 20px;
   border-radius: 50% !important;
@@ -431,7 +473,7 @@ function getBadgeColor(eventClass: string): string {
   position: absolute;
   cursor: pointer;
   top: 4px;
-  right: 28px;
+  right: 4px;
   height: 20px;
   width: 20px;
   border-radius: 50% !important;

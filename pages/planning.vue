@@ -123,6 +123,7 @@
           </div>
           <template #action>
             <q-btn
+              v-if="isStaff"
               flat
               color="negative"
               label="Résoudre les conflits"
@@ -668,9 +669,17 @@ import MyCalender from "~/components/MyCalender.vue";
 import { usePlanningModule } from "~/stores/planning/planningModule";
 import { useSubjectModule } from "~/stores/subject/subjectModule";
 import { useGroupModule } from "~/stores/group/groupModule";
+import { useAuthModule } from "~/stores/auth/authModule";
 import { getAllUsers } from "~/stores/auth/authService";
 import { ALL_ROLES } from "~/utils/types";
 import moment from "moment";
+
+const authModule = useAuthModule();
+const userRole = computed(() => authModule.getRole);
+const isStaff = computed(
+  () => userRole.value === "admin" || userRole.value === "coordinator",
+);
+const canTakeAttendance = computed(() => userRole.value !== "student");
 
 const STANDARD_SLOTS = [
   { start: "08:30", end: "10:15" },
@@ -1013,10 +1022,10 @@ function openEditConflictEvent(event: any) {
 }
 
 function confirmDeleteEvent(event: any) {
+  if (!isStaff.value) return;
   $q.dialog({
     title: "Confirmation de suppression",
     message: `Voulez-vous vraiment supprimer la séance "${event.title}" du planning ?`,
-    cancel: true,
     persistent: true,
     ok: {
       label: "Supprimer",
@@ -1082,6 +1091,7 @@ const dialogGroupOptions = computed(() => {
 
 // Double click cell to create an event
 function cellDblClick(date: Date) {
+  if (!isStaff.value) return;
   mode.value = "add";
   const snapped = snapToPlanningSlot(date);
   const startStr = snapped.start.format("YYYY-MM-DD HH:mm");
@@ -1104,6 +1114,7 @@ function cellDblClick(date: Date) {
 
 // Click edit on an event
 function onEditEvent(event: any) {
+  if (!isStaff.value) return;
   mode.value = "edit";
   eventForm.value = {
     id: event.id,
@@ -1122,6 +1133,7 @@ function onEditEvent(event: any) {
 
 // Click duplicate on an event
 function onDuplicateEvent(event: any) {
+  if (!isStaff.value) return;
   mode.value = "add";
   eventForm.value = {
     id: "", // Empty to trigger create
@@ -1237,6 +1249,7 @@ function onEventDragCreate(event: any) {
 
 // Save form handler (Add / Edit)
 async function saveEvent() {
+  if (!isStaff.value) return;
   if (
     !eventForm.value.specialty ||
     !eventForm.value.subjectId ||
@@ -1308,6 +1321,7 @@ async function saveEvent() {
 
 // Delete scheduling event
 async function deleteEvent() {
+  if (!isStaff.value) return;
   try {
     await planningStore.removePlanning(eventForm.value.id);
     Notify.create({
@@ -1327,6 +1341,7 @@ async function deleteEvent() {
 
 // Attendance handlers
 async function onEventAttendance(calEvent: any) {
+  if (!canTakeAttendance.value) return;
   attendanceEvent.value = calEvent;
   showAttendanceDialog.value = true;
   attendanceLoading.value = true;
@@ -1337,7 +1352,19 @@ async function onEventAttendance(calEvent: any) {
   attendanceStudents.value = students.value.filter((s) => s.group === groupName);
 
   try {
+    const HeaderRole = detectRoleFromHeader(`Bearer ${authModule.token}`);
+
+    if (!HeaderRole) {
+      throw createError({
+        statusCode: 403,
+        statusMessage:
+          "Forbidden: Only coordinators, teachers, and admins can register attendance",
+      });
+    }
     const res: any = await $fetch(`/api/attendance`, {
+      headers: {
+        Authorization: `Bearer ${authModule.token}`,
+      },
       params: { eventId: calEvent.id },
     });
     const dbRecords = res?.records || [];
@@ -1377,12 +1404,16 @@ function markAll(present: boolean) {
 }
 
 async function saveAttendance() {
+  if (!canTakeAttendance.value) return;
   if (!attendanceEvent.value) return;
 
   savingAttendance.value = true;
   try {
     await $fetch(`/api/attendance`, {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${authModule.token}`,
+      },
       body: {
         eventId: attendanceEvent.value.id,
         records: attendanceRecords.value,
