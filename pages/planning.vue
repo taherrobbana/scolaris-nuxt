@@ -151,6 +151,8 @@
           @event-drop="onEventDrop"
           @event-resize="onEventResize"
           @event-attendance="onEventAttendance"
+          @event-delete="confirmDeleteEvent"
+          @event-duplicate="onDuplicateEvent"
         />
       </div>
     </div>
@@ -1105,6 +1107,24 @@ function onEditEvent(event: any) {
   mode.value = "edit";
   eventForm.value = {
     id: event.id,
+    start: moment(event.start).format("YYYY-MM-DD HH:mm"),
+    end: moment(event.end).format("YYYY-MM-DD HH:mm"),
+    title: event.title,
+    subjectId: event.subjectId || "",
+    groupId: event.groupId || "",
+    teacherId: event.teacherId || "",
+    specialty: event.specialty || "",
+    discription: event.discription || "",
+    class: event.class || "cours",
+  };
+  showEditEventDialog.value = true;
+}
+
+// Click duplicate on an event
+function onDuplicateEvent(event: any) {
+  mode.value = "add";
+  eventForm.value = {
+    id: "", // Empty to trigger create
     start: moment(event.start).format("YYYY-MM-DD HH:mm"),
     end: moment(event.end).format("YYYY-MM-DD HH:mm"),
     title: event.title,

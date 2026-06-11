@@ -195,6 +195,36 @@
             </div>
           </div>
         </q-tooltip>
+
+        <q-menu context-menu>
+          <q-list style="min-width: 180px">
+            <q-item clickable v-close-popup @click="emit('event-edit', event)">
+              <q-item-section avatar>
+                <q-icon name="edit" color="primary" />
+              </q-item-section>
+              <q-item-section>Modifier la séance</q-item-section>
+            </q-item>
+            <q-item clickable v-close-popup @click="emit('event-attendance', event)">
+              <q-item-section avatar>
+                <q-icon name="how_to_reg" color="teal" />
+              </q-item-section>
+              <q-item-section>Faire l'appel</q-item-section>
+            </q-item>
+            <q-item clickable v-close-popup @click="emit('event-duplicate', event)">
+              <q-item-section avatar>
+                <q-icon name="content_copy" color="secondary" />
+              </q-item-section>
+              <q-item-section>Dupliquer la séance</q-item-section>
+            </q-item>
+            <q-separator />
+            <q-item clickable v-close-popup @click="emit('event-delete', event)">
+              <q-item-section avatar>
+                <q-icon name="delete" color="negative" />
+              </q-item-section>
+              <q-item-section class="text-negative text-weight-bold">Supprimer la séance</q-item-section>
+            </q-item>
+          </q-list>
+        </q-menu>
       </template>
     </vue-cal>
   </client-only>
@@ -224,6 +254,8 @@ const emit = defineEmits([
   "event-drag-start",
   "event-drag-end",
   "event-attendance",
+  "event-delete",
+  "event-duplicate",
 ]);
 
 const langModule = useLangModule();
