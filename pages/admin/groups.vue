@@ -16,7 +16,7 @@
       </div>
 
       <q-table
-        :rows="groupStore.groups"
+        :rows="groupsWithSpecialty"
         :columns="columns"
         row-key="id"
         :loading="groupStore.loading"
@@ -76,14 +76,29 @@
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
 
-        <q-card-section class="q-gutter-md">
+        <q-card-section class="q-gutter-y-md">
           <q-input
             v-model="groupForm.name"
             :label="$t('admin.groups.name')"
             outlined
             dense
+            :rules="[(v) => !!v || $t('admin.groups.nameRequired')]"
+            ref="nameInputRef"
             @keyup.enter="saveGroup"
           />
+          <q-select
+            v-model="groupForm.specialty"
+            :options="specialtyOptions"
+            :label="$t('admin.groups.specialty')"
+            outlined
+            dense
+            emit-value
+            map-options
+            :rules="[(v) => !!v || $t('admin.groups.specialtyRequired')]"
+            ref="specialtyInputRef"
+          >
+            <template #prepend><q-icon name="school" /></template>
+          </q-select>
         </q-card-section>
 
         <q-card-actions align="right">
@@ -182,15 +197,46 @@ const saving = ref(false);
 const groupDialog = ref(false);
 const isEditing = ref(false);
 
+const nameInputRef = ref<any>(null);
+const specialtyInputRef = ref<any>(null);
+
 const groupForm = ref({
   id: "",
   name: "",
+  specialty: "",
 });
 
 const assignDialog = ref(false);
 const selectedGroup = ref<any>(null);
 const allUsers = ref<any[]>([]);
 const assignLoading = ref(false);
+
+const specialtyOptions = computed(() => [
+  { label: "Software Engineering", value: "Software Engineering" },
+  { label: "Data Science & IA", value: "Data Science & IA" },
+  { label: "Embedded Systems", value: "Embedded Systems" },
+]);
+
+const specialtiesList = ref<any[]>([]);
+
+const fetchSpecialties = async () => {
+  try {
+    const res: any = await $fetch("/api/groups/specialties");
+    specialtiesList.value = res || [];
+  } catch (error) {
+    console.error("Failed to fetch specialties list", error);
+  }
+};
+
+const groupsWithSpecialty = computed(() => {
+  return groupStore.groups.map((g) => {
+    const mapping = specialtiesList.value.find((s) => s.groupId === g.id);
+    return {
+      ...g,
+      specialty: mapping ? mapping.specialty : "",
+    };
+  });
+});
 
 const columns = computed(() => [
   {
@@ -201,6 +247,17 @@ const columns = computed(() => [
     sortable: true,
   },
   {
+    name: "specialty",
+    label: t("admin.groups.columns.specialty"),
+    field: "specialty",
+    align: "left",
+    sortable: true,
+    format: (val: string) => {
+      const opt = specialtyOptions.value.find((o) => o.value === val);
+      return opt ? opt.label : (val || "—");
+    },
+  },
+  {
     name: "actions",
     label: t("admin.groups.columns.actions"),
     align: "center",
@@ -208,25 +265,31 @@ const columns = computed(() => [
 ]);
 
 const fetchGroups = async () => {
-  await groupStore.fetchGroups();
+  await Promise.all([
+    groupStore.fetchGroups(),
+    fetchSpecialties()
+  ]);
 };
 
 const openGroupDialog = (group = null) => {
   if (group) {
     isEditing.value = true;
-    groupForm.value = { ...group };
+    groupForm.value = {
+      id: group.id,
+      name: group.name,
+      specialty: group.specialty || "",
+    };
   } else {
     isEditing.value = false;
-    groupForm.value = { id: "", name: "" };
+    groupForm.value = { id: "", name: "", specialty: "" };
   }
   groupDialog.value = true;
 };
 
 const saveGroup = async () => {
-  if (!groupForm.value.name) {
-    $q.notify({ type: "warning", message: t("admin.groups.nameRequired") });
-    return;
-  }
+  const nameOk = await nameInputRef.value?.validate();
+  const specOk = await specialtyInputRef.value?.validate();
+  if (!nameOk || !specOk) return;
 
   saving.value = true;
   try {
@@ -268,11 +331,33 @@ const saveGroup = async () => {
         }
       }
 
+      await $fetch("/api/groups/specialties", {
+        method: "POST",
+        body: { groupId: groupForm.value.id, specialty: groupForm.value.specialty }
+      });
+
       $q.notify({ type: "positive", message: t("admin.groups.successUpdate") });
     } else {
-      await groupStore.addGroup({ name: groupForm.value.name });
+      const res = await groupStore.addGroup({ name: groupForm.value.name });
+      let newId = res?.id;
+      if (!newId && res?._id) {
+        newId = res._id.toString();
+      }
+      if (!newId) {
+        const found = groupStore.groups.find(g => g.name === groupForm.value.name);
+        newId = found?.id;
+      }
+
+      if (newId) {
+        await $fetch("/api/groups/specialties", {
+          method: "POST",
+          body: { groupId: newId, specialty: groupForm.value.specialty }
+        });
+      }
+
       $q.notify({ type: "positive", message: t("admin.groups.successCreate") });
     }
+    await fetchSpecialties();
     groupDialog.value = false;
   } finally {
     saving.value = false;

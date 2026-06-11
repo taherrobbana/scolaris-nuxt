@@ -312,6 +312,9 @@
       "editGroup": "Modifier le groupe",
       "addGroup": "Ajouter un groupe",
       "name": "Nom du groupe",
+      "specialty": "Spécialité",
+      "specialtyPlaceholder": "Sélectionner une spécialité",
+      "specialtyRequired": "La spécialité est requise",
       "cancel": "Annuler",
       "update": "Mettre à jour",
       "create": "Créer",
@@ -328,6 +331,7 @@
       "confirmDeleteMessage": "Voulez-vous vraiment supprimer le groupe \"{name}\" ?",
       "columns": {
         "name": "Nom du groupe",
+        "specialty": "Spécialité",
         "actions": "Actions"
       }
     },

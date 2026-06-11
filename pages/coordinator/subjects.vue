@@ -380,14 +380,13 @@ const columns = computed(() => [
 // ── Search ───────────────────────────────────────────────────────────────────
 const search = ref("");
 const selectedSpecialty = ref("");
+const specialtyOptionsSpec = computed(() => [
+  { label: "Software Engineering", value: "Software Engineering" },
+  { label: "Data Science & IA", value: "Data Science & IA" },
+  { label: "Embedded Systems", value: "Embedded Systems" },
+]);
 const specialtyOptions = computed(() => {
-  const specs = [
-    { label: t("Software Engineering"), value: "SE" },
-    { label: t("Data Science & IA"), value: "DS" },
-    { label: t("Embedded Systems"), value: "ES" },
-  ]
-    .map((s) => s.label)
-    .filter(Boolean);
+  const specs = specialtyOptionsSpec.value.map((s) => s.label).filter(Boolean);
   const unique = Array.from(new Set(specs));
   return [
     { label: t("coordinator.subjects.allSpecialties"), value: "" },

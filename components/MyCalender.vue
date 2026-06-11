@@ -48,7 +48,12 @@
           floating
           class="edit-badge shadow-2"
           @click.stop="emit('event-edit', event)"
-          :color="event.hasConflict ? 'negative' : getBadgeColor(event.class)"
+          :style="{
+            backgroundColor: event.hasConflict
+              ? 'var(--q-negative)'
+              : getBadgeColor(event.class),
+            color: 'white',
+          }"
         >
           <q-icon :name="event.hasConflict ? 'warning' : 'edit'" color="white" size="12px" />
           <q-tooltip>Modifier</q-tooltip>
@@ -58,7 +63,12 @@
           floating
           class="attendance-badge shadow-2"
           @click.stop="emit('event-attendance', event)"
-          color="teal"
+          :style="{
+            backgroundColor: event.hasConflict
+              ? 'var(--q-negative)'
+              : getBadgeColor(event.class),
+            color: 'white',
+          }"
         >
           <q-icon name="how_to_reg" color="white" size="12px" />
           <q-tooltip>Faire l'appel</q-tooltip>
@@ -227,15 +237,15 @@ function onCellDblClick(date: Date) {
 function getBadgeColor(eventClass: string): string {
   switch (eventClass) {
     case "cours":
-      return "blue";
+      return "#2196f3";
     case "workshop":
-      return "green";
+      return "#4caf50";
     case "conference":
-      return "purple";
+      return "#713e5a";
     case "exam":
-      return "yellow";
+      return "#f18d05";
     default:
-      return "blue";
+      return "#2196f3";
   }
 }
 </script>
@@ -266,27 +276,63 @@ function getBadgeColor(eventClass: string): string {
 
 /* Couleurs spécifiques pour chaque classe d'événement */
 .vuecal__event.cours {
-  background-color: #e3f2fd;
+  background-color: #d6ecfd;
+  border-left-color: #2196f3;
+  color: #0d47a1;
+}
+
+.vuecal--dark .vuecal__event.cours {
+  background-color: #d6ecfd;
   border-left-color: #2196f3;
   color: #0d47a1;
 }
 
 .vuecal__event.workshop {
-  background-color: #e8f5e9;
+  background-color: #ddf3de;
+  border-left-color: #4caf50;
+  color: #1b5e20;
+}
+
+.vuecal--dark .vuecal__event.workshop {
+  background-color: #ddf3de;
   border-left-color: #4caf50;
   color: #1b5e20;
 }
 
 .vuecal__event.exam {
-  background-color: #fff5bd;
-  border-left-color: yellow;
-  color: #000;
+  background-color: #ffe8c7;
+  border-left-color: #f18d05;
+  color: #f18d05;
+}
+
+.vuecal--dark .vuecal__event.exam {
+  background-color: #ffe8c7;
+  border-left-color: #f18d05;
+  color: #f18d05;
 }
 
 .vuecal__event.conference {
-  background-color: #f3e5f5;
-  border-left-color: #9c27b0;
-  color: #4a148c;
+  background-color: #e6d8e0;
+  border-left-color: #713e5a;
+  color: #713e5a;
+}
+
+.vuecal--dark .vuecal__event.conference {
+  background-color: #e6d8e0;
+  border-left-color: #713e5a;
+  color: #713e5a;
+}
+
+.vuecal__event.conflict-event {
+  background-color: #fcd9cf !important;
+  border-left-color: #eb4511 !important;
+  color: #ffffff !important;
+}
+
+.vuecal--dark .vuecal__event.conflict-event {
+  background-color: #fcd9cf !important;
+  border-left-color: #eb4511 !important;
+  color: #ffffff !important;
 }
 
 .vuecal__event-time {
@@ -385,42 +431,6 @@ function getBadgeColor(eventClass: string): string {
 
 .vuecal--dark .vuecal__time-cell {
   color: #a0a0c0;
-}
-
-.vuecal--dark .vuecal__event.cours {
-  background-color: #0d3c80;
-  border-left-color: #2196f3;
-  color: #e0f2f1 !important;
-}
-
-.vuecal--dark .vuecal__event.workshop {
-  background-color: #114b15;
-  border-left-color: #4caf50;
-  color: #e8f5e9 !important;
-}
-
-.vuecal--dark .vuecal__event.exam {
-  background-color: #fff3b0;
-  border-left-color: yellow;
-  color: #000 !important;
-}
-
-.vuecal--dark .vuecal__event.conference {
-  background-color: #3c0c70;
-  border-left-color: #9c27b0;
-  color: #f3e5f5 !important;
-}
-
-.vuecal__event.conflict-event {
-  border-left-color: #f44336 !important;
-  background-color: #ffebee !important;
-  color: #c62828 !important;
-}
-
-.vuecal--dark .vuecal__event.conflict-event {
-  border-left-color: #e53935 !important;
-  background-color: #5c1919 !important;
-  color: #ffebee !important;
 }
 
 /* Custom Tooltip Card Style */

@@ -36,6 +36,15 @@ export default defineEventHandler(async (event) => {
       ? matchedGroup._id.toString()
       : String(groupName);
 
+    // Get specialty mapped to this group
+    const specialtyMapping = await db.collection("group_specialties").findOne({ groupId });
+    const groupSpecialty = specialtyMapping ? specialtyMapping.specialty : null;
+
+    // Filter subjects by group specialty if set
+    const filteredSubjects = groupSpecialty
+      ? subjects.filter((s) => s.specialty === groupSpecialty)
+      : subjects;
+
     const planningEvents = await db
       .collection("planning")
       .find({ groupId })
@@ -49,7 +58,7 @@ export default defineEventHandler(async (event) => {
       .toArray();
 
     // 4. Calculate for each subject
-    const result = subjects.map((sub) => {
+    const result = filteredSubjects.map((sub) => {
       const subEvents = planningEvents.filter(
         (e) => e.subjectId === sub._id.toString(),
       );

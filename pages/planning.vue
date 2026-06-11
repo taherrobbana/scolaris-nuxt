@@ -204,6 +204,7 @@
             emit-value
             map-options
             :rules="[(v) => !!v || 'Le groupe est requis']"
+            @update:model-value="onDialogGroupChange"
           >
             <template #prepend><q-icon name="groups" /></template>
           </q-select>
@@ -724,6 +725,7 @@ const groupStore = useGroupModule();
 // Reactive data lists loaded from API
 const teachers = ref<any[]>([]);
 const students = ref<any[]>([]);
+const groupSpecialties = ref<any[]>([]);
 
 const $q = useQuasar();
 const showConflictsDialog = ref(false);
@@ -761,12 +763,22 @@ const eventForm = ref({
   class: "cours",
 });
 
+const fetchGroupSpecialties = async () => {
+  try {
+    const res: any = await $fetch("/api/groups/specialties");
+    groupSpecialties.value = res || [];
+  } catch (err) {
+    console.error("Failed to load group specialties", err);
+  }
+};
+
 // Load all required data from stores & auth service
 onMounted(async () => {
   await Promise.all([
     planningStore.loadPlanning(),
     subjectStore.loadSubjects(),
     groupStore.fetchGroups(),
+    fetchGroupSpecialties(),
     loadUsers(),
   ]);
 });
@@ -815,19 +827,14 @@ const groupOptions = computed(() => {
     if (typeof g === "string") {
       return { label: g, value: g, specialty: null };
     }
-    // We guess the specialty if the group name contains or matches a specialty keyword
     const groupName = g.name || g.label || g.id;
     const value = g.id || g.name;
 
-    // Attempt matching specialty in name
-    let matchedSpec = null;
-    for (const spec of specialties.value) {
-      if (groupName.toLowerCase().includes(spec.toLowerCase())) {
-        matchedSpec = spec;
-        break;
-      }
-    }
-    return { label: groupName, value: value, specialty: matchedSpec };
+    // Resolve specialty from groupSpecialties mapping loaded from DB
+    const mapping = groupSpecialties.value.find((m) => m.groupId === g.id);
+    const specialty = mapping ? mapping.specialty : null;
+
+    return { label: groupName, value: value, specialty: specialty };
   });
 });
 
@@ -1046,6 +1053,15 @@ function confirmDeleteEvent(event: any) {
 // When dialog specialty changes, make sure selected subject belongs to the specialty
 function onDialogSpecialtyChange(newSpec: string) {
   eventForm.value.subjectId = "";
+}
+
+function onDialogGroupChange(newGroupId: string) {
+  if (newGroupId) {
+    const group = groupOptions.value.find((g) => g.value === newGroupId);
+    if (group && group.specialty) {
+      eventForm.value.specialty = group.specialty;
+    }
+  }
 }
 
 const dialogSubjectOptions = computed(() => {

@@ -312,6 +312,9 @@
       "editGroup": "Edit Group",
       "addGroup": "Add Group",
       "name": "Group Name",
+      "specialty": "Specialty",
+      "specialtyPlaceholder": "Select a specialty",
+      "specialtyRequired": "Specialty is required",
       "cancel": "Cancel",
       "update": "Update",
       "create": "Create",
@@ -328,6 +331,7 @@
       "confirmDeleteMessage": "Do you really want to delete group \"{name}\" ?",
       "columns": {
         "name": "Group Name",
+        "specialty": "Specialty",
         "actions": "Actions"
       }
     },
