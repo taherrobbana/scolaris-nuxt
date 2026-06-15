@@ -176,6 +176,13 @@ const routes: ComputedRef<RouteConfig[]> = computed(() => [
     roles: [Role.student],
     route: "/student/absences",
   },
+  {
+    icon: "grade",
+    label: t("sidebar.grades"),
+    caption: t("sidebar.gradesCaption"),
+    roles: ["student"],
+    route: "/student/grades",
+  },
 ]);
 
 const filtredRoutesByRole = computed(() =>

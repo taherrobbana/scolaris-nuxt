@@ -154,6 +154,7 @@
           @event-attendance="onEventAttendance"
           @event-delete="confirmDeleteEvent"
           @event-duplicate="onDuplicateEvent"
+          @event-grades="onEventGrades"
         />
       </div>
     </div>
@@ -658,6 +659,84 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <!-- Dialog Saisie des Notes -->
+    <q-dialog v-model="showGradesDialog" persistent>
+      <q-card style="min-width: 500px; border-radius: 16px" class="q-pa-sm">
+        <q-card-section class="row items-center q-pb-none">
+          <div class="column">
+            <div class="text-h6 text-weight-bold text-deep-purple">
+              Saisie des Notes d'Examen
+            </div>
+            <div class="text-caption text-grey-7">
+              {{ gradesEvent?.subjectName || gradesEvent?.title }} - {{ gradesEvent?.groupName }}
+            </div>
+          </div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-card-section class="q-pt-md" style="max-height: 60vh; overflow-y: auto">
+          <div v-if="gradesLoading" class="row justify-center q-my-xl">
+            <q-spinner color="deep-purple" size="40px" />
+          </div>
+          <div v-else>
+            <div v-if="gradesStudents.length === 0" class="text-center q-py-xl text-grey-7">
+              <q-icon name="group_off" size="50px" class="q-mb-md" />
+              <div>Aucun étudiant n'est inscrit dans ce groupe.</div>
+            </div>
+            <div v-else>
+              <q-list bordered separator class="rounded-borders overflow-hidden">
+                <q-item v-for="student in gradesStudents" :key="student.studentId" class="q-py-sm">
+                  <q-item-section avatar>
+                    <q-avatar size="32px" color="deep-purple" text-color="white">
+                      {{ student.firstName?.charAt(0).toUpperCase() }}{{ student.lastName?.charAt(0).toUpperCase() }}
+                    </q-avatar>
+                  </q-item-section>
+
+                  <q-item-section>
+                    <q-item-label class="text-weight-medium">
+                      {{ student.firstName }} {{ student.lastName }}
+                    </q-item-label>
+                    <q-item-label caption>
+                      {{ student.username }}
+                    </q-item-label>
+                  </q-item-section>
+
+                  <q-item-section side style="width: 120px">
+                    <q-input
+                      v-model.number="student.grade"
+                      type="number"
+                      step="0.25"
+                      min="0"
+                      max="20"
+                      dense
+                      outlined
+                      suffix="/20"
+                      :rules="[
+                        v => v === null || v === '' || (Number(v) >= 0 && Number(v) <= 20) || 'Note invalide (0-20)'
+                      ]"
+                    />
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </div>
+          </div>
+        </q-card-section>
+
+        <q-card-actions align="right" class="q-pa-md">
+          <q-btn flat label="Annuler" color="grey" v-close-popup />
+          <q-btn
+            unelevated
+            label="Enregistrer"
+            color="deep-purple"
+            :loading="savingGrades"
+            :disable="gradesStudents.length === 0"
+            @click="saveGrades"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -687,8 +766,8 @@ const STANDARD_SLOTS = [
   { start: "12:30", end: "14:15" },
   { start: "14:30", end: "16:15" },
   { start: "16:30", end: "18:15" },
-  { start: "18:15", end: "20:00" },
-  { start: "20:00", end: "21:45" },
+  { start: "18:30", end: "20:15" },
+  { start: "20:30", end: "22:15" },
 ];
 
 function snapToPlanningSlot(date: Date | string | moment.Moment): {
@@ -1461,6 +1540,69 @@ async function saveAttendance() {
     });
   } finally {
     savingAttendance.value = false;
+  }
+}
+
+// Grades states and functions
+const showGradesDialog = ref(false);
+const gradesEvent = ref<any>(null);
+const gradesStudents = ref<any[]>([]);
+const gradesLoading = ref(false);
+const savingGrades = ref(false);
+
+async function onEventGrades(calEvent: any) {
+  gradesEvent.value = calEvent;
+  showGradesDialog.value = true;
+  gradesLoading.value = true;
+  try {
+    const res: any = await $fetch(`/api/grades/${calEvent.id}`, {
+      headers: {
+        Authorization: `Bearer ${authModule.token}`,
+      },
+    });
+    gradesStudents.value = res?.records || [];
+  } catch (error) {
+    console.error("Failed to load grades", error);
+    Notify.create({
+      type: "negative",
+      message: "Erreur lors de la récupération des notes",
+    });
+  } finally {
+    gradesLoading.value = false;
+  }
+}
+
+async function saveGrades() {
+  if (!gradesEvent.value) return;
+  savingGrades.value = true;
+  try {
+    await $fetch(`/api/grades/${gradesEvent.value.id}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${authModule.token}`,
+      },
+      body: {
+        records: gradesStudents.value.map((s) => ({
+          studentId: s.studentId,
+          grade: s.grade === "" || s.grade === null || s.grade === undefined ? null : Number(s.grade),
+        })),
+      },
+    });
+    Notify.create({
+      type: "positive",
+      message: "Notes enregistrées avec succès !",
+      icon: "check_circle",
+    });
+    showGradesDialog.value = false;
+  } catch (error) {
+    console.error("Failed to save grades", error);
+    Notify.create({
+      type: "negative",
+      message: "Erreur lors de l'enregistrement des notes",
+      icon: "error",
+    });
+  } finally {
+    savingGrades.value = false;
   }
 }
 </script>

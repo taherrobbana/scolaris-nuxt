@@ -12,7 +12,7 @@
       @cell-dblclick="onCellDblClick"
       :events="events"
       :time-from="8 * 60 + 30"
-      :time-to="22 * 60 - 15"
+      :time-to="22 * 60 + 30"
       :locale="getLanguage"
       today-button
       :today-button-style="{ color: 'white', border: '1px solid white' }"
@@ -78,6 +78,22 @@
         >
           <q-icon name="how_to_reg" color="white" size="12px" />
           <q-tooltip>Faire l'appel</q-tooltip>
+        </q-badge>
+        <q-badge
+          v-if="isTeacher && canGradeEvent(event)"
+          rounded
+          floating
+          class="grades-badge shadow-2"
+          @click.stop="emit('event-grades', event)"
+          :style="{
+            backgroundColor: event.hasConflict
+              ? 'var(--q-negative)'
+              : getBadgeColor(event.class),
+            color: 'white',
+          }"
+        >
+          <q-icon name="grade" color="white" size="12px" />
+          <q-tooltip>Saisir les notes</q-tooltip>
         </q-badge>
         <q-tooltip
           class="bg-transparent q-pa-none shadow-0"
@@ -223,6 +239,17 @@
               <q-item-section>Faire l'appel</q-item-section>
             </q-item>
             <q-item
+              v-if="isTeacher && canGradeEvent(event)"
+              clickable
+              v-close-popup
+              @click="emit('event-grades', event)"
+            >
+              <q-item-section avatar>
+                <q-icon name="grade" color="purple" />
+              </q-item-section>
+              <q-item-section>Saisir les notes</q-item-section>
+            </q-item>
+            <q-item
               v-if="isStaff"
               clickable
               v-close-popup
@@ -281,7 +308,14 @@ const emit = defineEmits([
   "event-attendance",
   "event-delete",
   "event-duplicate",
+  "event-grades",
 ]);
+
+const canGradeEvent = (event: any) => {
+  return event.class === 'exam' &&
+         (userRole.value === 'teacher' && event.teacherId === authModule.getId) &&
+         new Date(event.end) < new Date();
+};
 
 const langModule = useLangModule();
 const authModule = useAuthModule();
@@ -295,6 +329,7 @@ const isStaff = computed(
   () => userRole.value === "admin" || userRole.value === "coordinator",
 );
 const isStudent = computed(() => userRole.value === "student");
+const isTeacher = computed(() => userRole.value === "teacher");
 
 const editableEventsConfig = computed(() => {
   if (isStaff.value) {
@@ -482,8 +517,24 @@ function getBadgeColor(eventClass: string): string {
   justify-content: center;
 }
 
+.grades-badge {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  position: absolute;
+  cursor: pointer;
+  top: 4px;
+  right: 28px;
+  height: 20px;
+  width: 20px;
+  border-radius: 50% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .vuecal__event:hover .edit-badge,
-.vuecal__event:hover .attendance-badge {
+.vuecal__event:hover .attendance-badge,
+.vuecal__event:hover .grades-badge {
   opacity: 1;
 }
 

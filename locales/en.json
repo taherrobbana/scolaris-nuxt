@@ -21,7 +21,8 @@
     },
     "student": {
       "index": "My Student Dashboard",
-      "absences": "My Absences"
+      "absences": "My Absences",
+      "grades": "My Grades"
     },
     "teacher": {
       "index": "Teacher Dashboard"
@@ -189,7 +190,9 @@
     "planning": "Planning",
     "planningCaption": "Planning Management",
     "absences": "My Absences",
-    "absencesCaption": "Consult my absences and statistics"
+    "absencesCaption": "Consult my absences and statistics",
+    "grades": "My Grades",
+    "gradesCaption": "Check my grades and results"
   },
   "header": {
     "switchLanguage": "Passer en Français"
@@ -430,6 +433,21 @@
         "gpa": "GPA",
         "absences": "Absences"
       }
+    },
+    "grades": {
+      "title": "My Grades",
+      "subtitle": "Check your exam grades and weighted average.",
+      "gpa": "GPA",
+      "coefficientSum": "Total Coeff.",
+      "status": "Admission decision",
+      "admitted": "Admitted",
+      "resit": "Resit / Control",
+      "failed": "Failed",
+      "subject": "Subject",
+      "grade": "Grade",
+      "coefficient": "Coefficient",
+      "date": "Exam Date",
+      "noGrades": "No grades have been registered yet."
     }
   },
   "teacher": {

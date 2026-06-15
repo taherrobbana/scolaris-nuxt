@@ -129,14 +129,25 @@ export function decodeJWT(token: any) {
     if (!token || typeof token !== "string") {
       throw new Error("Token doit être une chaîne de caractères");
     }
-    const parts = token.split(".");
+    const cleanToken = token.startsWith("Bearer ") ? token.slice(7) : token;
+    const parts = cleanToken.split(".");
 
     if (parts.length !== 3) {
       throw new Error("Format JWT invalide. Doit avoir 3 parties.");
     }
 
-    const header = JSON.parse(atob(parts[0]));
-    const payload = JSON.parse(atob(parts[1]));
+    const decodeBase64 = (str: string) => {
+      let base64 = str.replace(/-/g, "+").replace(/_/g, "/");
+      while (base64.length % 4) {
+        base64 += "=";
+      }
+      return typeof window !== "undefined" && window.atob
+        ? atob(base64)
+        : Buffer.from(base64, "base64").toString("utf-8");
+    };
+
+    const header = JSON.parse(decodeBase64(parts[0]));
+    const payload = JSON.parse(decodeBase64(parts[1]));
 
     return {
       header: header,
@@ -239,6 +250,13 @@ export const routes = computed(() => {
       caption: $t("sidebar.absencesCaption"),
       roles: ["student"],
       route: "/student/absences",
+    },
+    {
+      icon: "grade",
+      label: $t("sidebar.grades"),
+      caption: $t("sidebar.gradesCaption"),
+      roles: ["student"],
+      route: "/student/grades",
     },
   ];
 });

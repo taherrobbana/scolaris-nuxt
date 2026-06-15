@@ -21,7 +21,8 @@
     },
     "student": {
       "index": "Mon Dashboard Étudiant",
-      "absences": "Mes absences"
+      "absences": "Mes absences",
+      "grades": "Mes notes"
     },
     "teacher": {
       "index": "Dashboard Enseignant"
@@ -189,7 +190,9 @@
     "planning": "Emploi du temps",
     "planningCaption": "Gestion de l'emploi du temps",
     "absences": "Mes absences",
-    "absencesCaption": "Consulter mes absences et statistiques"
+    "absencesCaption": "Consulter mes absences et statistiques",
+    "grades": "Mes notes",
+    "gradesCaption": "Consulter mes notes et résultats"
   },
   "header": {
     "switchLanguage": "Switch to English"
@@ -430,6 +433,21 @@
         "gpa": "Moyenne Générale",
         "absences": "Absences"
       }
+    },
+    "grades": {
+      "title": "Suivi des Notes",
+      "subtitle": "Consultez vos notes d'examens et votre moyenne générale pondérée.",
+      "gpa": "Moyenne Générale",
+      "coefficientSum": "Somme des Coeff.",
+      "status": "Décision finale",
+      "admitted": "Admis",
+      "resit": "Contrôle",
+      "failed": "Refusé",
+      "subject": "Matière",
+      "grade": "Note",
+      "coefficient": "Coefficient",
+      "date": "Date de l'épreuve",
+      "noGrades": "Aucune note n'a encore été enregistrée."
     }
   },
   "teacher": {
