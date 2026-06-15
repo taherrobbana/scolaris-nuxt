@@ -36,7 +36,7 @@
           </div>
 
           <!-- Specialty Filter -->
-          <div class="col">
+          <div class="col" v-if="userRole !== 'student'">
             <q-select
               v-model="filterSpecialty"
               :options="specialtyOptions"
@@ -53,7 +53,7 @@
           </div>
 
           <!-- Group Filter -->
-          <div class="col">
+          <div class="col" v-if="userRole !== 'student'">
             <q-select
               v-model="filterGroup"
               :options="filteredGroupOptions"
@@ -87,7 +87,7 @@
           </div>
 
           <!-- Teacher Filter -->
-          <div class="col">
+          <div class="col" v-if="userRole !== 'student' && userRole !== 'teacher'">
             <q-select
               v-model="filterTeacher"
               :options="teacherOptions"
@@ -959,6 +959,32 @@ const conflictedEventIds = computed(() => {
 
 const filteredEvents = computed(() => {
   let list = events.value;
+
+  if (userRole.value === "student") {
+    if (!authModule.getGroup) {
+      return [];
+    }
+    const studentGroup = groupOptions.value.find(
+      (g) => g.label === authModule.getGroup || g.value === authModule.getGroup
+    );
+    if (studentGroup) {
+      list = list.filter(
+        (e) =>
+          e.groupId === studentGroup.value &&
+          (!e.specialty || e.specialty === studentGroup.specialty)
+      );
+    } else {
+      list = list.filter((e) => e.groupId === authModule.getGroup);
+    }
+  }
+
+  if (userRole.value === "teacher") {
+    if (!authModule.getId) {
+      return [];
+    }
+    const teacherId = authModule.getId;
+    list = list.filter((e) => e.teacherId === teacherId);
+  }
 
   if (filterSpecialty.value) {
     list = list.filter((e) => e.specialty === filterSpecialty.value);

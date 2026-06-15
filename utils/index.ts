@@ -87,6 +87,43 @@ export function detectRoleFromHeader(token: any) {
   }
 }
 
+export function decodeJWTBuffer(token: any) {
+  try {
+    if (!token || typeof token !== "string") {
+      throw new Error("Token doit être une chaîne de caractères");
+    }
+    
+    // Enlever le préfixe "Bearer " si présent
+    const cleanToken = token.startsWith("Bearer ") ? token.slice(7) : token;
+    const parts = cleanToken.split(".");
+
+    if (parts.length !== 3) {
+      throw new Error("Format JWT invalide. Doit avoir 3 parties.");
+    }
+
+    const decodeBase64 = (str: any) => {
+      let base64 = str.replace(/-/g, "+").replace(/_/g, "/");
+      while (base64.length % 4) {
+        base64 += "=";
+      }
+      // Node.js uniquement
+      return Buffer.from(base64, "base64").toString("utf-8");
+    };
+
+    const header = JSON.parse(decodeBase64(parts[0]));
+    const payload = JSON.parse(decodeBase64(parts[1]));
+
+    return {
+      header: header,
+      payload: payload,
+      signature: parts[2],
+    };
+  } catch (error: any) {
+    throw new Error(`Erreur de décodage JWT: ${error.message}`);
+  }
+}
+
+
 export function decodeJWT(token: any) {
   try {
     if (!token || typeof token !== "string") {
