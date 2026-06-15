@@ -142,6 +142,8 @@ import { useAuthModule } from "~/stores/auth/authModule";
 import { useI18n } from "vue-i18n";
 import moment from "moment";
 
+import { useGradesModule } from "~/stores/grades/gradesModule";
+
 definePageMeta({
   middleware: "auth",
   roles: ["student"],
@@ -154,11 +156,13 @@ useHead({
 });
 
 const authModule = useAuthModule();
-const loading = ref(true);
-const grades = ref<any[]>([]);
-const gpa = ref(0);
-const coefficientSum = ref(0);
-const status = ref("pending");
+const gradesStore = useGradesModule();
+
+const loading = computed(() => gradesStore.loading);
+const grades = computed(() => gradesStore.studentGrades);
+const gpa = computed(() => gradesStore.gpa);
+const coefficientSum = computed(() => gradesStore.coefficientSum);
+const status = computed(() => gradesStore.status);
 
 const columns = computed(() => [
   {
@@ -238,22 +242,11 @@ function formatDateLabel(dateStr: string) {
 }
 
 async function loadGrades() {
-  loading.value = true;
   try {
     const studentId = authModule.getId;
-    const res: any = await $fetch(`/api/grades/student/${studentId}`, {
-      headers: {
-        Authorization: `Bearer ${authModule.token}`,
-      },
-    });
-    grades.value = res.grades || [];
-    gpa.value = res.gpa || 0;
-    coefficientSum.value = res.coefficientSum || 0;
-    status.value = res.status || "pending";
+    await gradesStore.loadStudentGrades(studentId);
   } catch (error) {
     console.error("Failed to load student grades", error);
-  } finally {
-    loading.value = false;
   }
 }
 

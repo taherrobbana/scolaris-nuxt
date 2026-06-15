@@ -750,6 +750,7 @@ import { useSubjectModule } from "~/stores/subject/subjectModule";
 import { useGroupModule } from "~/stores/group/groupModule";
 import { useAuthModule } from "~/stores/auth/authModule";
 import { getAllUsers } from "~/stores/auth/authService";
+import { useGradesModule } from "~/stores/grades/gradesModule";
 import { ALL_ROLES } from "~/utils/types";
 import moment from "moment";
 
@@ -811,6 +812,7 @@ useHead({
 const planningStore = usePlanningModule();
 const subjectStore = useSubjectModule();
 const groupStore = useGroupModule();
+const gradesStore = useGradesModule();
 
 // Reactive data lists loaded from API
 const teachers = ref<any[]>([]);
@@ -1547,47 +1549,31 @@ async function saveAttendance() {
 const showGradesDialog = ref(false);
 const gradesEvent = ref<any>(null);
 const gradesStudents = ref<any[]>([]);
-const gradesLoading = ref(false);
-const savingGrades = ref(false);
+const gradesLoading = computed(() => gradesStore.loading);
+const savingGrades = computed(() => gradesStore.saving);
 
 async function onEventGrades(calEvent: any) {
   gradesEvent.value = calEvent;
   showGradesDialog.value = true;
-  gradesLoading.value = true;
   try {
-    const res: any = await $fetch(`/api/grades/${calEvent.id}`, {
-      headers: {
-        Authorization: `Bearer ${authModule.token}`,
-      },
-    });
-    gradesStudents.value = res?.records || [];
+    const records = await gradesStore.loadEventGrades(calEvent.id);
+    gradesStudents.value = JSON.parse(JSON.stringify(records));
   } catch (error) {
-    console.error("Failed to load grades", error);
     Notify.create({
       type: "negative",
       message: "Erreur lors de la récupération des notes",
     });
-  } finally {
-    gradesLoading.value = false;
   }
 }
 
 async function saveGrades() {
   if (!gradesEvent.value) return;
-  savingGrades.value = true;
   try {
-    await $fetch(`/api/grades/${gradesEvent.value.id}`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${authModule.token}`,
-      },
-      body: {
-        records: gradesStudents.value.map((s) => ({
-          studentId: s.studentId,
-          grade: s.grade === "" || s.grade === null || s.grade === undefined ? null : Number(s.grade),
-        })),
-      },
-    });
+    const payload = gradesStudents.value.map((s) => ({
+      studentId: s.studentId,
+      grade: s.grade === "" || s.grade === null || s.grade === undefined ? null : Number(s.grade),
+    }));
+    await gradesStore.submitEventGrades(gradesEvent.value.id, payload);
     Notify.create({
       type: "positive",
       message: "Notes enregistrées avec succès !",
@@ -1595,14 +1581,11 @@ async function saveGrades() {
     });
     showGradesDialog.value = false;
   } catch (error) {
-    console.error("Failed to save grades", error);
     Notify.create({
       type: "negative",
       message: "Erreur lors de l'enregistrement des notes",
       icon: "error",
     });
-  } finally {
-    savingGrades.value = false;
   }
 }
 </script>
