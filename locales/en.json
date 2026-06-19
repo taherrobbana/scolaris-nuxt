@@ -14,7 +14,8 @@
     },
     "coordinator": {
       "index": "Coordinator Dashboard",
-      "subjects": "Subjects Management"
+      "subjects": "Subjects Management",
+      "grades": "Report Cards Validation"
     },
     "reset-password": {
       "id": "Reset Password"
@@ -192,7 +193,9 @@
     "absences": "My Absences",
     "absencesCaption": "Consult my absences and statistics",
     "grades": "My Grades",
-    "gradesCaption": "Check my grades and results"
+    "gradesCaption": "Check my grades and results",
+    "validateGrades": "Validation of Bulletins",
+    "validateGradesCaption": "Validate student report cards"
   },
   "header": {
     "switchLanguage": "Passer en Français"
@@ -420,6 +423,21 @@
         "toleratedAbsences": "Tolerated Absences",
         "actions": "Actions"
       }
+    },
+    "grades": {
+      "title": "Report Cards Validation",
+      "subtitle": "Validate student report cards once all grades are entered",
+      "selectGroup": "Select a Group",
+      "completion": "graded subjects",
+      "validated": "Validated",
+      "pendingValidation": "Pending",
+      "validateAction": "Validate",
+      "invalidateAction": "Revoke",
+      "noStudents": "No students found in this group.",
+      "pleaseSelectGroup": "Please select a group to display students.",
+      "validationSuccess": "The report card was validated.",
+      "invalidationSuccess": "The validation was revoked.",
+      "studentName": "Student"
     }
   },
   "student": {
@@ -447,7 +465,9 @@
       "grade": "Grade",
       "coefficient": "Coefficient",
       "date": "Exam Date",
-      "noGrades": "No grades have been registered yet."
+      "noGrades": "No grades have been registered yet.",
+      "validationWarning": "Your report card is currently being validated by the administration. Printing will be available once validated.",
+      "print": "Print My Report Card (PDF)"
     }
   },
   "teacher": {

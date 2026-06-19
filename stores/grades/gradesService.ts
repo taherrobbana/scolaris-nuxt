@@ -26,3 +26,19 @@ export async function fetchStudentGrades(studentId: string): Promise<any> {
     headers: getAuthHeaders(),
   });
 }
+
+export async function fetchGroupGradesStatus(groupId: string): Promise<any> {
+  return await $fetch(`/api/grades/coordinator/group-status`, {
+    method: "GET",
+    headers: getAuthHeaders(),
+    query: { groupId },
+  });
+}
+
+export async function validateReportCard(studentId: string, validated: boolean): Promise<any> {
+  return await $fetch(`/api/grades/coordinator/validate`, {
+    method: "POST",
+    headers: getAuthHeaders(),
+    body: { studentId, validated },
+  });
+}

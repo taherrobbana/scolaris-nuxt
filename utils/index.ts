@@ -245,6 +245,13 @@ export const routes = computed(() => {
       route: "/coordinator/subjects",
     },
     {
+      icon: "fact_check",
+      label: $t("sidebar.validateGrades"),
+      caption: $t("sidebar.validateGradesCaption"),
+      roles: ["coordinator"],
+      route: "/coordinator/grades",
+    },
+    {
       icon: "event_busy",
       label: $t("sidebar.absences"),
       caption: $t("sidebar.absencesCaption"),

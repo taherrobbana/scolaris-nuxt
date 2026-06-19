@@ -1,8 +1,34 @@
 <template>
   <q-page padding>
+    <!-- Academic Print Header (Only visible on paper / print layout) -->
+    <div class="print-only print-header q-mb-xl">
+      <div class="row justify-between items-center border-bottom q-pb-md">
+        <div>
+          <div class="text-h4 text-weight-bold text-indigo-9">SCOLARIS</div>
+          <div class="text-subtitle2 text-grey-8">Établissement d'Enseignement Supérieur</div>
+        </div>
+        <div class="text-right">
+          <div class="text-h5 text-weight-bold">RELEVÉ DE NOTES OFFICIEL</div>
+          <div class="text-caption text-grey-7">Année Académique 2025-2026</div>
+        </div>
+      </div>
+      <q-separator class="q-my-md" />
+      <div class="row q-col-gutter-md">
+        <div class="col-6">
+          <div class="text-weight-bold text-subtitle1">{{ authModule.firstName }} {{ authModule.lastName }}</div>
+          <div>Identifiant Étudiant: {{ authModule.getId }}</div>
+          <div>Nom d'utilisateur: {{ authModule.username }}</div>
+        </div>
+        <div class="col-6 text-right">
+          <div>Date d'impression: {{ printDate }}</div>
+          <div>Statut de Validation: <span class="text-weight-bold text-success text-positive">VALIDÉ PAR L'ADMINISTRATION</span></div>
+        </div>
+      </div>
+    </div>
+
     <div class="myCard q-pa-lg">
       <!-- Header -->
-      <div class="row items-center q-mb-lg">
+      <div class="row items-center justify-between q-mb-lg no-print">
         <div>
           <div class="text-h5 text-primary text-weight-bold">
             {{ $t("student.grades.title") }}
@@ -11,7 +37,27 @@
             {{ $t("student.grades.subtitle") }}
           </div>
         </div>
+        <div>
+          <q-btn
+            v-if="reportCardValidated"
+            color="primary"
+            icon="print"
+            :label="$t('student.grades.print')"
+            unelevated
+            rounded
+            no-caps
+            @click="printReportCard"
+          />
+        </div>
       </div>
+
+      <!-- Notice when not validated -->
+      <q-banner v-if="!loading && !reportCardValidated" inline-actions class="text-white bg-warning q-mb-lg rounded-borders shadow-2 no-print">
+        <template v-slot:avatar>
+          <q-icon name="warning" color="white" size="sm" />
+        </template>
+        {{ $t("student.grades.validationWarning") || "Votre relevé de notes est en cours de validation par l'administration. L'impression sera disponible une fois validé." }}
+      </q-banner>
 
       <!-- Loading State -->
       <div v-if="loading" class="row justify-center q-my-xl">
@@ -163,6 +209,179 @@ const grades = computed(() => gradesStore.studentGrades);
 const gpa = computed(() => gradesStore.gpa);
 const coefficientSum = computed(() => gradesStore.coefficientSum);
 const status = computed(() => gradesStore.status);
+const reportCardValidated = computed(() => gradesStore.reportCardValidated);
+const printDate = computed(() => moment().format("DD/MM/YYYY [à] HH:mm"));
+
+async function printReportCard() { 
+  if (process.server) return;
+
+  try {
+    const { jsPDF } = await import("jspdf");
+    const { default: autoTable } = await import("jspdf-autotable");
+
+    const doc = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
+    });
+
+    // Helper to load image as base64
+    const getBase64ImageFromUrl = (url: string): Promise<{ base64: string; width: number; height: number }> => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.src = url;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext("2d");
+          if (ctx) {
+            ctx.drawImage(img, 0, 0);
+            resolve({
+              base64: canvas.toDataURL("image/png"),
+              width: img.width,
+              height: img.height,
+            });
+          } else {
+            reject(new Error("Could not get canvas context"));
+          }
+        };
+        img.onerror = (err) => reject(err);
+      });
+    };
+
+    // Load SESAME logo
+    let logoData = null;
+    try {
+      logoData = await getBase64ImageFromUrl("/sesameLogo.png");
+    } catch (e) {
+      console.warn("Could not load sesameLogo.png, proceeding without logo", e);
+    }
+
+    // Add Logo or text header
+    if (logoData) {
+      const targetWidth = 45;
+      const targetHeight = (logoData.height / logoData.width) * targetWidth;
+      doc.addImage(logoData.base64, "PNG", 15, 15, targetWidth, targetHeight);
+    } else {
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(22);
+      doc.setTextColor(26, 35, 126);
+      doc.text("SESAME", 15, 25);
+    }
+
+    // Institution info
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100);
+    doc.text("Établissement d'Enseignement Supérieur", 15, 33);
+
+    // Document title (Right side aligned)
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.setTextColor(33, 33, 33);
+    doc.text("RELEVÉ DE NOTES OFFICIEL", 115, 23, { align: "left" });
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(100, 100, 100);
+    doc.text("Année Académique: 2025-2026", 115, 29);
+    doc.text(`Date d'édition: ${moment().format("DD/MM/YYYY [à] HH:mm")}`, 115, 34);
+
+    // Separator line
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.5);
+    doc.line(15, 40, 195, 40);
+
+    // Student information section
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(33, 33, 33);
+    doc.text("Informations de l'Étudiant", 15, 48);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text(`Nom & Prénom: ${authModule.firstName} ${authModule.lastName}`, 15, 54);
+    doc.text(`Identifiant: ${authModule.getId}`, 15, 60);
+    doc.text(`Nom d'utilisateur: ${authModule.username}`, 15, 66);
+
+    doc.text(`Statut de Validation: Validé par l'Administration`, 115, 54);
+    doc.text(`Moyenne générale: ${gpa.value} / 20`, 115, 60);
+    doc.text(`Décision du jury: ${statusLabel.value}`, 115, 66);
+
+    // Separator
+    doc.line(15, 72, 195, 72);
+
+    // Table of grades
+    const tableRows = grades.value.map((g: any) => [
+      `${g.subjectName} (${g.subjectCode})`,
+      g.examTitle || "—",
+      g.coefficient.toString(),
+      formatDateLabel(g.examDate),
+      `${g.grade} / 20`,
+    ]);
+
+    autoTable(doc, {
+      startY: 78,
+      head: [["Matière", "Évaluation", "Coeff.", "Date d'évaluation", "Note"]],
+      body: tableRows,
+      theme: "striped",
+      headStyles: {
+        fillColor: [26, 35, 126], // Indigo 9
+        textColor: [255, 255, 255],
+        fontStyle: "bold",
+      },
+      columnStyles: {
+        0: { cellWidth: 70 },
+        1: { cellWidth: 40 },
+        2: { cellWidth: 15, halign: "center" },
+        3: { cellWidth: 35, halign: "center" },
+        4: { cellWidth: 20, halign: "right" },
+      },
+      styles: {
+        fontSize: 9,
+        cellPadding: 3,
+      },
+    });
+
+    // Summary statistics below table
+    const finalY = (doc as any).lastAutoTable.finalY + 10;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(33, 33, 33);
+    doc.text("Synthèse des résultats", 15, finalY);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text(`Somme des coefficients: ${coefficientSum.value}`, 15, finalY + 7);
+    doc.text(`Moyenne Générale: ${gpa.value} / 20`, 15, finalY + 13);
+
+    // Status text color based on status value
+    let statusText = statusLabel.value;
+    if (status.value === "admitted") {
+      doc.setTextColor(46, 125, 50); // Green
+    } else if (status.value === "resit") {
+      doc.setTextColor(239, 108, 0); // Orange
+    } else if (status.value === "failed") {
+      doc.setTextColor(198, 40, 40); // Red
+    }
+    doc.text(`Décision du jury: ${statusText}`, 15, finalY + 19);
+
+    // Footer on the bottom of page
+    doc.setTextColor(100, 100, 100);
+    doc.setFontSize(8);
+    doc.text("Document officiel généré électroniquement par SCOLARIS.", 15, 285);
+    doc.text("Page 1/1", 185, 285, { align: "right" });
+
+    // Save the PDF
+    const filename = `Releve_Notes_${authModule.firstName}_${authModule.lastName}.pdf`;
+    doc.save(filename);
+  } catch (error) {
+    console.error("Failed to generate PDF", error);
+  }
+}
 
 const columns = computed(() => [
   {
@@ -284,5 +503,78 @@ onMounted(() => {
 
 .border-grey {
   border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.print-only {
+  display: none;
+}
+
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .no-print,
+  .q-drawer-container,
+  .q-header,
+  .q-footer,
+  aside,
+  button,
+  .q-btn,
+  .q-banner {
+    display: none !important;
+  }
+  
+  .print-only {
+    display: block !important;
+  }
+
+  .q-page-container {
+    padding: 0 !important;
+  }
+
+  .q-page {
+    padding: 0 !important;
+    min-height: auto !important;
+  }
+
+  .myCard {
+    box-shadow: none !important;
+    border: none !important;
+    background: white !important;
+    padding: 0 !important;
+    backdrop-filter: none !important;
+  }
+
+  .stat-card {
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+    box-shadow: none !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  .border-grey {
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  }
+
+  .q-table__container {
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+    box-shadow: none !important;
+  }
+
+  .q-table th {
+    background-color: #f5f5f5 !important;
+    color: black !important;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .q-table td {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .text-primary {
+    color: #1a237e !important;
+  }
 }
 </style>

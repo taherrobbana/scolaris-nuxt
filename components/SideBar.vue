@@ -170,6 +170,13 @@ const routes: ComputedRef<RouteConfig[]> = computed(() => [
     route: "/coordinator/subjects",
   },
   {
+    icon: "fact_check",
+    label: t("sidebar.validateGrades"),
+    caption: t("sidebar.validateGradesCaption"),
+    roles: [Role.coordinator],
+    route: "/coordinator/grades",
+  },
+  {
     icon: "event_busy",
     label: t("sidebar.absences"),
     caption: t("sidebar.absencesCaption"),

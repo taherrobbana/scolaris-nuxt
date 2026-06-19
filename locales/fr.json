@@ -14,7 +14,8 @@
     },
     "coordinator": {
       "index": "Dashboard Entreprise / Coordinateur",
-      "subjects": "Gestion des matières"
+      "subjects": "Gestion des matières",
+      "grades": "Validation des Bulletins"
     },
     "reset-password": {
       "id": "Réinitialiser le mot de passe"
@@ -192,7 +193,9 @@
     "absences": "Mes absences",
     "absencesCaption": "Consulter mes absences et statistiques",
     "grades": "Mes notes",
-    "gradesCaption": "Consulter mes notes et résultats"
+    "gradesCaption": "Consulter mes notes et résultats",
+    "validateGrades": "Validation des Bulletins",
+    "validateGradesCaption": "Valider les relevés de notes"
   },
   "header": {
     "switchLanguage": "Switch to English"
@@ -420,6 +423,21 @@
         "toleratedAbsences": "Absences tolérées",
         "actions": "Actions"
       }
+    },
+    "grades": {
+      "title": "Validation des Bulletins",
+      "subtitle": "Validez les relevés de notes des étudiants une fois la saisie complète",
+      "selectGroup": "Sélectionner un groupe",
+      "completion": "matières évaluées",
+      "validated": "Validé",
+      "pendingValidation": "En attente",
+      "validateAction": "Valider",
+      "invalidateAction": "Annuler Val.",
+      "noStudents": "Aucun étudiant trouvé dans ce groupe.",
+      "pleaseSelectGroup": "Veuillez sélectionner un groupe pour afficher les étudiants.",
+      "validationSuccess": "Le bulletin a été validé.",
+      "invalidationSuccess": "La validation du bulletin a été annulée.",
+      "studentName": "Étudiant"
     }
   },
   "student": {
@@ -447,7 +465,9 @@
       "grade": "Note",
       "coefficient": "Coefficient",
       "date": "Date de l'épreuve",
-      "noGrades": "Aucune note n'a encore été enregistrée."
+      "noGrades": "Aucune note n'a encore été enregistrée.",
+      "validationWarning": "Votre relevé de notes est en cours de validation par l'administration. L'impression sera disponible une fois validé.",
+      "print": "Imprimer mon Relevé de Notes (PDF)"
     }
   },
   "teacher": {

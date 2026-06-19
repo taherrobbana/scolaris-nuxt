@@ -11,7 +11,7 @@
       small
       @cell-dblclick="onCellDblClick"
       :events="events"
-      :time-from="8 * 60 + 30"
+      :time-from="8 * 60"
       :time-to="22 * 60 + 30"
       :locale="getLanguage"
       today-button

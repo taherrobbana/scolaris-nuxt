@@ -126,12 +126,17 @@ export default defineEventHandler(async (event) => {
       }
     }
 
+    // 5. Fetch validation status
+    const reportCard = await db.collection("report_cards").findOne({ studentId });
+    const reportCardValidated = reportCard ? !!reportCard.validated : false;
+
     return {
       studentId,
       grades: gradesList,
       gpa,
       coefficientSum,
       status,
+      reportCardValidated,
     };
   } catch (error: any) {
     throw createError({
