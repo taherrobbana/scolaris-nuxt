@@ -118,7 +118,7 @@
             {{ allConflicts.length }} conflit(s) de planification détecté(s) !
           </div>
           <div>
-            Certains enseignants ou groupes d'élèves ont plusieurs cours prévus
+            Certains enseignants ou groupes d'étudiants ont plusieurs cours prévus
             sur les mêmes créneaux horaires.
           </div>
           <template #action>
