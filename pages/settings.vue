@@ -17,7 +17,7 @@
             <q-item tag="label" v-ripple>
               <q-item-section avatar>
                 <q-icon
-                  :name="isDark ? 'dark_mode' : 'light_mode'"
+                  :name="isDarkActive ? 'dark_mode' : 'light_mode'"
                   color="primary"
                 />
               </q-item-section>
@@ -29,7 +29,7 @@
               </q-item-section>
               <q-item-section side>
                 <q-toggle
-                  v-model="isDark"
+                  v-model="isDarkActive"
                   color="primary"
                   @update:model-value="toggleDarkMode"
                 />
@@ -56,6 +56,7 @@
                   emit-value
                   map-options
                   color="primary"
+                  @update:model-value="changeLanguage"
                 />
               </q-item-section>
             </q-item>
@@ -125,6 +126,8 @@ import { ref, computed } from "vue";
 import { useQuasar } from "quasar";
 import { useI18n } from "vue-i18n";
 import { ALL_ROLES } from "~/utils/types";
+import { Dark } from "quasar";
+import { useLangModule } from "~/stores/lang/langModule";
 
 definePageMeta({
   middleware: "auth",
@@ -137,17 +140,20 @@ const { t } = useI18n();
 useHead({
   title: computed(() => t("useHead.settings")),
 });
+const langModule = useLangModule();
 
 // Données mockées (initialisées avec des valeurs par défaut)
-const isDark = ref($q.dark.isActive);
-const selectedLanguage = ref("fr");
+const isDarkActive = computed(() => Dark.isActive);
+const selectedLanguage = computed(() => langModule.getLanguage);
 const emailNotifications = ref(true);
 const pushNotifications = ref(false);
 
+const changeLanguage = () => {
+  langModule.setLanguage();
+};
 const languageOptions = [
   { label: "Français", value: "fr" },
   { label: "English", value: "en" },
-  { label: "العربية", value: "ar" },
 ];
 
 const toggleDarkMode = (val: boolean) => {

@@ -241,7 +241,7 @@ export const routes = computed(() => {
       icon: "menu_book",
       label: $t("sidebar.subjects"),
       caption: $t("sidebar.subjectsCaption"),
-      roles: ["coordinator"],
+      roles: ["admin", "coordinator"],
       route: "/coordinator/subjects",
     },
     {

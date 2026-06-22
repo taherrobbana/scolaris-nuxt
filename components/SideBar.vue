@@ -166,7 +166,7 @@ const routes: ComputedRef<RouteConfig[]> = computed(() => [
     icon: "menu_book",
     label: t("sidebar.subjects"),
     caption: t("sidebar.subjectsCaption"),
-    roles: [Role.coordinator],
+    roles: [Role.admin, Role.coordinator],
     route: "/coordinator/subjects",
   },
   {

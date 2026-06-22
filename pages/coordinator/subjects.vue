@@ -303,7 +303,7 @@ import type { Subject } from "~/stores/subject/subjectService";
 // ── Page meta ───────────────────────────────────────────────────────────────
 definePageMeta({
   middleware: "auth",
-  roles: ["coordinator"],
+  roles: ["admin", "coordinator"],
 });
 
 const { t } = useI18n();
