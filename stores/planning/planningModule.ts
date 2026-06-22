@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import {
   fetchAllPlanning,
   createPlanningApi,
+  bulkCreatePlanningApi,
   updatePlanningApi,
   deletePlanningApi,
   type ScheduleEvent,
@@ -44,6 +45,20 @@ export const usePlanningModule = defineStore("planningModule", {
         return created;
       } catch (error) {
         console.error("Failed to create planning event", error);
+        throw error;
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async bulkAddPlanning(data: Omit<ScheduleEvent, "id">[]) {
+      this.loading = true;
+      try {
+        const createdList = await bulkCreatePlanningApi(data);
+        this.events.push(...createdList);
+        return createdList;
+      } catch (error) {
+        console.error("Failed to bulk create planning events", error);
         throw error;
       } finally {
         this.loading = false;

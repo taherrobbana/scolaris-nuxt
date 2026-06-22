@@ -40,6 +40,15 @@ export async function createPlanningApi(data: Omit<ScheduleEvent, "id">): Promis
   return res;
 }
 
+export async function bulkCreatePlanningApi(data: Omit<ScheduleEvent, "id">[]): Promise<ScheduleEvent[]> {
+  const res: any = await $fetch(`${getApiBase()}/bulk`, {
+    method: "POST",
+    headers: getAuthHeaders(),
+    body: data,
+  });
+  return res;
+}
+
 export async function updatePlanningApi(id: string, data: Omit<ScheduleEvent, "id">): Promise<ScheduleEvent> {
   const res: any = await $fetch(`${getApiBase()}/${id}`, {
     method: "PUT",

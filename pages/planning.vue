@@ -3,9 +3,23 @@
     <div class="myCard q-pa-lg">
       <!-- Title & Main Filters -->
       <div class="row items-center justify-between q-mb-lg q-col-gutter-md">
-        <div class="col-12 col-md-4">
-          <div class="text-h5 text-primary text-weight-bold">
-            Gestion du Planning
+        <div class="col-12 col-md-5">
+          <div class="row items-center q-gutter-x-md">
+            <div class="text-h5 text-primary text-weight-bold">
+              Gestion du Planning
+            </div>
+            <q-btn
+              v-if="isStaff"
+              color="secondary"
+              icon="upload_file"
+              label="Upload Planning"
+              @click="showBulkDialog = true"
+              unelevated
+              rounded
+              dense
+              class="q-px-sm"
+              no-caps
+            />
           </div>
           <div class="text-caption text-grey-6 q-mt-xs">
             Planification des cours par spécialité, groupe et enseignant
@@ -737,6 +751,139 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <!-- Dialog Importation en Masse -->
+    <q-dialog v-model="showBulkDialog" persistent>
+      <q-card style="min-width: 800px; max-width: 90%; border-radius: 16px" class="q-pa-sm">
+        <q-card-section class="row items-center q-pb-none">
+          <div class="column">
+            <div class="text-h6 text-weight-bold text-secondary">
+              Importation en masse du planning
+            </div>
+            <div class="text-caption text-grey-7">
+              Importez un fichier Excel (.xlsx, .xls) contenant les séances de cours.
+            </div>
+          </div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-card-section class="q-pt-md">
+          <div class="q-mb-md">
+            <div class="text-subtitle2 text-grey-8 q-mb-xs">Colonnes attendues dans l'Excel :</div>
+            <div class="row q-gutter-xs q-mb-md">
+              <q-badge color="blue-1" text-color="blue-9" label="Matière" />
+              <q-badge color="blue-1" text-color="blue-9" label="Groupe" />
+              <q-badge color="blue-1" text-color="blue-9" label="Enseignant" />
+              <q-badge color="blue-1" text-color="blue-9" label="Date" />
+              <q-badge color="blue-1" text-color="blue-9" label="Début" />
+              <q-badge color="blue-1" text-color="blue-9" label="Fin" />
+              <q-badge color="grey-3" text-color="grey-9" label="Type (Optionnel)" />
+              <q-badge color="grey-3" text-color="grey-9" label="Salle / Salle de cours (Optionnel)" />
+            </div>
+
+            <q-file
+              v-model="bulkExcelFile"
+              label="Sélectionner le fichier Excel"
+              outlined
+              dense
+              accept=".xlsx, .xls"
+              @update:model-value="processBulkExcel"
+            >
+              <template #prepend>
+                <q-icon name="upload_file" />
+              </template>
+              <template #append>
+                <q-btn
+                  flat
+                  round
+                  dense
+                  icon="close"
+                  @click.stop.prevent="bulkExcelFile = null; parsedSessions = []"
+                  v-if="bulkExcelFile"
+                />
+              </template>
+            </q-file>
+          </div>
+
+          <!-- Preview Table -->
+          <div v-if="parsedSessions.length > 0">
+            <div class="text-subtitle1 text-weight-bold q-mb-sm text-grey-9 row items-center justify-between">
+              <div>Aperçu des séances ({{ parsedSessions.length }} détectée(s))</div>
+              <div v-if="hasErrors" class="text-caption text-negative text-weight-bold">
+                Certaines séances contiennent des erreurs et ne peuvent pas être importées.
+              </div>
+            </div>
+            <q-table
+              :rows="parsedSessions"
+              :columns="bulkColumns"
+              row-key="title"
+              flat
+              bordered
+              dense
+              :pagination="{ rowsPerPage: 5 }"
+              style="max-height: 40vh"
+            >
+              <template v-slot:body-cell-subject="props">
+                <q-td :props="props">
+                  <div class="text-weight-bold text-primary">{{ props.row.title.split(' (')[0] }}</div>
+                  <div class="text-caption text-grey-6">Brut : {{ props.row.rawSubject }}</div>
+                </q-td>
+              </template>
+
+              <template v-slot:body-cell-group="props">
+                <q-td :props="props">
+                  <div>{{ props.row.groupName }}</div>
+                  <div class="text-caption text-grey-6">Brut : {{ props.row.rawGroup }}</div>
+                </q-td>
+              </template>
+
+              <template v-slot:body-cell-teacher="props">
+                <q-td :props="props">
+                  <div>{{ props.row.teacherName }}</div>
+                  <div class="text-caption text-grey-6">Brut : {{ props.row.rawTeacher }}</div>
+                </q-td>
+              </template>
+
+              <template v-slot:body-cell-datetime="props">
+                <q-td :props="props">
+                  <div class="text-weight-medium">{{ props.row.start }}</div>
+                  <div class="text-caption text-grey-6">jusqu'à {{ props.row.end }}</div>
+                </q-td>
+              </template>
+
+              <template v-slot:body-cell-warnings="props">
+                <q-td :props="props">
+                  <div v-if="props.row.warnings.length === 0">
+                    <q-badge color="positive" label="Prêt" />
+                  </div>
+                  <div v-else class="q-gutter-xs">
+                    <q-badge
+                      v-for="(w, idx) in props.row.warnings"
+                      :key="idx"
+                      color="negative"
+                      :label="w"
+                    />
+                  </div>
+                </q-td>
+              </template>
+            </q-table>
+          </div>
+        </q-card-section>
+
+        <q-card-actions align="right" class="q-pa-md">
+          <q-btn flat label="Annuler" color="grey" v-close-popup />
+          <q-btn
+            unelevated
+            label="Importer le planning"
+            color="secondary"
+            :loading="isImporting"
+            :disable="parsedSessions.length === 0 || hasErrors"
+            @click="importParsedSessions"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -753,6 +900,7 @@ import { getAllUsers } from "~/stores/auth/authService";
 import { useGradesModule } from "~/stores/grades/gradesModule";
 import { ALL_ROLES } from "~/utils/types";
 import moment from "moment";
+import * as XLSX from "xlsx";
 
 const authModule = useAuthModule();
 const userRole = computed(() => authModule.getRole);
@@ -821,6 +969,202 @@ const groupSpecialties = ref<any[]>([]);
 
 const $q = useQuasar();
 const showConflictsDialog = ref(false);
+
+// Bulk Import Excel state and methods
+const showBulkDialog = ref(false);
+const bulkExcelFile = ref<any>(null);
+const parsedSessions = ref<any[]>([]);
+const isImporting = ref(false);
+
+const hasErrors = computed(() => {
+  return parsedSessions.value.some((s) => s.warnings && s.warnings.length > 0);
+});
+
+const bulkColumns = [
+  { name: "subject", label: "Matière", align: "left" as const, field: "subjectName" },
+  { name: "group", label: "Groupe", align: "left" as const, field: "groupName" },
+  { name: "teacher", label: "Enseignant", align: "left" as const, field: "teacherName" },
+  { name: "datetime", label: "Date & Horaire", align: "left" as const },
+  { name: "warnings", label: "Statut", align: "center" as const },
+];
+
+const processBulkExcel = (file: any) => {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e: any) => {
+    const data = new Uint8Array(e.target.result);
+    const workbook = XLSX.read(data, { type: "array" });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const rawRows = XLSX.utils.sheet_to_json(worksheet) as any[];
+
+    parsedSessions.value = rawRows.map((row: any) => {
+      // Find key case-insensitively
+      const getVal = (keys: string[]) => {
+        const foundKey = Object.keys(row).find(k => 
+          keys.some(key => k.toLowerCase().replace(/é|è|à/g, 'e').includes(key.toLowerCase()))
+        );
+        return foundKey ? row[foundKey] : null;
+      };
+
+      const rawSubject = getVal(["matiere", "subject", "code"]);
+      const rawGroup = getVal(["groupe", "group", "classe"]);
+      const rawTeacher = getVal(["enseignant", "teacher", "prof"]);
+      const rawDate = getVal(["date"]);
+      const rawStart = getVal(["debut", "start", "heure"]);
+      const rawEnd = getVal(["fin", "end"]);
+      const rawType = getVal(["type", "class", "categorie"]);
+      const rawDesc = getVal(["description", "salle", "room", "notes"]);
+
+      // Resolve Date & Times
+      let startStr = "";
+      let endStr = "";
+      if (rawDate && rawStart && rawEnd) {
+        let formattedDate = "";
+        if (typeof rawDate === "number") {
+          // Excel numeric date format
+          const excelDate = new Date((rawDate - 25569) * 86400 * 1000);
+          formattedDate = moment(excelDate).format("YYYY-MM-DD");
+        } else {
+          formattedDate = moment(rawDate).isValid() ? moment(rawDate).format("YYYY-MM-DD") : String(rawDate);
+        }
+        
+        let formattedStart = "";
+        let formattedEnd = "";
+        if (typeof rawStart === "number") {
+          const hours = Math.floor(rawStart * 24);
+          const minutes = Math.round((rawStart * 24 - hours) * 60);
+          formattedStart = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+        } else {
+          formattedStart = String(rawStart);
+        }
+
+        if (typeof rawEnd === "number") {
+          const hours = Math.floor(rawEnd * 24);
+          const minutes = Math.round((rawEnd * 24 - hours) * 60);
+          formattedEnd = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+        } else {
+          formattedEnd = String(rawEnd);
+        }
+
+        startStr = `${formattedDate} ${formattedStart}`;
+        endStr = `${formattedDate} ${formattedEnd}`;
+      } else {
+        startStr = rawStart ? String(rawStart) : "";
+        endStr = rawEnd ? String(rawEnd) : "";
+      }
+
+      // Format to YYYY-MM-DD HH:mm
+      const startMoment = moment(startStr, ["YYYY-MM-DD HH:mm", "YYYY-MM-DD HH:mm:ss", "HH:mm", "YYYY/MM/DD HH:mm"]);
+      const endMoment = moment(endStr, ["YYYY-MM-DD HH:mm", "YYYY-MM-DD HH:mm:ss", "HH:mm", "YYYY/MM/DD HH:mm"]);
+
+      const subjectObj = subjectStore.getSubjects.find(s => 
+        (s.code && s.code.toLowerCase() === String(rawSubject || "").toLowerCase().trim()) || 
+        (s.name && s.name.toLowerCase() === String(rawSubject || "").toLowerCase().trim())
+      );
+
+      const groupObj = groupOptions.value.find(g => 
+        g.label.toLowerCase() === String(rawGroup || "").toLowerCase().trim() || 
+        g.value.toLowerCase() === String(rawGroup || "").toLowerCase().trim()
+      );
+
+      const teacherObj = teachers.value.find(t => {
+        const full = `${t.firstName} ${t.lastName}`.toLowerCase().trim();
+        const fullAlt = `${t.lastName} ${t.firstName}`.toLowerCase().trim();
+        const input = String(rawTeacher || "").toLowerCase().trim();
+        return full === input || fullAlt === input || t.username.toLowerCase().trim() === input || t.lastName.toLowerCase().trim() === input;
+      });
+
+      // Type mapping
+      let sessionType = "cours";
+      const typeStr = String(rawType || "").toLowerCase().trim();
+      if (typeStr.includes("td") || typeStr.includes("tp") || typeStr.includes("workshop") || typeStr.includes("travaux")) {
+        sessionType = "workshop";
+      } else if (typeStr.includes("exam") || typeStr.includes("devoir") || typeStr.includes("controle")) {
+        sessionType = "exam";
+      } else if (typeStr.includes("conf") || typeStr.includes("spec") || typeStr.includes("special")) {
+        sessionType = "conference";
+      }
+
+      // Title Auto-generation
+      const subjectName = subjectObj ? subjectObj.name : (rawSubject || "Cours");
+      const teacherName = teacherObj ? `${teacherObj.firstName} ${teacherObj.lastName}` : (rawTeacher || "Enseignant");
+      const groupName = groupObj ? groupObj.label : (rawGroup || "Groupe");
+      const generatedTitle = `${subjectName} (${teacherName}) - ${groupName}`;
+
+      const warnings: string[] = [];
+      if (!subjectObj) warnings.push("Matière non trouvée");
+      if (!groupObj) warnings.push("Groupe non trouvé");
+      if (!teacherObj) warnings.push("Enseignant non trouvé");
+      if (!startMoment.isValid()) warnings.push("Date/Heure de début invalide");
+      if (!endMoment.isValid()) warnings.push("Date/Heure de fin invalide");
+
+      return {
+        title: generatedTitle,
+        start: startMoment.isValid() ? startMoment.format("YYYY-MM-DD HH:mm") : startStr,
+        end: endMoment.isValid() ? endMoment.format("YYYY-MM-DD HH:mm") : endStr,
+        subjectId: subjectObj ? subjectObj.id : null,
+        groupId: groupObj ? groupObj.value : null,
+        teacherId: teacherObj ? teacherObj.id : null,
+        specialty: subjectObj?.specialty || groupObj?.specialty || "",
+        discription: rawDesc ? String(rawDesc) : "",
+        class: sessionType,
+        warnings,
+        rawSubject,
+        rawGroup,
+        rawTeacher,
+        subjectName,
+        teacherName,
+        groupName,
+      };
+    });
+  };
+  reader.readAsArrayBuffer(file);
+};
+
+const importParsedSessions = async () => {
+  if (hasErrors.value) {
+    Notify.create({
+      type: "negative",
+      message: "Veuillez corriger les erreurs avant d'importer",
+    });
+    return;
+  }
+
+  isImporting.value = true;
+  try {
+    const payload = parsedSessions.value.map((s) => ({
+      title: s.title,
+      start: s.start,
+      end: s.end,
+      subjectId: s.subjectId,
+      groupId: s.groupId,
+      teacherId: s.teacherId,
+      specialty: s.specialty,
+      discription: s.discription,
+      class: s.class,
+    }));
+
+    await planningStore.bulkAddPlanning(payload);
+    Notify.create({
+      type: "positive",
+      message: `${payload.length} séance(s) importée(s) avec succès !`,
+      icon: "check_circle",
+    });
+    showBulkDialog.value = false;
+    parsedSessions.value = [];
+    bulkExcelFile.value = null;
+  } catch (error) {
+    console.error("Bulk import failed", error);
+    Notify.create({
+      type: "negative",
+      message: "Erreur lors de l'importation en masse",
+      icon: "error",
+    });
+  } finally {
+    isImporting.value = false;
+  }
+};
 
 // Attendance / Roll call states
 const showAttendanceDialog = ref(false);
