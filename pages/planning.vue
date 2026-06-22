@@ -3,9 +3,9 @@
     <div class="myCard q-pa-lg">
       <!-- Title & Main Filters -->
       <div class="row items-center justify-between q-mb-lg q-col-gutter-md">
-        <div class="col-12 col-md-5">
-          <div class="row items-center q-gutter-x-md">
-            <div class="text-h5 text-primary text-weight-bold">
+        <div class="col-12 col-md-6">
+          <div class="row items-center q-gutter-x-sm">
+            <div class="text-h5 text-primary text-weight-bold q-mr-sm">
               Gestion du Planning
             </div>
             <q-btn
@@ -14,6 +14,18 @@
               icon="upload_file"
               label="Upload Planning"
               @click="showBulkDialog = true"
+              unelevated
+              rounded
+              dense
+              class="q-px-sm"
+              no-caps
+            />
+            <q-btn
+              v-if="isStaff"
+              color="accent"
+              icon="auto_awesome"
+              label="Générer Planning"
+              @click="openGenerateDialog"
               unelevated
               rounded
               dense
@@ -884,6 +896,225 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <!-- Dialog Génération Automatique -->
+    <q-dialog v-model="showGenerateDialog" persistent>
+      <q-card style="min-width: 800px; max-width: 90%; border-radius: 16px" class="q-pa-sm">
+        <q-card-section class="row items-center q-pb-none">
+          <div class="column">
+            <div class="text-h6 text-weight-bold text-accent">
+              Générateur Automatique de Planning
+            </div>
+            <div class="text-caption text-grey-7">
+              Générez automatiquement un planning sans conflits pour un groupe d'étudiants.
+            </div>
+          </div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-card-section>
+          <!-- Stepper navigation -->
+          <q-tabs v-model="genStep" class="text-accent q-mb-md" dense align="justify">
+            <q-tab name="config" icon="settings" label="1. Paramètres" />
+            <q-tab name="teachers" icon="people" label="2. Enseignants" :disable="!genGroupId" />
+            <q-tab name="preview" icon="visibility" label="3. Aperçu" :disable="generatedSessions.length === 0" />
+          </q-tabs>
+
+          <q-tab-panels v-model="genStep" animated :swipeable="false">
+            <!-- TAB CONFIG -->
+            <q-tab-panel name="config" class="q-gutter-y-md">
+              <div class="row q-col-gutter-md">
+                <div class="col-12 col-sm-6">
+                  <q-select
+                    v-model="genGroupId"
+                    :options="groupOptions"
+                    label="Sélectionner le Groupe"
+                    outlined
+                    dense
+                    emit-value
+                    map-options
+                    @update:model-value="onGenGroupChange"
+                    :rules="[v => !!v || 'Le groupe est requis']"
+                  >
+                    <template #prepend><q-icon name="groups" /></template>
+                  </q-select>
+                </div>
+                <div class="col-12 col-sm-6">
+                  <q-input
+                    outlined
+                    dense
+                    v-model="genStartDate"
+                    label="Date de début de planification"
+                    :rules="[v => !!v || 'La date de début est requise']"
+                  >
+                    <template #prepend>
+                      <q-icon name="event" class="cursor-pointer">
+                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                          <q-date v-model="genStartDate" mask="YYYY-MM-DD">
+                            <div class="row items-center justify-end">
+                              <q-btn v-close-popup label="Fermer" color="primary" flat />
+                            </div>
+                          </q-date>
+                        </q-popup-proxy>
+                      </q-icon>
+                    </template>
+                  </q-input>
+                </div>
+              </div>
+
+              <!-- Days Selector -->
+              <div>
+                <div class="text-subtitle2 text-grey-8 q-mb-sm">Jours de cours autorisés :</div>
+                <div class="row q-gutter-md">
+                  <q-checkbox v-model="genActiveDays" :val="1" label="Lundi" />
+                  <q-checkbox v-model="genActiveDays" :val="2" label="Mardi" />
+                  <q-checkbox v-model="genActiveDays" :val="3" label="Mercredi" />
+                  <q-checkbox v-model="genActiveDays" :val="4" label="Jeudi" />
+                  <q-checkbox v-model="genActiveDays" :val="5" label="Vendredi" />
+                  <q-checkbox v-model="genActiveDays" :val="6" label="Samedi" />
+                </div>
+              </div>
+
+              <!-- Slots Selector -->
+              <div>
+                <div class="text-subtitle2 text-grey-8 q-mb-sm">Créneaux horaires de cours :</div>
+                <div class="column q-gutter-y-xs">
+                  <q-checkbox
+                    v-for="(slot, idx) in STANDARD_SLOTS"
+                    :key="idx"
+                    v-model="genActiveSlots"
+                    :val="slot"
+                    :label="`${slot.start} - ${slot.end}`"
+                  />
+                </div>
+              </div>
+            </q-tab-panel>
+
+            <!-- TAB TEACHERS -->
+            <q-tab-panel name="teachers">
+              <div v-if="genGroupSubjects.length === 0" class="text-center q-py-xl text-grey-7">
+                <q-icon name="menu_book" size="50px" class="q-mb-md" />
+                <div>Aucune matière associée à la spécialité de ce groupe.</div>
+              </div>
+              <div v-else>
+                <div class="text-subtitle2 text-grey-8 q-mb-md">
+                  Attribuez un enseignant et le nombre de séances à planifier pour chaque matière :
+                </div>
+                <q-list bordered separator class="rounded-borders overflow-hidden">
+                  <q-item v-for="subj in genGroupSubjects" :key="subj.id" class="q-py-md">
+                    <q-item-section>
+                      <q-item-label class="text-weight-bold">{{ subj.name }}</q-item-label>
+                      <q-item-label caption>{{ subj.code }} (Coeff: {{ subj.coefficient }})</q-item-label>
+                    </q-item-section>
+                    
+                    <q-item-section side style="width: 250px">
+                      <q-select
+                        v-model="genSubjectTeachers[subj.id]"
+                        :options="teacherOptions"
+                        label="Enseignant"
+                        outlined
+                        dense
+                        emit-value
+                        map-options
+                      />
+                    </q-item-section>
+
+                    <q-item-section side style="width: 100px">
+                      <q-input
+                        v-model.number="genSubjectSessions[subj.id]"
+                        type="number"
+                        min="1"
+                        label="Séances"
+                        outlined
+                        dense
+                      />
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </div>
+            </q-tab-panel>
+
+            <!-- TAB PREVIEW -->
+            <q-tab-panel name="preview">
+              <div class="text-subtitle1 text-weight-bold text-positive row items-center q-mb-md">
+                <q-icon name="check_circle" class="q-mr-sm" size="sm" />
+                {{ generatedSessions.length }} séances générées avec succès sans conflits !
+              </div>
+              <q-table
+                :rows="generatedSessions"
+                :columns="genPreviewColumns"
+                row-key="start"
+                flat
+                bordered
+                dense
+                :pagination="{ rowsPerPage: 10 }"
+                style="max-height: 40vh"
+              >
+                <template v-slot:body-cell-subject="props">
+                  <q-td :props="props">
+                    <div class="text-weight-bold text-primary">{{ props.row.subjectName }}</div>
+                  </q-td>
+                </template>
+                <template v-slot:body-cell-teacher="props">
+                  <q-td :props="props">
+                    <div>{{ props.row.teacherName }}</div>
+                  </q-td>
+                </template>
+                <template v-slot:body-cell-datetime="props">
+                  <q-td :props="props">
+                    <div class="text-weight-medium">{{ props.row.start }}</div>
+                    <div class="text-caption text-grey-6">jusqu'à {{ props.row.end }}</div>
+                  </q-td>
+                </template>
+              </q-table>
+            </q-tab-panel>
+          </q-tab-panels>
+        </q-card-section>
+
+        <q-card-actions align="right" class="q-pa-md q-gutter-x-sm">
+          <q-btn flat label="Annuler" color="grey" v-close-popup />
+          <q-btn
+            v-if="genStep === 'config'"
+            unelevated
+            label="Suivant"
+            color="primary"
+            :disable="!genGroupId"
+            @click="genStep = 'teachers'"
+          />
+          <q-btn
+            v-if="genStep === 'teachers'"
+            flat
+            label="Précédent"
+            color="primary"
+            @click="genStep = 'config'"
+          />
+          <q-btn
+            v-if="genStep === 'teachers'"
+            unelevated
+            label="Lancer la génération"
+            color="accent"
+            :disable="!isTeachersAssigned"
+            @click="generatePlanning"
+          />
+          <q-btn
+            v-if="genStep === 'preview'"
+            flat
+            label="Précédent"
+            color="primary"
+            @click="genStep = 'teachers'"
+          />
+          <q-btn
+            v-if="genStep === 'preview'"
+            unelevated
+            label="Enregistrer le planning"
+            color="accent"
+            :loading="isSavingGen"
+            @click="saveGeneratedPlanning"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -969,6 +1200,239 @@ const groupSpecialties = ref<any[]>([]);
 
 const $q = useQuasar();
 const showConflictsDialog = ref(false);
+
+// Auto-Scheduler Planning Generator state
+const showGenerateDialog = ref(false);
+const genStep = ref("config");
+const genGroupId = ref("");
+const genStartDate = ref(moment().add(1, "days").format("YYYY-MM-DD"));
+const genActiveDays = ref([1, 2, 3, 4, 5]);
+const genActiveSlots = ref([
+  { start: "08:30", end: "10:15" },
+  { start: "10:30", end: "12:15" },
+  { start: "14:30", end: "16:15" },
+  { start: "16:30", end: "18:15" },
+]);
+const genSubjectTeachers = ref<Record<string, string>>({});
+const genSubjectSessions = ref<Record<string, number>>({});
+const generatedSessions = ref<any[]>([]);
+const isSavingGen = ref(false);
+
+const genPreviewColumns = [
+  { name: "subject", label: "Matière", align: "left" as const, field: "subjectName" },
+  { name: "teacher", label: "Enseignant", align: "left" as const, field: "teacherName" },
+  { name: "datetime", label: "Date & Horaire", align: "left" as const },
+];
+
+const genGroupSubjects = computed(() => {
+  if (!genGroupId.value) return [];
+  const selectedGroup = groupOptions.value.find((g) => g.value === genGroupId.value);
+  if (!selectedGroup || !selectedGroup.specialty) return [];
+  return subjectStore.getSubjects.filter((s) => s.specialty === selectedGroup.specialty);
+});
+
+const isTeachersAssigned = computed(() => {
+  if (genGroupSubjects.value.length === 0) return false;
+  return genGroupSubjects.value.every((s) => !!genSubjectTeachers.value[s.id]);
+});
+
+function openGenerateDialog() {
+  genStep.value = "config";
+  genGroupId.value = "";
+  genStartDate.value = moment().add(1, "days").format("YYYY-MM-DD");
+  genActiveDays.value = [1, 2, 3, 4, 5];
+  genActiveSlots.value = [
+    { start: "08:30", end: "10:15" },
+    { start: "10:30", end: "12:15" },
+    { start: "14:30", end: "16:15" },
+    { start: "16:30", end: "18:15" },
+  ];
+  genSubjectTeachers.value = {};
+  genSubjectSessions.value = {};
+  generatedSessions.value = [];
+  showGenerateDialog.value = true;
+}
+
+function onGenGroupChange(groupId: string) {
+  genSubjectTeachers.value = {};
+  genSubjectSessions.value = {};
+  generatedSessions.value = [];
+  
+  if (groupId) {
+    const selectedGroup = groupOptions.value.find((g) => g.value === groupId);
+    if (selectedGroup && selectedGroup.specialty) {
+      const subjects = subjectStore.getSubjects.filter((s) => s.specialty === selectedGroup.specialty);
+      subjects.forEach((s) => {
+        genSubjectSessions.value[s.id] = s.sessionsCount || 15;
+      });
+    }
+  }
+}
+
+const generatePlanning = () => {
+  const activeDays = genActiveDays.value;
+  const activeSlots = genActiveSlots.value;
+  const startDateStr = genStartDate.value;
+  const groupId = genGroupId.value;
+
+  if (activeDays.length === 0 || activeSlots.length === 0 || !startDateStr || !groupId) {
+    Notify.create({
+      type: "negative",
+      message: "Veuillez configurer la date, les jours et créneaux autorisés",
+    });
+    return;
+  }
+
+  // Build the queue of sessions to schedule
+  const queue: any[] = [];
+  genGroupSubjects.value.forEach(subj => {
+    const teacherId = genSubjectTeachers.value[subj.id];
+    const sessionsCount = genSubjectSessions.value[subj.id] || 0;
+    for (let i = 0; i < sessionsCount; i++) {
+      queue.push({
+        subjectId: subj.id,
+        subjectName: subj.name,
+        teacherId,
+        teacherName: getTeacherName(teacherId),
+        specialty: subj.specialty,
+      });
+    }
+  });
+
+  if (queue.length === 0) {
+    Notify.create({
+      type: "negative",
+      message: "Aucune séance à planifier",
+    });
+    return;
+  }
+
+  const generated: any[] = [];
+  const existingEvents = planningStore.getEvents; // Existing calendar events to check conflicts against
+
+  const isOverlap = (s1: string, e1: string, s2: string, e2: string) => {
+    const start1 = moment(s1);
+    const end1 = moment(e1);
+    const start2 = moment(s2);
+    const end2 = moment(e2);
+    return start1.isBefore(end2) && start2.isBefore(end1);
+  };
+
+  // Helper to check if a slot is conflicting for a teacher or group
+  const hasConflict = (start: string, end: string, teacherId: string, groupId: string) => {
+    // Check against database events
+    const dbConflict = existingEvents.some(evt => {
+      const isSameTeacher = evt.teacherId === teacherId;
+      const isSameGroup = evt.groupId === groupId;
+      if (!isSameTeacher && !isSameGroup) return false;
+      return isOverlap(evt.start, evt.end, start, end);
+    });
+
+    if (dbConflict) return true;
+
+    // Check against newly generated events in this batch
+    return generated.some(evt => {
+      const isSameTeacher = evt.teacherId === teacherId;
+      const isSameGroup = evt.groupId === groupId;
+      if (!isSameTeacher && !isSameGroup) return false;
+      return isOverlap(evt.start, evt.end, start, end);
+    });
+  };
+
+  let currentMoment = moment(startDateStr, "YYYY-MM-DD");
+  let safetyCounter = 0;
+  const maxDaysToTry = 365; // Stop if we can't schedule after a year to avoid infinite loop
+
+  while (queue.length > 0 && safetyCounter < maxDaysToTry) {
+    const dayOfWeek = currentMoment.isoWeekday(); // 1 = Mon, 7 = Sun
+    if (activeDays.includes(dayOfWeek)) {
+      // Loop through each active slot on this day
+      for (const slot of activeSlots) {
+        if (queue.length === 0) break;
+
+        const startStr = `${currentMoment.format("YYYY-MM-DD")} ${slot.start}`;
+        const endStr = `${currentMoment.format("YYYY-MM-DD")} ${slot.end}`;
+
+        // Find the first session in the queue that does not conflict in this slot
+        let foundIdx = -1;
+        for (let i = 0; i < queue.length; i++) {
+          const session = queue[i];
+          if (!hasConflict(startStr, endStr, session.teacherId, groupId)) {
+            foundIdx = i;
+            break;
+          }
+        }
+
+        if (foundIdx !== -1) {
+          // Schedule it!
+          const session = queue.splice(foundIdx, 1)[0];
+          generated.push({
+            title: `${session.subjectName} (${session.teacherName}) - ${getGroupName(groupId)}`,
+            start: startStr,
+            end: endStr,
+            subjectId: session.subjectId,
+            subjectName: session.subjectName,
+            groupId: groupId,
+            groupName: getGroupName(groupId),
+            teacherId: session.teacherId,
+            teacherName: session.teacherName,
+            specialty: session.specialty,
+            class: "cours",
+          });
+        }
+      }
+    }
+    // Move to next day
+    currentMoment.add(1, "days");
+    safetyCounter++;
+  }
+
+  if (queue.length > 0) {
+    Notify.create({
+      type: "warning",
+      message: `Impossible de planifier ${queue.length} séance(s) en raison de conflits d'enseignants. Veuillez libérer des créneaux.`,
+      timeout: 5000,
+    });
+  }
+
+  generatedSessions.value = generated;
+  genStep.value = "preview";
+};
+
+const saveGeneratedPlanning = async () => {
+  if (generatedSessions.value.length === 0) return;
+  isSavingGen.value = true;
+  try {
+    const payload = generatedSessions.value.map(s => ({
+      title: s.title,
+      start: s.start,
+      end: s.end,
+      subjectId: s.subjectId,
+      groupId: s.groupId,
+      teacherId: s.teacherId,
+      specialty: s.specialty,
+      class: s.class,
+    }));
+
+    await planningStore.bulkAddPlanning(payload);
+    Notify.create({
+      type: "positive",
+      message: `${payload.length} séance(s) générée(s) et sauvegardée(s) !`,
+      icon: "check_circle",
+    });
+    showGenerateDialog.value = false;
+    generatedSessions.value = [];
+  } catch (error) {
+    console.error("Failed to save auto-generated planning", error);
+    Notify.create({
+      type: "negative",
+      message: "Erreur lors de l'enregistrement du planning",
+      icon: "error",
+    });
+  } finally {
+    isSavingGen.value = false;
+  }
+};
 
 // Bulk Import Excel state and methods
 const showBulkDialog = ref(false);
