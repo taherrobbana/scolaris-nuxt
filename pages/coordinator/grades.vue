@@ -175,10 +175,23 @@ useHead({
   title: computed(() => t("useHead.coordinator.grades") || "Validation des Bulletins"),
 });
 
+import { useRoute } from "vue-router";
+
+const route = useRoute();
 const groupStore = useGroupModule();
 const gradesStore = useGradesModule();
 
 const selectedGroup = ref<string | null>(null);
+
+// ... (keep options and columns)
+// Let's modify onMounted to load group from query parameter:
+onMounted(async () => {
+  await groupStore.fetchGroups();
+  if (route.query.group) {
+    selectedGroup.value = route.query.group as string;
+    onGroupChange(selectedGroup.value);
+  }
+});
 
 const groupOptions = computed(() => {
   return groupStore.groups.map((g) => ({
@@ -270,9 +283,7 @@ function getDecisionLabel(val: string) {
   return "En attente";
 }
 
-onMounted(() => {
-  groupStore.fetchGroups();
-});
+// Already handled onMounted above
 </script>
 
 <style scoped lang="scss">

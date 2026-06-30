@@ -285,7 +285,8 @@ useHead({
 
 const users = ref<any[]>([]);
 const loading = ref(false);
-const filter = ref("");
+const route = useRoute();
+const filter = ref((route.query.search as string) || "");
 const saving = ref(false);
 const bulkLoading = ref(false);
 
